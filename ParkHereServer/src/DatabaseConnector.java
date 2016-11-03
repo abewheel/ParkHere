@@ -41,9 +41,31 @@ public class DatabaseConnector {
 		
 	}
 	
-	public User createUser(User user){
-		return user;
+	public User createUser(User user) throws SQLException{
+		PreparedStatement ps = conn.prepareStatement("INSERT INTO "+DBConstants.USER_TB+" ("+
+				DBConstants.USER_EMAIL_COL+", "+DBConstants.USER_NAME_COL+", "+DBConstants.PASSWORD_COL+") VALUES ('"+
+				user.getEmail()+"', '"+user.getName()+"', '"+user.getPassword()+"')", Statement.RETURN_GENERATED_KEYS);
+	
+		System.out.println("INSERT INTO "+DBConstants.USER_TB+" ("+
+				DBConstants.USER_EMAIL_COL+", "+DBConstants.USER_NAME_COL+", "+DBConstants.PASSWORD_COL+") VALUES ("+
+				user.getEmail()+", "+user.getName()+", "+user.getPassword()+")");
 		
+		ps.executeUpdate();
+		ResultSet rs = ps.getGeneratedKeys();
+		System.out.println("about to print id");
+		if (rs.next()){
+			System.out.println(rs.getLong(1));
+			user.setUser_id(rs.getLong(1));
+		}
+		
+		return user;
+	}
+	
+	public Boolean checkUserPasssword(String email, String password) throws SQLException{
+		PreparedStatement ps = conn.prepareStatement("SELECT * FROM"+DBConstants.USER_TB+" WHERE "+DBConstants.USER_EMAIL_COL+" = "+email
+				+" AND "+DBConstants.PASSWORD_COL+" = "+password);
+		ResultSet rs = ps.executeQuery();
+		return rs.next();
 	}
 
 }

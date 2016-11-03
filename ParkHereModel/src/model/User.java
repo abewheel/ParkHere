@@ -13,16 +13,30 @@ public class User implements Serializable{
 
     private Seeker seeker;
     private long user_id;
-
+    private Lender lender;
+    private  Role current_role;
+    private String email;
+    private String name;
+    private String password;
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
     	seeker = (Seeker) in.readObject();
     	user_id = (Long) in.readLong();
+    	lender = (Lender) in.readObject();
+    	current_role = (Role) in.readObject();
+    	email = (String) in.readObject();
+    	name = (String) in.readObject();
+    	password = (String) in.readObject();
     }
     
     private void writeObject(ObjectOutputStream out) throws IOException{
     	out.writeObject(seeker);
     	out.writeLong(user_id);
+    	out.writeObject(lender);
+    	out.writeObject(current_role);
+    	out.writeObject(email);
+    	out.writeObject(name);
+    	out.writeObject(password);
     }
     
     public long getUser_id() {
@@ -92,9 +106,4 @@ public class User implements Serializable{
         return current_role;
     }
 
-    private Lender lender;
-    private  Role current_role;
-    private String email;
-    private String name;
-    private String password;
 }

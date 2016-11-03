@@ -5,7 +5,7 @@ import java.net.Socket;
 
 import messages.LenderMessage;
 import messages.Message;
-import model.Lender;
+import messages.UserMessage;
 
 public class ServerComThread extends Thread{
 
@@ -23,17 +23,7 @@ public class ServerComThread extends Thread{
 			System.out.println("just made oos");
 			ois = new ObjectInputStream(s.getInputStream());
 			System.out.println("just made ois");
-			
-			Message message = new LenderMessage();
-			message.action = Message.insert;
-			System.out.println("just made message");
-			try {
-				oos.writeObject(new Lender());
-				oos.flush();
-				System.out.println("just sent message");
-			} catch (IOException e) {
-				System.out.println("exception in server com thread sending msg: "+e.getMessage());
-			}
+
 		} catch (IOException e) {
 			System.out.println("io exception creating streams in server com thread "+e.getMessage());
 		}
@@ -43,25 +33,39 @@ public class ServerComThread extends Thread{
 	
 	public void run(){
 		
-		
 		while (true){
 			
-			Message message = new LenderMessage();
-			message.action = Message.insert;
-			System.out.println("just made message");
 			try {
-				oos.writeObject(new Lender());
-				oos.flush();
-				System.out.println("just sent message");
+				Message message = (Message) ois.readObject();
+				//synchronized(message){
+					System.out.println("read message: "+message.action);
+
+					server.processMessage(message, this);
+					oos.reset();
+					oos.writeObject(message);
+					oos.flush();
+				//}
+				
+
 			} catch (IOException e) {
-				System.out.println("exception in server com thread sending msg: "+e.getMessage());
+				//System.out.println("ioe"+e.getMessage());
 			}
-//			try {
-//				//Message message = (Message)ois.readObject();
-//			} catch (ClassNotFoundException | IOException e) {
-//				System.out.println("ioexception maybe in server com thread run "+e.getMessage());
-//			}
+			catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				System.out.println("ioe"+e.getMessage());
+			}
 			
 		}
+	}
+	
+	public void sendMessage(Message message) throws IOException{
+		UserMessage mess = (UserMessage) message;
+		System.out.println("about to print shit");
+		System.out.println(mess.user.getName());
+		System.out.println(mess.user.getUser_id());
+		oos.reset();
+		oos.writeObject(mess);
+		//oos.writeObject("test string");
+		oos.flush();
 	}
 }
