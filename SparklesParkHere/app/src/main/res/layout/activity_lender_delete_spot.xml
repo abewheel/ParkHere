@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_lender_delete_spot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.sparkleusc.sparklesparkhere.LenderDeleteSpotActivity">
+
+    <Button
+        android:text="Delete Spot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/deleteSpotButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="11dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Edit Times Available"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:id="@+id/editTimeAvailableED" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Edit Price"
+        android:ems="10"
+        android:layout_below="@+id/editTimeAvailableED"
+        android:layout_alignStart="@+id/editTimeAvailableED"
+        android:layout_marginTop="52dp"
+        android:id="@+id/editPriceET" />
+
+    <Button
+        android:text="Edit Picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editPriceET"
+        android:layout_alignStart="@+id/editPriceET"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="74dp"
+        android:id="@+id/editPictureButton" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Edit Description"
+        android:ems="10"
+        android:layout_above="@+id/deleteSpotButton"
+        android:layout_alignStart="@+id/editPriceET"
+        android:layout_marginBottom="26dp"
+        android:id="@+id/editDescriptionET" />
+
+</RelativeLayout>
