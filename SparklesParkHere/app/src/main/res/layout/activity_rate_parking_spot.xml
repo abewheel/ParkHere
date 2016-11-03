@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" 
+    android:id="@+id/activity_sign_up"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.sparkleusc.sparklesparkhere.RateParkingSpotActivity">
+
+    <TextView
+        android:id="@+id/rateMeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rate_your_experience"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="4"
+        android:stepSize="1.0"
+        android:progressTint="#FFCC00"
+        android:rating="2.0"
+        android:layout_marginTop="43dp"
+        android:layout_below="@+id/rateMeTV"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rate"
+        android:layout_below="@+id/ratingBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Add a comment!"
+        android:ems="10"
+        android:layout_below="@+id/button"
+        android:layout_alignEnd="@+id/ratingBar"
+        android:layout_marginTop="67dp"
+        android:id="@+id/addACommentET" />
+
+</RelativeLayout>
