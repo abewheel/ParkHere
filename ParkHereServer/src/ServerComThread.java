@@ -37,15 +37,10 @@ public class ServerComThread extends Thread{
 			
 			try {
 				Message message = (Message) ois.readObject();
-				//synchronized(message){
-					System.out.println("read message: "+message.action);
+				System.out.println("read message: "+message.action);
 
-					server.processMessage(message, this);
-					oos.reset();
-					oos.writeObject(message);
-					oos.flush();
-				//}
-				
+				server.processMessage(message, this);
+
 
 			} catch (IOException e) {
 				//System.out.println("ioe"+e.getMessage());

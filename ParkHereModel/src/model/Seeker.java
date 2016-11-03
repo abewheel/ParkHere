@@ -24,6 +24,10 @@ public class Seeker extends Role implements Serializable{
     public List<Listing> getFavorites(){
         return super.getListings();
     }
+    
+    public void setFavorites(List<Listing> listings){
+    	super.setListings(listings);
+    }
 
     public void addToFavorites(Listing listing){
         super.addListing(listing);

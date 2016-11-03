@@ -62,6 +62,7 @@ public class Server extends Thread {
 				}
 				origThread.sendMessage(mess);
 			}
+
 		}
 //		catch (IOException ioe){
 //			System.out.println("ioe in server process message: "+ioe.getMessage());
@@ -71,7 +72,7 @@ public class Server extends Thread {
 			//return null;
 		}
 		//return message;
- catch (IOException e) {
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

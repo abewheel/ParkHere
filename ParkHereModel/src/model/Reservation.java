@@ -19,6 +19,10 @@ public class Reservation implements Serializable{
     private int pricePerHour;
     private int btTransactionId;
     private long reservationId;
+    
+    private long listingId;
+    private long seekerId;
+    private long lenderId;
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
     	lender = (Lender) in.readObject();
@@ -28,6 +32,9 @@ public class Reservation implements Serializable{
     	pricePerHour = in.readInt();
     	btTransactionId = in.readInt();
     	reservationId = (Long) in.readLong();
+    	listingId = (Long) in.readLong();
+    	seekerId = (Long) in.readLong();
+    	lenderId = (Long) in.readLong();
     }
     
     private void writeObject(ObjectOutputStream out) throws IOException{
@@ -38,6 +45,34 @@ public class Reservation implements Serializable{
     	out.writeInt(pricePerHour);
     	out.writeInt(btTransactionId);
     	out.writeLong(reservationId);
+    	out.writeLong(listingId);
+    	out.writeLong(seekerId);
+    	out.writeLong(lenderId);
+    	
+    }
+    
+    public long getLenderId(){
+    	return lenderId;
+    }
+    
+    public long getSeekerId(){
+    	return seekerId;
+    }
+    
+    public long getListingId(){
+    	return listingId;
+    }
+    
+    public void setLenderId(long id){
+    	lenderId = id;
+    }
+    
+    public void setListingId(long id){
+    	listingId = id;
+    }
+    
+    public void setSeekerId(long id){
+    	seekerId = id;
     }
     
     public long getReservationId(){

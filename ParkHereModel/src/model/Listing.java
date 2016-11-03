@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 public class Listing implements Serializable{
 
     private Lender lender;
+    private long lenderId;
     private String title;
     double price_per_hr;
     private Address address;
@@ -44,6 +45,7 @@ public class Listing implements Serializable{
     	categories = (List<String>)in.readObject();
     	cancellationPolicy = (String) in.readObject();
     	listingId = in.readLong();
+    	lenderId = in.readLong();
     }
     
     private void writeObject(ObjectOutputStream out) throws IOException{
@@ -59,9 +61,26 @@ public class Listing implements Serializable{
     	out.writeObject(categories);
     	out.writeObject(cancellationPolicy);
     	out.writeLong(listingId);
+    	out.writeLong(lenderId);
     }
 
-    public long getListingId(){
+	public void setPrice_per_hr(double price_per_hr) {
+		this.price_per_hr = price_per_hr;
+	}
+
+	public void setLender(Lender lender) {
+		this.lender = lender;
+	}
+	
+	public void setLenderId(long lender){
+		this.lenderId = lender;
+	}
+	
+	public long getLenderId(){
+		return lenderId;
+	}
+
+	public long getListingId(){
         return listingId;
     }
 
