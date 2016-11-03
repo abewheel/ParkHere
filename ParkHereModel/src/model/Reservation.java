@@ -1,9 +1,16 @@
 package model;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * Created by emmalautz on 10/19/16.
  */
 
-public class Reservation {
+public class Reservation implements Serializable{
 
     private Lender lender;
     private Seeker seeker;
@@ -13,6 +20,26 @@ public class Reservation {
     private int btTransactionId;
     private long reservationId;
 
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+    	lender = (Lender) in.readObject();
+    	seeker = (Seeker) in.readObject();
+    	listing = (Listing) in.readObject();
+    	listingAvailibility = (ListingAvailibility) in.readObject();
+    	pricePerHour = in.readInt();
+    	btTransactionId = in.readInt();
+    	reservationId = (Long) in.readLong();
+    }
+    
+    private void writeObject(ObjectOutputStream out) throws IOException{
+    	out.writeObject(lender);
+    	out.writeObject(seeker);
+    	out.writeObject(listing);
+    	out.writeObject(listingAvailibility);
+    	out.writeInt(pricePerHour);
+    	out.writeInt(btTransactionId);
+    	out.writeLong(reservationId);
+    }
+    
     public long getReservationId(){
         return reservationId;
     }

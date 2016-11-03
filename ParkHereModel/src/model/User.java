@@ -1,13 +1,30 @@
 package model;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 /**
  * Created by emmalautz on 10/19/16.
  */
 
-public class User {
+public class User implements Serializable{
 
     private Seeker seeker;
     private long user_id;
 
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+    	seeker = (Seeker) in.readObject();
+    	user_id = (Long) in.readLong();
+    }
+    
+    private void writeObject(ObjectOutputStream out) throws IOException{
+    	out.writeObject(seeker);
+    	out.writeLong(user_id);
+    }
+    
     public long getUser_id() {
 		return user_id;
 	}

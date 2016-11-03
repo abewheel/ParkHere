@@ -3,7 +3,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import messages.LenderMessage;
 import messages.Message;
+import model.Lender;
 
 public class ServerComThread extends Thread{
 
@@ -18,7 +20,20 @@ public class ServerComThread extends Thread{
 		try {
 			oos = new ObjectOutputStream(s.getOutputStream());
 			oos.flush();
+			System.out.println("just made oos");
 			ois = new ObjectInputStream(s.getInputStream());
+			System.out.println("just made ois");
+			
+			Message message = new LenderMessage();
+			message.action = Message.insert;
+			System.out.println("just made message");
+			try {
+				oos.writeObject(new Lender());
+				oos.flush();
+				System.out.println("just sent message");
+			} catch (IOException e) {
+				System.out.println("exception in server com thread sending msg: "+e.getMessage());
+			}
 		} catch (IOException e) {
 			System.out.println("io exception creating streams in server com thread "+e.getMessage());
 		}
@@ -28,12 +43,24 @@ public class ServerComThread extends Thread{
 	
 	public void run(){
 		
+		
 		while (true){
+			
+			Message message = new LenderMessage();
+			message.action = Message.insert;
+			System.out.println("just made message");
 			try {
-				Message message = (Message)ois.readObject();
-			} catch (ClassNotFoundException | IOException e) {
-				System.out.println("ioexception maybe in server com thread run "+e.getMessage());
+				oos.writeObject(new Lender());
+				oos.flush();
+				System.out.println("just sent message");
+			} catch (IOException e) {
+				System.out.println("exception in server com thread sending msg: "+e.getMessage());
 			}
+//			try {
+//				//Message message = (Message)ois.readObject();
+//			} catch (ClassNotFoundException | IOException e) {
+//				System.out.println("ioexception maybe in server com thread run "+e.getMessage());
+//			}
 			
 		}
 	}

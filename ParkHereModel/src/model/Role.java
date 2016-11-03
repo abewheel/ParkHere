@@ -3,10 +3,14 @@ package model;
  * Created by emmalautz on 10/19/16.
  */
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Role {
+public abstract class Role implements Serializable{
 	
     private List<Reservation> reservations;
     private List<Listing> listings;
@@ -14,6 +18,22 @@ public abstract class Role {
     private int bt_merchant_id;
     private long user_id;
 
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+    	reservations = (List<Reservation>) in.readObject();
+    	listings = (List<Listing>) in.readObject();
+    	profile = (Profile) in.readObject();
+    	bt_merchant_id = in.readInt();
+    	user_id = (Long) in.readLong();
+    }
+    
+    private void writeObject(ObjectOutputStream out) throws IOException{
+    	out.writeObject(reservations);
+    	out.writeObject(listings);
+    	out.writeObject(profile);
+    	out.writeInt(bt_merchant_id);
+    	out.writeLong(user_id);
+    }
+    
     public List<Reservation> getReservations() {
         return reservations;
     }
