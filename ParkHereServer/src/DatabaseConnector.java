@@ -315,16 +315,39 @@ public class DatabaseConnector {
 		
 		if (!listing.getAvailabilityList().isEmpty()){
 			
-			StringBuilder sb = new StringBuilder("INSERT INTO "+DBConstants.AVAILABILITY_TB+" ("+DBConstants.LISTING_ID_COL+
-					", "+DBConstants.BEGIN_DATE_TIME_COL+", "+DBConstants.END_DATE_TIME_COL+") VALUES");
 			
 			for (ListingAvailibility av : listing.getAvailabilityList()){
-				//need to set preparedstatement things to setDate
-				//psAddress.setT
+				
+				PreparedStatement psAv = conn.prepareStatement("INSERT INTO "+DBConstants.AVAILABILITY_TB+" ("+DBConstants.LISTING_ID_COL+
+						", "+DBConstants.BEGIN_DATE_TIME_COL+", "+DBConstants.END_DATE_TIME_COL+") VALUES ("+listing.getListingId()+", ?, ?)", Statement.RETURN_GENERATED_KEYS);
+				psAv.setTimestamp(1, av.getBeginDateTime());
+				psAv.setTimestamp(2,  av.getEndDateTime());
+				ResultSet rsAv = psAv.executeQuery();
+				av.setAvailabilityId(rsAv.getLong(1));
 			}
 		}
 		//insert images
 		return listing;
+	}
+	
+	public void createSeekerFavorite(long seekerId, long listingId) throws SQLException{
+		PreparedStatement psfav = conn.prepareStatement("INSERT INTO "+DBConstants.SEEKER_FAVORITES_TB+" ("+DBConstants.SEEKER_ID_COL+", "+DBConstants.LISTING_ID_COL+") VALUES ("+
+				seekerId+", "+listingId+")");
+		psfav.executeQuery();
+		
+	}
+	
+	public Reservation createReservation(Reservation reservation) throws SQLException{
+		//not currently inserting amount paid or transaction_id
+		PreparedStatement psfav = conn.prepareStatement("INSER INTO "+DBConstants.RESERVATION_TB+" ("+DBConstants.LISTING_ID_COL+
+				", "+DBConstants.LENDER_ID_COL+", "+DBConstants.SEEKER_ID_COL+", "+DBConstants.AVAILIBILITY_ID_COL+
+				") VALUES ("+ reservation.getListingId()+", "+reservation.getLenderId()+", "+reservation.getSeekerId()+", "+reservation.getListingAvailibility().getAvailabilityId()+")", 
+				Statement.RETURN_GENERATED_KEYS);
+		ResultSet rs = psfav.executeQuery();
+		if (rs.next()){
+			reservation.setReservationId(rs.getLong(1));
+		}
+		return reservation;
 	}
 	
 	public Boolean checkUserPasssword(String email, String password) throws SQLException{

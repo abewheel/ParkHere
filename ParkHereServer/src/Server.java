@@ -4,7 +4,11 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import messages.LenderMessage;
+import messages.ListingMessage;
 import messages.Message;
+import messages.ReservationMessage;
+import messages.SeekerMessage;
 import messages.UserMessage;
 
 public class Server extends Thread {
@@ -60,7 +64,47 @@ public class Server extends Thread {
 					mess.user = dbConn.createUser(mess.user);
 					//return mess;
 				}
+				else if (mess.action.equals(Message.get)){
+					mess.user = dbConn.getUser(mess.user.getEmail());
+				}
+				
 				origThread.sendMessage(mess);
+			}
+			else if (message instanceof ReservationMessage){
+				ReservationMessage resMess = (ReservationMessage) message;
+				
+				if (resMess.action.equals(Message.insert)){
+					resMess.reservation = dbConn.createReservation(resMess.reservation);
+				}
+				
+				origThread.sendMessage(resMess);
+				
+			}
+			else if (message instanceof ListingMessage){
+				ListingMessage listMess = (ListingMessage) message;
+				if (listMess.action.equals(Message.insert)){
+					listMess.listing = dbConn.createListing(listMess.listing);
+				}
+				
+				origThread.sendMessage(listMess);
+				
+			}
+			else if (message instanceof SeekerMessage){
+				SeekerMessage seekMess = (SeekerMessage) message;
+				
+				if (seekMess.action.equals(Message.insert)){
+					seekMess.seeker = dbConn.createSeeker(seekMess.seeker);
+				}
+				
+				origThread.sendMessage(seekMess);
+			}
+			else if (message instanceof LenderMessage){
+				LenderMessage lenderMess = (LenderMessage) message;
+				if (lenderMess.action.equals(Message.insert)){
+					lenderMess.lender = dbConn.createLender(lenderMess.lender);
+				}
+				
+				origThread.sendMessage(lenderMess);
 			}
 
 		}

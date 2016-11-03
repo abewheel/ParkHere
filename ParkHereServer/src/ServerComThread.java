@@ -54,12 +54,12 @@ public class ServerComThread extends Thread{
 	}
 	
 	public void sendMessage(Message message) throws IOException{
-		UserMessage mess = (UserMessage) message;
-		System.out.println("about to print shit");
-		System.out.println(mess.user.getName());
-		System.out.println(mess.user.getUser_id());
+		//UserMessage mess = (UserMessage) message;
+		//System.out.println("about to print shit");
+		//System.out.println(mess.user.getName());
+		//System.out.println(mess.user.getUser_id());
 		oos.reset();
-		oos.writeObject(mess);
+		oos.writeObject(message);
 		//oos.writeObject("test string");
 		oos.flush();
 	}
