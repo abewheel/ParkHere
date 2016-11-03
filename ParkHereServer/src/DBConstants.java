@@ -65,6 +65,30 @@ public class DBConstants {
 	
 	//reservation
 	public static final String RESERVATION_ID_COL = "reservation_id";
+	public static final String SEEKER_ID_COL = "seeker_id";
+	//LENDER_ID_COL
+	//LISTING_ID_COL
+	//AVAILABILITY_ID_COL
+	public static final String AMOUNT_PAID_COL = "amount_paid";
+	public static final String TRANSACTION_ID_COL = "transaction_id";
+	
+	//seeker
+	//SEEKER_ID_COL
+	//USER_ID_COL
+	//PHONE_NUMBER_COL
+	//PROFILE_PIC_COL
+	//IS_DEFAULT_ROLE_COL
+	
+	//seeker favorites
+	//SEEKER_ID_COL
+	//LISTING_ID_COL
+	
+	//user
+	public static final String USER_EMAIL_COL = "user_email";
+	public static final String USER_NAME_COL = "name";
+	public static final String PASSWORD_COL = "password";
+	//USER_ID_COL
+	
 	
 	
 }

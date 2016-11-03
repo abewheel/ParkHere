@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import model.User;
+
 public class DatabaseConnector {
 	private Connection conn;
 	public DatabaseConnector(){
@@ -36,6 +38,11 @@ public class DatabaseConnector {
 		} catch (ClassNotFoundException e) {
 			System.out.println("class not found excep: "+e.getMessage());
 		}
+		
+	}
+	
+	public User createUser(User user){
+		return user;
 		
 	}
 
