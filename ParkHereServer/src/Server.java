@@ -15,11 +15,11 @@ public class Server extends Thread {
 		dbConnection = new DatabaseConnector();
 		serverThreads = new Vector<>();
 		try {
-			ss = new ServerSocket(6789);
+			ss = new ServerSocket(port);
 		} catch (IOException e) {
 			System.out.println("IOException in server constructor");
 		}
-
+		this.start();
 	}
 	
 	@Override

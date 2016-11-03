@@ -3,9 +3,6 @@ package model;
  * Created by emmalautz on 10/19/16.
  */
 
-import java.util.Date;
-import java.sql.Timestamp;
-
 public class Reservation {
 
     private Lender lender;
