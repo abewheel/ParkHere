@@ -428,6 +428,8 @@ public class DatabaseConnector {
 		getSeeker(user.getUser_id(), user);
 		getLender(user.getUser_id(), user);
 	
+		System.out.println("user naem "+user.getName());
+		System.out.println("email "+user.getEmail());
 		return user;
 	}
 	
@@ -520,6 +522,7 @@ public class DatabaseConnector {
 				psAv.executeUpdate();
 				ResultSet rsAv = psAv.getGeneratedKeys();
 				av.setAvailabilityId(rsAv.getLong(1));
+				av.setListingId(listing.getListingId());
 			}
 		}
 		//insert images
