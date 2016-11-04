@@ -32,7 +32,7 @@ public class DatabaseConnector {
 			//st = conn.createStatement();
 //			
 //			ps = conn.prepareStatement("SELECT * FROM cancellation_policy");
-//			
+			
 //			User user = new User();
 //			user.setEmail("EMMA");
 //			user.setName("NAME");
@@ -309,7 +309,7 @@ public class DatabaseConnector {
 			lender.setUser_id(userId);
 			lender.setLenderId(rsLender.getLong(rsLender.findColumn(DBConstants.LENDER_ID_COL)));
 			Profile profile = new Profile();
-			profile.setPhoneNumber(rsLender.getInt(rsLender.findColumn(DBConstants.PHONE_NUM_COL)));
+			profile.setPhoneNumber(rsLender.getString(rsLender.findColumn(DBConstants.PHONE_NUM_COL)));
 			//profile pic
 			//merchant id
 			lender.setProfile(profile);
@@ -331,7 +331,7 @@ public class DatabaseConnector {
 			seeker.setUser_id(userId);
 			seeker.setSeekerId(rsSeeker.getLong(rsSeeker.findColumn(DBConstants.SEEKER_ID_COL)));
 			Profile profile = new Profile();
-			profile.setPhoneNumber(rsSeeker.getInt(rsSeeker.findColumn(DBConstants.PHONE_NUM_COL)));
+			profile.setPhoneNumber(rsSeeker.getString(rsSeeker.findColumn(DBConstants.PHONE_NUM_COL)));
 			//profile pic
 			//merchant id
 			seeker.setProfile(profile);
@@ -404,21 +404,21 @@ public class DatabaseConnector {
 			user.setUser_id(rs.getLong(rs.findColumn(DBConstants.USER_ID_COL)));
 		}
 		
-		PreparedStatement psSeeker = conn.prepareStatement("SELECT * FROM "+DBConstants.SEEKER_TB+" WHERE "+DBConstants.USER_ID_COL+" = "+user.getUser_id());
-		ResultSet rsSeeker = psSeeker.executeQuery();
-		
-		if (rsSeeker.next()){
-			Seeker seeker = new Seeker();
-			seeker.setUser_id(user.getUser_id());
-			seeker.setSeekerId(rsSeeker.getLong(rsSeeker.findColumn(DBConstants.SEEKER_ID_COL)));
-			Profile profile = new Profile();
-			profile.setPhoneNumber(rsSeeker.getInt(rsSeeker.findColumn(DBConstants.PHONE_NUM_COL)));
-			//profile pic
-			//merchant id
-			seeker.setProfile(profile);
-			
-			user.setSeeker(seeker);
-		}
+//		PreparedStatement psSeeker = conn.prepareStatement("SELECT * FROM "+DBConstants.SEEKER_TB+" WHERE "+DBConstants.USER_ID_COL+" = "+user.getUser_id());
+//		ResultSet rsSeeker = psSeeker.executeQuery();
+//		
+//		if (rsSeeker.next()){
+//			Seeker seeker = new Seeker();
+//			seeker.setUser_id(user.getUser_id());
+//			seeker.setSeekerId(rsSeeker.getLong(rsSeeker.findColumn(DBConstants.SEEKER_ID_COL)));
+//			Profile profile = new Profile();
+//			profile.setPhoneNumber(rsSeeker.getString(rsSeeker.findColumn(DBConstants.PHONE_NUM_COL)));
+//			//profile pic
+//			//merchant id
+//			seeker.setProfile(profile);
+//			
+//			user.setSeeker(seeker);
+//		}
 		
 		user.setSeeker(getSeeker(user.getUser_id()));
 		user.setLender(getLender(user.getUser_id()));
@@ -449,7 +449,7 @@ public class DatabaseConnector {
 	//hardcoded default role for now
 	public Seeker createSeeker(Seeker seeker) throws SQLException{
 		PreparedStatement ps = conn.prepareStatement("INSERT INTO "+DBConstants.SEEKER_TB+" ("+DBConstants.USER_ID_COL+", "+DBConstants.PHONE_NUM_COL+", "+
-				DBConstants.IS_DEFAULT_ROLE_COL+") VALUES ("+seeker.getUser_id()+", "+seeker.getProfile().getPhoneNumber()+", "+true+")", Statement.RETURN_GENERATED_KEYS);
+				DBConstants.IS_DEFAULT_ROLE_COL+") VALUES ("+seeker.getUser_id()+", '"+seeker.getProfile().getPhoneNumber()+"', "+true+")", Statement.RETURN_GENERATED_KEYS);
 		
 		ps.executeUpdate();
 		ResultSet rs = ps.getGeneratedKeys();
@@ -464,7 +464,7 @@ public class DatabaseConnector {
 	//hardcoded default role for now
 	public Lender createLender(Lender lender) throws SQLException{
 		PreparedStatement ps = conn.prepareStatement("INSERT INTO "+DBConstants.LENDER_TB+" ("+DBConstants.USER_ID_COL+", "+DBConstants.PHONE_NUM_COL+", "+
-				DBConstants.IS_DEFAULT_ROLE_COL+") VALUES ("+lender.getUser_id()+", "+lender.getProfile().getPhoneNumber()+", "+true+")", Statement.RETURN_GENERATED_KEYS);
+				DBConstants.IS_DEFAULT_ROLE_COL+") VALUES ("+lender.getUser_id()+", '"+lender.getProfile().getPhoneNumber()+"', "+true+")", Statement.RETURN_GENERATED_KEYS);
 		
 		ps.executeUpdate();
 		ResultSet rs = ps.getGeneratedKeys();
@@ -544,8 +544,8 @@ public class DatabaseConnector {
 	public Boolean checkUserPasssword(String email, String password) throws SQLException{
 		PreparedStatement ps = conn.prepareStatement("SELECT * FROM "+DBConstants.USER_TB+" WHERE "+DBConstants.USER_EMAIL_COL+" = '"+email
 				+"' AND "+DBConstants.PASSWORD_COL+" = '"+password+"'");
-		ps.executeUpdate();
-		ResultSet rs = ps.getGeneratedKeys();
+		
+		ResultSet rs = ps.executeQuery();
 		return rs.next();
 	}
 

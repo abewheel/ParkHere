@@ -6,7 +6,7 @@ package model;
 //import android.location.Address;
 //import android.media.Image;
 
-import java.awt.Image;
+//import java.awt.Image;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.ImageIcon;
+//import javax.swing.ImageIcon;
 
 public class Listing implements Serializable{
 
@@ -23,7 +23,7 @@ public class Listing implements Serializable{
     private String title;
     double price_per_hr;
     private Address address;
-    private List<ImageIcon> listing_images;
+   // private List<ImageIcon> listing_images;
     private String description;
     private List<ListingAvailibility> availability_list;
     private Integer total_rating;
@@ -37,7 +37,7 @@ public class Listing implements Serializable{
     	title = (String) in.readObject();
     	price_per_hr = in.readDouble();
     	address = (Address) in.readObject();
-    	listing_images = (List<ImageIcon>) in.readObject();
+    	//listing_images = (List<ImageIcon>) in.readObject();
     	description = (String) in.readObject();
     	availability_list = (List<ListingAvailibility>) in.readObject();
     	total_rating = in.readInt();
@@ -53,7 +53,7 @@ public class Listing implements Serializable{
     	out.writeObject(title);
     	out.writeDouble(price_per_hr);
     	out.writeObject(address);
-    	out.writeObject(listing_images);
+    	//out.writeObject(listing_images);
     	out.writeObject(description);
     	out.writeObject(availability_list);
     	out.writeInt(total_rating);
@@ -112,18 +112,18 @@ public class Listing implements Serializable{
         this.address = address;
     }
 
-    public List<ImageIcon> getListingImages() {
-        return listing_images;
-    }
-
-    public void setListingImages(List<ImageIcon> listing_images) {
-        this.listing_images = listing_images;
-    }
-
-    public void addImage(ImageIcon image){
-        if (listing_images == null) listing_images = new ArrayList<>();
-        listing_images.add(image);
-    }
+//    public List<ImageIcon> getListingImages() {
+//        return listing_images;
+//    }
+//
+//    public void setListingImages(List<ImageIcon> listing_images) {
+//        this.listing_images = listing_images;
+//    }
+//
+//    public void addImage(ImageIcon image){
+//        if (listing_images == null) listing_images = new ArrayList<>();
+//        listing_images.add(image);
+//    }
 
     public String getDescription() {
         return description;

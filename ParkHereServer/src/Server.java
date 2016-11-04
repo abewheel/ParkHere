@@ -55,6 +55,8 @@ public class Server extends Thread {
 			if (message instanceof UserMessage){
 				UserMessage mess = (UserMessage)message;
 				if (mess.action.equals(Message.check_validity)){
+					System.out.println("IN CORRECT MESSAGE");
+					System.out.println("user: "+mess.user.getEmail()+"; pass: "+mess.user.getPassword());
 					mess.success = dbConn.checkUserPasssword(mess.user.getEmail(), mess.user.getPassword());
 					//return mess;
 				}
