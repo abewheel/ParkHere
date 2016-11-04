@@ -8,6 +8,7 @@ import messages.LenderMessage;
 import messages.ListingMessage;
 import messages.Message;
 import messages.ReservationMessage;
+import messages.SearchMessage;
 import messages.SeekerMessage;
 import messages.UserMessage;
 
@@ -105,6 +106,11 @@ public class Server extends Thread {
 				}
 				
 				origThread.sendMessage(lenderMess);
+			}
+			else if (message instanceof SearchMessage){
+				SearchMessage searchMess = (SearchMessage) message;
+				searchMess.returnListings = dbConn.search(searchMess.zipcode);
+				origThread.sendMessage(searchMess);
 			}
 
 		}

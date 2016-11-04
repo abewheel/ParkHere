@@ -4,10 +4,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import model.Address;
+import model.CancellationPolicy;
 import model.Lender;
 import model.Listing;
 import model.ListingAvailibility;
@@ -28,19 +30,180 @@ public class DatabaseConnector {
 			conn = DriverManager.getConnection("jdbc:mysql://db4free.net/park_here?user=elautz&password=elautz&useSSL=false");
 			System.out.println("connected!");
 			//st = conn.createStatement();
+//			
+//			ps = conn.prepareStatement("SELECT * FROM cancellation_policy");
+//			
+//			User user = new User();
+//			user.setEmail("EMMA");
+//			user.setName("NAME");
+//			user.setPassword("PASSWORD");
+//			createUser(user);
+//			System.out.println("user : "+user.getUser_id());
+//			
+//			Lender lender = new Lender();
+//			Profile lendProf = new Profile();
+//			
+//			Seeker seeker = new Seeker();
+//			Profile seekerProf = new Profile();
+//			
+//			lender.setProfile(lendProf);
+//			lender.setUser_id(user.getUser_id());
+//			lender.setBt_merchant_id(2);
+//			lendProf.setPhoneNumber(1232345);
+//			
+//			createLender(lender);
+//			System.out.println("lender: "+lender.getLenderId());
+//			
+//			Listing listing = new Listing();
+//			Listing listing2 = new Listing();
+//			Listing listing3 = new Listing();
+//			
+//			Address one = new Address();
+//			Address two = new Address();
+//			Address three = new Address();
+//			
+//			one.setFirstLine("first line");
+//			one.setSecondLine("second line");
+//			one.setCity("Los Angeles");
+//			one.setState("CA");
+//			one.setZipCode("90007");
+//			
+//			two.setFirstLine("first 2");
+//			two.setSecondLine("second");
+//			two.setState("CA");
+//			two.setCity("Davis");
+//			two.setZipCode("90007");
+//			
+//			three.setFirstLine("three one");
+//			three.setSecondLine("three two");
+//			three.setCity("Sacramento");
+//			three.setState("CA");
+//			three.setZipCode("90007");
+//			
+//			listing.setAddress(one);
+//			listing.setLenderId(lender.getLenderId());
+//			listing.setTitle("title 1");
+//			listing.setDescription("desc 1");
+//			listing.setCancellationPolicy(CancellationPolicy.TEN_DOLLAR_CHARGE);
+//			listing.setPrice_per_hr(10);
+//			
+//			ListingAvailibility la1 = new ListingAvailibility();
+//			la1.setBeginDateTime(new Timestamp(100000));
+//			la1.setEndDateTime(new Timestamp(765432));
+//			//la1.setIsReserved(true);
+//			la1.setListingId(listing.getListingId());
+//			ListingAvailibility la2 = new ListingAvailibility();
+//			la2.setBeginDateTime(new Timestamp(102200));
+//			la2.setEndDateTime(new Timestamp(7622342));
+//			//la1.setIsReserved(true);
+//			la2.setListingId(listing.getListingId());
+//			ListingAvailibility la3 = new ListingAvailibility();
+//			la3.setBeginDateTime(new Timestamp(10001100));
+//			la3.setEndDateTime(new Timestamp(76543211));
+//			//la1.setIsReserved(true);
+//			la3.setListingId(listing2.getListingId());
+//			ListingAvailibility la4 = new ListingAvailibility();
+//			la4.setBeginDateTime(new Timestamp(1033000));
+//			la4.setEndDateTime(new Timestamp(76543332));
+//			//la1.setIsReserved(true);
+//			la4.setListingId(listing2.getListingId());
+//			ListingAvailibility la5 = new ListingAvailibility();
+//			la5.setBeginDateTime(new Timestamp(10009900));
+//			la5.setEndDateTime(new Timestamp(765432999));
+//			//la1.setIsReserved(true);
+//			la5.setListingId(listing3.getListingId());
+//			ListingAvailibility la6 = new ListingAvailibility();
+//			la6.setBeginDateTime(new Timestamp(11213000));
+//			la6.setEndDateTime(new Timestamp(765456432));
+//			//la1.setIsReserved(true);
+//			la6.setListingId(listing3.getListingId());
+//			
+//			listing2.setAvailabilityList(new ArrayList<>());
+//			listing.setAvailabilityList(new ArrayList<>());
+//			listing3.setAvailabilityList(new ArrayList<>());
+//			listing.addAvailibility(la1);
+//			listing.addAvailibility(la2);
+//			listing2.addAvailibility(la3);
+//			listing2.addAvailibility(la4);
+//			listing3.addAvailibility(la5);
+//			listing3.addAvailibility(la6);
+//			
+//			listing2.setAddress(two);
+//			listing2.setLenderId(lender.getLenderId());
+//			listing2.setTitle("title 2");
+//			listing2.setDescription("desc 2");
+//			listing2.setCancellationPolicy(CancellationPolicy.NO_CHARGE);
+//			listing2.setPrice_per_hr(15);
+//			
+//			listing3.setAddress(three);
+//			listing3.setLenderId(lender.getLenderId());
+//			listing3.setTitle("title 3");
+//			listing3.setDescription("desc 3");
+//			listing3.setCancellationPolicy(CancellationPolicy.FIVE_DOLLAR_CHARGE);
+//			listing3.setPrice_per_hr(20);
+//			
+//			createListing(listing);
+//			System.out.println("listing : "+listing.getListingId());
+//			System.out.println("address1 : "+one.getAddressId());
+//			createListing(listing2);
+//			System.out.println("listing2 : "+listing2.getListingId());
+//			System.out.println("address2 : "+two.getAddressId());
+//			createListing(listing3);
+//			System.out.println("listing3 : "+listing3.getListingId());
+//			System.out.println("address3 : "+three.getAddressId());
+//			
+//			System.out.println("available1: "+la1.getAvailabilityId());
+//			System.out.println("available2: "+la2.getAvailabilityId());
+//			System.out.println("available3: "+la3.getAvailabilityId());
+//			System.out.println("available4: "+la4.getAvailabilityId());
+//			System.out.println("available5: "+la5.getAvailabilityId());
+//			System.out.println("available6: "+la6.getAvailabilityId());
+//			
+//			seeker.setBt_merchant_id(5);
+//			seeker.setUser_id(user.getUser_id());
+//			seeker.setProfile(seekerProf);
+//			seekerProf.setPhoneNumber(98765);
+//			
+//			createSeeker(seeker);
+//			System.out.println("seeker : "+seeker.getSeekerId());
+//			
+//			this.createSeekerFavorite(seeker.getSeekerId(), listing.getListingId());
+//			this.createSeekerFavorite(seeker.getSeekerId(), listing2.getListingId());
+//			
+//			Reservation reservation = new Reservation();
+//			reservation.setBTTransactionId(6);
+//			reservation.setLenderId(lender.getLenderId());
+//			reservation.setListingId(listing.getLenderId());
+//			reservation.setSeekerId(seeker.getSeekerId());
+//			reservation.setPricePerHour((int) listing.getPricePerHr());
+//			reservation.setListingAvailibility(la2);
+//			
+//			createReservation(reservation);
+//			System.out.println("reservation : "+reservation.getReservationId());
+//			
+//			User userQueried = getUser(user.getEmail());
+//			System.out.println((userQueried.getUser_id() == user.getUser_id()) +" : correct user id returned");
+//			Seeker seekerQueried = userQueried.getSeeker();
+//			Lender lenderQueried = userQueried.getLender();
+//			System.out.println((seekerQueried.getSeekerId() == seeker.getSeekerId())+" : corrrect seeker id returned");
+//			System.out.println((lenderQueried.getLenderId() == lender.getLenderId())+" : correct lender id returned");
+//			
+//			
+//			System.out.println((seeker.getReservations().isEmpty()) + " : reservations are empty");
+//			
 			
-			ps = conn.prepareStatement("SELECT * FROM cancellation_policy");
+			
 			//ps.setString(1, name); // set first variable in prepared statement
-			rs = ps.executeQuery();
-			//System.out.println(rs.);
-			while (rs.next()) {
-				Integer fname = rs.getInt("cancellation_policy_id");
-				String lname = rs.getString("cancellation_policy");
-				//int studentID = rs.getInt("studentID");
-				System.out.println ("id = " + fname);
-				System.out.println ("policy = " + lname);
-				//System.out.println ("studentID = " + studentID);
-			}
+//			rs = ps.executeQuery();
+//			//System.out.println(rs.);
+//			while (rs.next()) {
+//				Integer fname = rs.getInt("cancellation_policy_id");
+//				String lname = rs.getString("cancellation_policy");
+//				//int studentID = rs.getInt("studentID");
+//				System.out.println ("id = " + fname);
+//				System.out.println ("policy = " + lname);
+//				//System.out.println ("studentID = " + studentID);
+//			}
 		}
 		catch (SQLException sqle){
 			System.out.println("sql excep: "+sqle.getMessage());
@@ -181,6 +344,22 @@ public class DatabaseConnector {
 		return null;
 	}
 	
+	public List<Listing> search(String zipcode) throws SQLException{
+		List<Listing> listings = new ArrayList<>();
+		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+
+				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
+				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
+				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
+				", a."+DBConstants.STATE_COL+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
+				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
+				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+
+				"a."+DBConstants.ZIP_CODE_COL+" = "+zipcode);
+		//PreparedStatement ps = conn.prepareStatement("SELECT )
+		ResultSet rs = psListing.executeQuery();
+		populateListing(listings, rs);
+		return listings;
+	}
+	
 	public List<Reservation> getReservations(long id, Boolean isLender) throws SQLException{
 		List<Reservation> reservations = new ArrayList<>();
 		
@@ -272,8 +451,12 @@ public class DatabaseConnector {
 		PreparedStatement ps = conn.prepareStatement("INSERT INTO "+DBConstants.SEEKER_TB+" ("+DBConstants.USER_ID_COL+", "+DBConstants.PHONE_NUM_COL+", "+
 				DBConstants.IS_DEFAULT_ROLE_COL+") VALUES ("+seeker.getUser_id()+", "+seeker.getProfile().getPhoneNumber()+", "+true+")", Statement.RETURN_GENERATED_KEYS);
 		
-		ResultSet rs = ps.executeQuery();
-		seeker.setSeekerId(rs.getLong(1));
+		ps.executeUpdate();
+		ResultSet rs = ps.getGeneratedKeys();
+		if (rs.next()){
+			seeker.setSeekerId(rs.getLong(1));
+		}
+		
 		return seeker;
 	}
 	
@@ -283,8 +466,12 @@ public class DatabaseConnector {
 		PreparedStatement ps = conn.prepareStatement("INSERT INTO "+DBConstants.LENDER_TB+" ("+DBConstants.USER_ID_COL+", "+DBConstants.PHONE_NUM_COL+", "+
 				DBConstants.IS_DEFAULT_ROLE_COL+") VALUES ("+lender.getUser_id()+", "+lender.getProfile().getPhoneNumber()+", "+true+")", Statement.RETURN_GENERATED_KEYS);
 		
-		ResultSet rs = ps.executeQuery();
-		lender.setLenderId(rs.getLong(1));
+		ps.executeUpdate();
+		ResultSet rs = ps.getGeneratedKeys();
+		if (rs.next()){
+			lender.setLenderId(rs.getLong(1));
+		}
+		
 		return lender;
 	}
 	
@@ -295,7 +482,8 @@ public class DatabaseConnector {
 				", "+DBConstants.ZIP_CODE_COL+", "+DBConstants.CITY_COL+", "+DBConstants.STATE_COL+") VALUES ('"+address.getFirstLine()+
 				"', '"+address.getSecondLine()+"', '"+address.getZipCode()+"', '"+address.getCity()+"', '"+address.getState()+"')", Statement.RETURN_GENERATED_KEYS);
 		
-		ResultSet rsAddress = psAddress.executeQuery();
+		psAddress.executeUpdate();
+		ResultSet rsAddress = psAddress.getGeneratedKeys();
 		if (rsAddress.next()){
 			address.setAddressId(rsAddress.getLong(1));
 		}
@@ -308,12 +496,13 @@ public class DatabaseConnector {
 				" WHERE "+DBConstants.CANCELLATION_POLICY_COL+" = '"+listing.getCancellationPolicy()+"'), "+listing.getPricePerHr()+", "+
 				address.getAddressId()+")", Statement.RETURN_GENERATED_KEYS);
 		
-		ResultSet rsListing = psListing.executeQuery();
+		psListing.executeUpdate();
+		ResultSet rsListing = psListing.getGeneratedKeys();
 		if (rsListing.next()){
 			listing.setListingId(rsListing.getLong(1));
 		}
 		
-		if (!listing.getAvailabilityList().isEmpty()){
+		if (listing.getAvailabilityList()!= null && !listing.getAvailabilityList().isEmpty()){
 			
 			
 			for (ListingAvailibility av : listing.getAvailabilityList()){
@@ -322,7 +511,8 @@ public class DatabaseConnector {
 						", "+DBConstants.BEGIN_DATE_TIME_COL+", "+DBConstants.END_DATE_TIME_COL+") VALUES ("+listing.getListingId()+", ?, ?)", Statement.RETURN_GENERATED_KEYS);
 				psAv.setTimestamp(1, av.getBeginDateTime());
 				psAv.setTimestamp(2,  av.getEndDateTime());
-				ResultSet rsAv = psAv.executeQuery();
+				psAv.executeUpdate();
+				ResultSet rsAv = psAv.getGeneratedKeys();
 				av.setAvailabilityId(rsAv.getLong(1));
 			}
 		}
@@ -333,7 +523,7 @@ public class DatabaseConnector {
 	public void createSeekerFavorite(long seekerId, long listingId) throws SQLException{
 		PreparedStatement psfav = conn.prepareStatement("INSERT INTO "+DBConstants.SEEKER_FAVORITES_TB+" ("+DBConstants.SEEKER_ID_COL+", "+DBConstants.LISTING_ID_COL+") VALUES ("+
 				seekerId+", "+listingId+")");
-		psfav.executeQuery();
+		psfav.executeUpdate();
 		
 	}
 	
@@ -343,7 +533,8 @@ public class DatabaseConnector {
 				", "+DBConstants.LENDER_ID_COL+", "+DBConstants.SEEKER_ID_COL+", "+DBConstants.AVAILIBILITY_ID_COL+
 				") VALUES ("+ reservation.getListingId()+", "+reservation.getLenderId()+", "+reservation.getSeekerId()+", "+reservation.getListingAvailibility().getAvailabilityId()+")", 
 				Statement.RETURN_GENERATED_KEYS);
-		ResultSet rs = psfav.executeQuery();
+		psfav.executeUpdate();
+		ResultSet rs = psfav.getGeneratedKeys();
 		if (rs.next()){
 			reservation.setReservationId(rs.getLong(1));
 		}
@@ -353,7 +544,8 @@ public class DatabaseConnector {
 	public Boolean checkUserPasssword(String email, String password) throws SQLException{
 		PreparedStatement ps = conn.prepareStatement("SELECT * FROM "+DBConstants.USER_TB+" WHERE "+DBConstants.USER_EMAIL_COL+" = '"+email
 				+"' AND "+DBConstants.PASSWORD_COL+" = '"+password+"'");
-		ResultSet rs = ps.executeQuery();
+		ps.executeUpdate();
+		ResultSet rs = ps.getGeneratedKeys();
 		return rs.next();
 	}
 
