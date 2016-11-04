@@ -300,7 +300,7 @@ public class DatabaseConnector {
 		return listings;
 	}
 	
-	public Lender getLender(long userId) throws SQLException{
+	public void getLender(long userId, User user) throws SQLException{
 		PreparedStatement psLender = conn.prepareStatement("SELECT * FROM "+DBConstants.LENDER_TB+" WHERE "+DBConstants.USER_ID_COL+" = "+userId);
 		ResultSet rsLender = psLender.executeQuery();
 		
@@ -317,12 +317,14 @@ public class DatabaseConnector {
 			lender.setListings(getLenderListings(lender.getLenderId(), lender));
 			lender.setReservations(getReservations(lender.getLenderId(), true));
 			
-			return lender;
+			user.setLender(lender);
+			if (rsLender.getBoolean(rsLender.findColumn(DBConstants.IS_DEFAULT_ROLE_COL))){
+				user.setCurrent_role(lender);
+			}
 		}
-		return null;
 	}
 	
-	public Seeker getSeeker(long userId) throws SQLException{
+	public void getSeeker(long userId, User user) throws SQLException{
 		PreparedStatement psSeeker = conn.prepareStatement("SELECT * FROM "+DBConstants.SEEKER_TB+" WHERE "+DBConstants.USER_ID_COL+" = "+userId);
 		ResultSet rsSeeker = psSeeker.executeQuery();
 		
@@ -335,13 +337,16 @@ public class DatabaseConnector {
 			//profile pic
 			//merchant id
 			seeker.setProfile(profile);
-			
+			//seeker.setIsDefau
 			seeker.setFavorites(getSeekerListings(seeker.getSeekerId()));
 			seeker.setReservations(getReservations(seeker.getSeekerId(), false));
 			
-			return seeker;
+			user.setSeeker(seeker);
+			if (rsSeeker.getBoolean(rsSeeker.findColumn(DBConstants.IS_DEFAULT_ROLE_COL))){
+				user.setCurrent_role(seeker);
+			}
 		}
-		return null;
+
 	}
 	
 	public List<Listing> search(String zipcode) throws SQLException{
@@ -420,8 +425,9 @@ public class DatabaseConnector {
 //			user.setSeeker(seeker);
 //		}
 		
-		user.setSeeker(getSeeker(user.getUser_id()));
-		user.setLender(getLender(user.getUser_id()));
+		getSeeker(user.getUser_id(), user);
+		getLender(user.getUser_id(), user);
+	
 		return user;
 	}
 	
