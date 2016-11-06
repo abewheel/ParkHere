@@ -24,33 +24,33 @@ public class Reservation implements Serializable{
     private long seekerId;
     private long lenderId;
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-    	lender = (Lender) in.readObject();
-    	seeker = (Seeker) in.readObject();
-    	listing = (Listing) in.readObject();
-    	listingAvailibility = (ListingAvailibility) in.readObject();
-    	pricePerHour = in.readInt();
-    	btTransactionId = in.readInt();
-    	reservationId = (Long) in.readLong();
-    	listingId = (Long) in.readLong();
-    	seekerId = (Long) in.readLong();
-    	lenderId = (Long) in.readLong();
-    }
-    
-    private void writeObject(ObjectOutputStream out) throws IOException{
-    	out.writeObject(lender);
-    	out.writeObject(seeker);
-    	out.writeObject(listing);
-    	out.writeObject(listingAvailibility);
-    	out.writeInt(pricePerHour);
-    	out.writeInt(btTransactionId);
-    	out.writeLong(reservationId);
-    	out.writeLong(listingId);
-    	out.writeLong(seekerId);
-    	out.writeLong(lenderId);
-    	
-    }
-    
+//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+//    	lender = (Lender) in.readObject();
+//    	seeker = (Seeker) in.readObject();
+//    	listing = (Listing) in.readObject();
+//    	listingAvailibility = (ListingAvailibility) in.readObject();
+//    	pricePerHour = in.readInt();
+//    	btTransactionId = in.readInt();
+//    	reservationId = (Long) in.readLong();
+//    	listingId = (Long) in.readLong();
+//    	seekerId = (Long) in.readLong();
+//    	lenderId = (Long) in.readLong();
+//    }
+//    
+//    private void writeObject(ObjectOutputStream out) throws IOException{
+//    	out.writeObject(lender);
+//    	out.writeObject(seeker);
+//    	out.writeObject(listing);
+//    	out.writeObject(listingAvailibility);
+//    	out.writeInt(pricePerHour);
+//    	out.writeInt(btTransactionId);
+//    	out.writeLong(reservationId);
+//    	out.writeLong(listingId);
+//    	out.writeLong(seekerId);
+//    	out.writeLong(lenderId);
+//    	
+//    }
+//    
     public long getLenderId(){
     	return lenderId;
     }

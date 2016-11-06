@@ -33,10 +33,10 @@ public class ServerComThread extends Thread{
 	
 	public void run(){
 		
-		while (true){
+		//while (true){
 			
 			try {
-				System.out.println("attempting to read message..");
+				//System.out.println("attempting to read message..");
 				Message message = (Message) ois.readObject();
 				System.out.println("read message: "+message.action);
 
@@ -48,10 +48,10 @@ public class ServerComThread extends Thread{
 			}
 			catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
-				System.out.println("ioe"+e.getMessage());
+				System.out.println("cnfe"+e.getMessage());
 			}
 			
-		}
+		//}
 	}
 	
 	public void sendMessage(Message message) throws IOException{

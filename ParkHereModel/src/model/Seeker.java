@@ -13,13 +13,13 @@ public class Seeker extends Role implements Serializable{
 
     private long seeker_id;
     
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-    	seeker_id = (Long) in.readLong();
-    }
-    
-    private void writeObject(ObjectOutputStream out) throws IOException{
-    	out.writeLong(seeker_id);
-    }
+//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+//    	seeker_id = (Long) in.readLong();
+//    }
+//    
+//    private void writeObject(ObjectOutputStream out) throws IOException{
+//    	out.writeLong(seeker_id);
+//    }
 
     public List<Listing> getFavorites(){
         return super.getListings();

@@ -14,24 +14,24 @@ public class Address implements Serializable{
 	private String city;
 	private long addressId;
 	
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-    	firstLine = (String) in.readObject();
-    	secondLine = (String) in.readObject();
-    	zipCode = (String) in.readObject();
-    	state = (String) in.readObject();
-    	city = (String) in.readObject();
-    	addressId = (Long) in.readLong();
-    }
-    
-    private void writeObject(ObjectOutputStream out) throws IOException{
-    	out.writeObject(firstLine);
-    	out.writeObject(secondLine);
-    	out.writeObject(zipCode);
-    	out.writeObject(state);
-    	out.writeObject(city);
-    	out.writeLong(addressId);
-    }
-	
+//	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+//    	firstLine = (String) in.readObject();
+//    	secondLine = (String) in.readObject();
+//    	zipCode = (String) in.readObject();
+//    	state = (String) in.readObject();
+//    	city = (String) in.readObject();
+//    	addressId = (Long) in.readLong();
+//    }
+//    
+//    private void writeObject(ObjectOutputStream out) throws IOException{
+//    	out.writeObject(firstLine);
+//    	out.writeObject(secondLine);
+//    	out.writeObject(zipCode);
+//    	out.writeObject(state);
+//    	out.writeObject(city);
+//    	out.writeLong(addressId);
+//    }
+//	
 	public String getFirstLine() {
 		return firstLine;
 	}

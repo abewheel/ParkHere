@@ -14,13 +14,13 @@ public class Lender extends Role implements Serializable{
 
     private long lenderId;
     
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-    	lenderId = in.readLong();
-    }
-    
-    private void writeObject(ObjectOutputStream out) throws IOException{
-    	out.writeLong(lenderId);
-    }
+//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+//    	lenderId = in.readLong();
+//    }
+//    
+//    private void writeObject(ObjectOutputStream out) throws IOException{
+//    	out.writeLong(lenderId);
+//    }
 
     public long getLenderId(){
         return lenderId;

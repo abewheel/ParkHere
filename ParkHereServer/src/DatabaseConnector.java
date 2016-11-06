@@ -505,7 +505,8 @@ public class DatabaseConnector {
 				", "+DBConstants.DESCRIPTION_COL+", "+DBConstants.TOTAL_RATING_COL+", "+DBConstants.NUM_RATINGS_COL+", "+
 				DBConstants.CANCELLATION_POLICY_ID_COL+", "+DBConstants.PRICE_PER_HR_COL+", "+DBConstants.ADDRESS_ID_COL+") VALUES ("+listing.getLenderId()+
 				", '"+listing.getTitle()+"', '"+listing.getDescription()+"', 0, 0, (SELECT "+DBConstants.CANCELLATION_POLICY_ID_COL+" FROM "+DBConstants.CANCELLATION_POLICY_TB+
-				" WHERE "+DBConstants.CANCELLATION_POLICY_COL+" = '"+listing.getCancellationPolicy()+"'), "+listing.getPricePerHr()+", "+
+			//	" WHERE "+DBConstants.CANCELLATION_POLICY_COL+" = '"+listing.getCancellationPolicy()+"'), "+listing.getPricePerHr()+", "+
+				" WHERE "+DBConstants.CANCELLATION_POLICY_COL+" = '"+CancellationPolicy.FIVE_DOLLAR_CHARGE+"'), "+listing.getPricePerHr()+", "+
 				address.getAddressId()+")", Statement.RETURN_GENERATED_KEYS);
 		
 		psListing.executeUpdate();

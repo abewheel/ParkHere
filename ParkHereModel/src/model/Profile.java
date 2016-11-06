@@ -20,16 +20,16 @@ public class Profile implements Serializable{
    // private transient ImageIcon profile_pic;
     private String phone_number;
     
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-    	//profile_pic = (ImageIcon) in.readObject();
-    	phone_number = (String)in.readObject();
-    }
-    
-    private void writeObject(ObjectOutputStream out) throws IOException{
-    	//out.writeObject(profile_pic);
-    	out.writeObject(phone_number);
-    }
-    
+//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+//    	//profile_pic = (ImageIcon) in.readObject();
+//    	phone_number = (String)in.readObject();
+//    }
+//    
+//    private void writeObject(ObjectOutputStream out) throws IOException{
+//    	//out.writeObject(profile_pic);
+//    	out.writeObject(phone_number);
+//    }
+//    
     public String getPhoneNumber() {
         return phone_number;
     }

@@ -17,22 +17,22 @@ public abstract class Role implements Serializable{
     private Profile profile;
     private int bt_merchant_id;
     private long user_id;
-
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-    	reservations = (List<Reservation>) in.readObject();
-    	listings = (List<Listing>) in.readObject();
-    	profile = (Profile) in.readObject();
-    	bt_merchant_id = in.readInt();
-    	user_id = (Long) in.readLong();
-    }
-    
-    private void writeObject(ObjectOutputStream out) throws IOException{
-    	out.writeObject(reservations);
-    	out.writeObject(listings);
-    	out.writeObject(profile);
-    	out.writeInt(bt_merchant_id);
-    	out.writeLong(user_id);
-    }
+//
+//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+//    	reservations = (List<Reservation>) in.readObject();
+//    	listings = (List<Listing>) in.readObject();
+//    	profile = (Profile) in.readObject();
+//    	bt_merchant_id = in.readInt();
+//    	user_id = (Long) in.readLong();
+//    }
+//    
+//    private void writeObject(ObjectOutputStream out) throws IOException{
+//    	out.writeObject(reservations);
+//    	out.writeObject(listings);
+//    	out.writeObject(profile);
+//    	out.writeInt(bt_merchant_id);
+//    	out.writeLong(user_id);
+//    }
     
     public List<Reservation> getReservations() {
         return reservations;
