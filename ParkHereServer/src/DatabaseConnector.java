@@ -305,11 +305,13 @@ public class DatabaseConnector {
 		ResultSet rsLender = psLender.executeQuery();
 		
 		if (rsLender.next()){
+			System.out.println("got the lender!!");
 			Lender lender = new Lender();
 			lender.setUser_id(userId);
 			lender.setLenderId(rsLender.getLong(rsLender.findColumn(DBConstants.LENDER_ID_COL)));
 			Profile profile = new Profile();
 			profile.setPhoneNumber(rsLender.getString(rsLender.findColumn(DBConstants.PHONE_NUM_COL)));
+			System.out.println("lender phone : "+rsLender.getString(rsLender.findColumn(DBConstants.PHONE_NUM_COL)));
 			//profile pic
 			//merchant id
 			lender.setProfile(profile);
@@ -373,7 +375,7 @@ public class DatabaseConnector {
 				", r."+DBConstants.AMOUNT_PAID_COL+", r."+DBConstants.TRANSACTION_ID_COL+
 				", a."+DBConstants.BEGIN_DATE_TIME_COL+", a."+DBConstants.END_DATE_TIME_COL+", a."+
 				DBConstants.IS_RESERVED_COL+" FROM "+DBConstants.RESERVATION_TB+" r INNER JOIN "+DBConstants.AVAILABILITY_TB+
-				" ON r."+DBConstants.AVAILIBILITY_ID_COL+" = a."+DBConstants.AVAILIBILITY_ID_COL+" WHERE r."+
+				" a ON r."+DBConstants.AVAILIBILITY_ID_COL+" = a."+DBConstants.AVAILIBILITY_ID_COL+" WHERE r."+
 				(isLender? DBConstants.LENDER_ID_COL : DBConstants.SEEKER_ID_COL)+" = "+id);
 		
 		ResultSet rs = ps.executeQuery();
@@ -485,6 +487,8 @@ public class DatabaseConnector {
 	
 	//NOT DONE
 	public Listing createListing(Listing listing) throws SQLException{
+		
+		System.out.println("in create listing");
 		Address address = listing.getAddress();
 		PreparedStatement psAddress = conn.prepareStatement("INSERT INTO "+DBConstants.ADDRESS_TB+" ("+DBConstants.FIRST_LINE_COL+", "+DBConstants.SECOND_LINE_COL+
 				", "+DBConstants.ZIP_CODE_COL+", "+DBConstants.CITY_COL+", "+DBConstants.STATE_COL+") VALUES ('"+address.getFirstLine()+

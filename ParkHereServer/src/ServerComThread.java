@@ -36,6 +36,7 @@ public class ServerComThread extends Thread{
 		while (true){
 			
 			try {
+				System.out.println("attempting to read message..");
 				Message message = (Message) ois.readObject();
 				System.out.println("read message: "+message.action);
 

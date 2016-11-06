@@ -86,6 +86,7 @@ public class Server extends Thread {
 			else if (message instanceof ListingMessage){
 				ListingMessage listMess = (ListingMessage) message;
 				if (listMess.action.equals(Message.insert)){
+					System.out.println("received create listing message");
 					listMess.listing = dbConn.createListing(listMess.listing);
 				}
 				
