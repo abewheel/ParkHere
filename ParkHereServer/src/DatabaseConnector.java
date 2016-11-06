@@ -232,7 +232,7 @@ public class DatabaseConnector {
 	}
 	
 	private void populateListing(List<Listing> listings, ResultSet rsListing) throws SQLException{
-		
+		System.out.println("before get populate listings");
 		while (rsListing.next()){
 			Listing listing = new Listing();
 			//set images
@@ -243,8 +243,9 @@ public class DatabaseConnector {
 			address.setCity(rsListing.getString(rsListing.findColumn(DBConstants.CITY_COL)));
 			address.setState(rsListing.getString(rsListing.findColumn(DBConstants.STATE_COL)));
 			address.setZipCode(rsListing.getString(rsListing.findColumn(DBConstants.ZIP_CODE_COL)));
-			
+			System.out.println("before set lender id on listing");
 			listing.setLenderId(rsListing.getLong(rsListing.findColumn(DBConstants.LENDER_ID_COL)));
+			System.out.println("after set lender id on listing");
 			listing.setAddress(address);
 			listing.setCancellationPolicy(rsListing.getString(rsListing.findColumn(DBConstants.CANCELLATION_POLICY_COL)));
 			listing.setDescription(rsListing.getString(rsListing.findColumn(DBConstants.DESCRIPTION_COL)));
@@ -256,7 +257,7 @@ public class DatabaseConnector {
 			PreparedStatement psCategories = conn.prepareStatement("SELECT "+DBConstants.CATEGORY_COL+" FROM "+DBConstants.LISTING_CATEGORY_TB+
 					" l INNER JOIN "+DBConstants.CATEGORY_TB+" c ON l."+DBConstants.CATEGORY_ID_COL+" = c."+DBConstants.CATEGORY_ID_COL+" WHERE "+DBConstants.LISTING_ID_COL+
 					" = "+listing.getListingId());
-			
+			System.out.println("before get listing categories");
 			ResultSet rsCats = psCategories.executeQuery();
 			while (rsCats.next()){
 				listing.getCategories().add(rsCats.getString(1));
@@ -265,7 +266,7 @@ public class DatabaseConnector {
 			PreparedStatement psAvailable = conn.prepareStatement("SELECT "+DBConstants.AVAILIBILITY_ID_COL+", "+
 			DBConstants.BEGIN_DATE_TIME_COL+", "+DBConstants.END_DATE_TIME_COL+", "+DBConstants.IS_RESERVED_COL+" FROM "+DBConstants.AVAILABILITY_TB+
 			" WHERE "+DBConstants.LISTING_ID_COL+" = "+listing.getListingId());
-			
+			System.out.println("before get listing availabilities");
 			ResultSet rsAvailable = psAvailable.executeQuery();
 			while (rsAvailable.next()){
 				ListingAvailibility av = new ListingAvailibility();
@@ -279,14 +280,16 @@ public class DatabaseConnector {
 			
 			listings.add(listing);
 		}
+		
+		System.out.println("after get listings");
 	}
 	
 	public List<Listing>getLenderListings(long lenderId, Lender lender) throws SQLException{
-		
+		System.out.println("before get listings");
 		List<Listing> listings = new ArrayList<>();
 		
-		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+
-				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
+		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LENDER_ID_COL+", +l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+
+				", l."+DBConstants.LISTING_TITLE_COL+", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
 				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
 				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
 				", a."+DBConstants.STATE_COL+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
@@ -296,7 +299,7 @@ public class DatabaseConnector {
 		
 		ResultSet rsListing = psListing.executeQuery();
 		populateListing(listings, rsListing);
-		
+		System.out.println("after get listings");
 		return listings;
 	}
 	
@@ -318,7 +321,7 @@ public class DatabaseConnector {
 			
 			lender.setListings(getLenderListings(lender.getLenderId(), lender));
 			lender.setReservations(getReservations(lender.getLenderId(), true));
-			
+			System.out.println("after  get listings and reservations");
 			user.setLender(lender);
 			if (rsLender.getBoolean(rsLender.findColumn(DBConstants.IS_DEFAULT_ROLE_COL))){
 				user.setCurrent_role(lender);
@@ -369,7 +372,7 @@ public class DatabaseConnector {
 	
 	public List<Reservation> getReservations(long id, Boolean isLender) throws SQLException{
 		List<Reservation> reservations = new ArrayList<>();
-		
+		System.out.println("before get reservations");
 		PreparedStatement ps = conn.prepareStatement("SELECT r."+DBConstants.RESERVATION_ID_COL+", r."+DBConstants.SEEKER_ID_COL+
 				", r."+DBConstants.LENDER_ID_COL+", r."+DBConstants.LISTING_ID_COL+", r."+DBConstants.AVAILIBILITY_ID_COL+
 				", r."+DBConstants.AMOUNT_PAID_COL+", r."+DBConstants.TRANSACTION_ID_COL+
@@ -396,7 +399,7 @@ public class DatabaseConnector {
 			reservation.setListingAvailibility(available);
 			reservations.add(reservation);
 		}
-		
+		System.out.println("after get reservations");
 		return reservations;
 	}
 	
