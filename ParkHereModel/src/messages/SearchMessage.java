@@ -8,4 +8,5 @@ import model.Listing;
 public class SearchMessage extends Message implements Serializable{
 	public String zipcode;
 	public List<Listing> returnListings;
+	public List<String> categories;
 }

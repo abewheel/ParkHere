@@ -331,6 +331,25 @@ public class DatabaseConnector {
 		}
 	}
 	
+	public void removeListing(long listingId) throws SQLException{
+		PreparedStatement psAddress = conn.prepareStatement("DELETE FROM "+DBConstants.ADDRESS_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
+		psAddress.executeQuery();
+		PreparedStatement psAvailabilities = conn.prepareStatement("DELETE FROM "+DBConstants.AVAILABILITY_TB+" WEHRE "+DBConstants.LISTING_ID_COL+" = "+listingId);
+		psAvailabilities.executeQuery();
+		PreparedStatement psCategories = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_CATEGORY_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
+		psCategories.executeQuery();
+		PreparedStatement psImages = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_IMAGE_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
+		psImages.executeQuery();
+		PreparedStatement psListing = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
+		psListing.executeQuery();
+	}
+	
+	public Boolean canRemoveListing(long listingId) throws SQLException{
+		PreparedStatement psReservation = conn.prepareStatement("SELECT * FROM "+DBConstants.RESERVATION_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
+		ResultSet rs = psReservation.executeQuery();
+		return rs.next();
+	}
+	
 	public void getSeeker(long userId, User user) throws SQLException{
 		PreparedStatement psSeeker = conn.prepareStatement("SELECT * FROM "+DBConstants.SEEKER_TB+" WHERE "+DBConstants.USER_ID_COL+" = "+userId);
 		ResultSet rsSeeker = psSeeker.executeQuery();
