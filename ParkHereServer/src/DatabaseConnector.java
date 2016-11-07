@@ -268,6 +268,7 @@ public class DatabaseConnector {
 			" WHERE "+DBConstants.LISTING_ID_COL+" = "+listing.getListingId());
 			System.out.println("before get listing availabilities");
 			ResultSet rsAvailable = psAvailable.executeQuery();
+			if (listing.getAvailabilityList() == null) listing.setAvailabilityList(new ArrayList<>());
 			while (rsAvailable.next()){
 				ListingAvailibility av = new ListingAvailibility();
 				av.setListingId(listing.getListingId());
@@ -275,6 +276,7 @@ public class DatabaseConnector {
 				av.setBeginDateTime(rsAvailable.getTimestamp(rsAvailable.findColumn(DBConstants.BEGIN_DATE_TIME_COL)));
 				av.setEndDateTime(rsAvailable.getTimestamp(rsAvailable.findColumn(DBConstants.END_DATE_TIME_COL)));
 				av.setIsReserved(rsAvailable.getBoolean(rsAvailable.findColumn(DBConstants.IS_RESERVED_COL)));
+				
 				listing.getAvailabilityList().add(av);
 			}
 			
