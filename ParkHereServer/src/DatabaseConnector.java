@@ -470,6 +470,8 @@ public class DatabaseConnector {
 			seeker.setSeekerId(rs.getLong(1));
 		}
 		
+		seeker.setReservations(new ArrayList<>());
+		seeker.setFavorites(new ArrayList<>());
 		return seeker;
 	}
 	
@@ -484,7 +486,8 @@ public class DatabaseConnector {
 		if (rs.next()){
 			lender.setLenderId(rs.getLong(1));
 		}
-		
+		lender.setListings(new ArrayList<>());
+		lender.setReservations(new ArrayList<>());
 		return lender;
 	}
 	
@@ -529,8 +532,11 @@ public class DatabaseConnector {
 				psAv.setTimestamp(2,  av.getEndDateTime());
 				psAv.executeUpdate();
 				ResultSet rsAv = psAv.getGeneratedKeys();
-				av.setAvailabilityId(rsAv.getLong(1));
-				av.setListingId(listing.getListingId());
+				if (rsAv.next()){
+					av.setAvailabilityId(rsAv.getLong(1));
+					av.setListingId(listing.getListingId());
+				}
+				
 			}
 		}
 		//insert images
