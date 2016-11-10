@@ -141,6 +141,9 @@ public class Server extends Thread {
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (DBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

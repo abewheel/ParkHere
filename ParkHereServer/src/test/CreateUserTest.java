@@ -9,6 +9,8 @@ import org.junit.Test;
 import model.User;
 
 import org.junit.*;
+
+import server.DBException;
 import server.DatabaseConnector;
 
 public class CreateUserTest {
@@ -64,6 +66,9 @@ public class CreateUserTest {
 		}
 		catch (SQLException sqle){
 			System.out.println("sqle: "+sqle.getMessage());
+		} catch (DBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}
@@ -88,6 +93,9 @@ public class CreateUserTest {
 		}
 		catch (SQLException sqle){
 			System.out.println("sqle: "+sqle.getMessage());
+		} catch (DBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}
@@ -112,6 +120,9 @@ public class CreateUserTest {
 		}
 		catch (SQLException sqle){
 			System.out.println("sqle: "+sqle.getMessage());
+		} catch (DBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

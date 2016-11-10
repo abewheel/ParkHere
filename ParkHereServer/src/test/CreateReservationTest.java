@@ -21,6 +21,7 @@ import model.Profile;
 import model.Reservation;
 import model.Seeker;
 import model.User;
+import server.DBException;
 import server.DatabaseConnector;
 
 public class CreateReservationTest {
@@ -29,6 +30,10 @@ public class CreateReservationTest {
 	User user2;
 	Boolean isSetUp = false;
 	Boolean tornDown = false;
+	Listing listing;
+	Lender lender;
+	Seeker seeker;
+	ListingAvailibility la1;
 
 	@Before
 	public void setUp() throws Exception {
@@ -45,19 +50,11 @@ public class CreateReservationTest {
 			user2.setName("test_name3");
 			user2.setPassword("pass!!!!");
 			user2 = dbConn.createUser(user2);
-			isSetUp = true;
-		}
-		
-	}
-	
-	@Test
-	public void testCreateReservation(){
-		
-		try {
-			Seeker seeker = new Seeker();
-			Lender lender = new Lender();
-			Listing listing = new Listing();
-			ListingAvailibility la1 = new ListingAvailibility();
+			
+			seeker = new Seeker();
+			lender = new Lender();
+			listing = new Listing();
+			la1 = new ListingAvailibility();
 			ListingAvailibility la2 = new ListingAvailibility();
 			
 			seeker.setUser_id(user1.getUser_id());
@@ -100,6 +97,106 @@ public class CreateReservationTest {
 	//		listing.se
 			dbConn.createListing(listing);
 			
+			isSetUp = true;
+		}
+		
+	}
+	
+	@Test
+	public void testCreateReservationMissingListing(){
+		Reservation reservation = new Reservation();
+		reservation.setLenderId(lender.getLenderId());
+		//reservation.setListingId(listing.getListingId());
+		reservation.setListingAvailibility(la1);
+		reservation.setSeekerId(seeker.getSeekerId());
+		//reservation.setPricePerHour((int) 5.50);
+		try{
+			dbConn.createReservation(reservation);
+			Assert.assertTrue("should have thrown exception", false);
+		}
+		catch (DBException dbe){
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.CREATE_RESERVATION));
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.INVALID_LISTING_ID));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
+	public void testCreateReservationMissingLender(){
+		Reservation reservation = new Reservation();
+		//reservation.setLenderId(lender.getLenderId());
+		reservation.setListingId(listing.getListingId());
+		reservation.setListingAvailibility(la1);
+		reservation.setSeekerId(seeker.getSeekerId());
+		//reservation.setPricePerHour((int) 5.50);
+		try{
+			dbConn.createReservation(reservation);
+			Assert.assertTrue("should have thrown exception", false);
+		}
+		catch (DBException dbe){
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.CREATE_RESERVATION));
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.INVALID_LENDER_ID));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
+	public void testCreateReservationMissingAvailability(){
+		Reservation reservation = new Reservation();
+		reservation.setLenderId(lender.getLenderId());
+		reservation.setListingId(listing.getListingId());
+		//reservation.setListingAvailibility(la1);
+		reservation.setSeekerId(seeker.getSeekerId());
+		//reservation.setPricePerHour((int) 5.50);
+		try{
+			dbConn.createReservation(reservation);
+			Assert.assertTrue("should have thrown exception", false);
+		}
+		catch (DBException dbe){
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.CREATE_RESERVATION));
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.INVALID_AVAILABILITY));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
+	public void testCreateReservationMissingSeeker(){
+		Reservation reservation = new Reservation();
+		reservation.setLenderId(lender.getLenderId());
+		reservation.setListingId(listing.getListingId());
+		reservation.setListingAvailibility(la1);
+		//reservation.setSeekerId(seeker.getSeekerId());
+		//reservation.setPricePerHour((int) 5.50);
+		try{
+			dbConn.createReservation(reservation);
+			Assert.assertTrue("should have thrown exception", false);
+		}
+		catch (DBException dbe){
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.CREATE_RESERVATION));
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.INVALID_SEEKER_ID));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	@Test
+	public void testCreateReservation(){
+		
+		try {
+			
+			
 			Reservation reservation = new Reservation();
 			reservation.setLenderId(lender.getLenderId());
 			reservation.setListingId(listing.getListingId());
@@ -140,6 +237,9 @@ public class CreateReservationTest {
 			//Assert.assertTrue("reservation);
 			
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -315,7 +315,7 @@ public class DatabaseConnector {
 		//return listings;
 	}
 	
-	public void getLender(long userId, User user) throws SQLException{
+	public void getLender(long userId, User user) throws SQLException, DBException{
 		PreparedStatement psLender = conn.prepareStatement("SELECT * FROM "+DBConstants.LENDER_TB+" WHERE "+DBConstants.USER_ID_COL+" = "+userId);
 		ResultSet rsLender = psLender.executeQuery();
 		
@@ -365,7 +365,7 @@ public class DatabaseConnector {
 		return rs.next();
 	}
 	
-	public void getSeeker(long userId, User user) throws SQLException{
+	public void getSeeker(long userId, User user) throws SQLException, DBException{
 		PreparedStatement psSeeker = conn.prepareStatement("SELECT * FROM "+DBConstants.SEEKER_TB+" WHERE "+DBConstants.USER_ID_COL+" = "+userId);
 		ResultSet rsSeeker = psSeeker.executeQuery();
 		
@@ -472,81 +472,106 @@ public class DatabaseConnector {
 		return new HashMap<>();
 	}
 	
-	public Map<Long, Reservation> getReservations(long id, Boolean isLender) throws SQLException{
+	public Map<Long, Reservation> getReservations(long id, Boolean isLender) throws DBException{
 		Map<Long, Reservation> reservations = new HashMap<>();
 		System.out.println("before get reservations");
-		PreparedStatement ps = conn.prepareStatement("SELECT r."+DBConstants.RESERVATION_ID_COL+", r."+DBConstants.SEEKER_ID_COL+
-				", r."+DBConstants.LENDER_ID_COL+", r."+DBConstants.LISTING_ID_COL+", r."+DBConstants.AVAILIBILITY_ID_COL+
-				", r."+DBConstants.AMOUNT_PAID_COL+", r."+DBConstants.TRANSACTION_ID_COL+
-				", a."+DBConstants.BEGIN_DATE_TIME_COL+", a."+DBConstants.END_DATE_TIME_COL+", a."+
-				DBConstants.IS_RESERVED_COL+" FROM "+DBConstants.RESERVATION_TB+" r INNER JOIN "+DBConstants.AVAILABILITY_TB+
-				" a ON r."+DBConstants.AVAILIBILITY_ID_COL+" = a."+DBConstants.AVAILIBILITY_ID_COL+" WHERE r."+
-				(isLender? DBConstants.LENDER_ID_COL : DBConstants.SEEKER_ID_COL)+" = "+id);
-		
-		ResultSet rs = ps.executeQuery();
-		
-		while (rs.next()){
-			Reservation reservation = new Reservation();
-			ListingAvailibility available = new ListingAvailibility();
-			reservation.setBtTransactionId(rs.getInt(rs.findColumn(DBConstants.TRANSACTION_ID_COL)));
-			reservation.setLenderId(rs.getLong(rs.findColumn(DBConstants.LENDER_ID_COL)));
-			reservation.setSeekerId(rs.getLong(rs.findColumn(DBConstants.SEEKER_ID_COL)));
-			reservation.setListingId(rs.getLong(rs.findColumn(DBConstants.LISTING_ID_COL)));
-			reservation.setReservationId(rs.getLong(rs.findColumn(DBConstants.RESERVATION_ID_COL)));
-			//reservation.setPricePerHour(rs.getInt(rs.findColumn(DBConstants.PRICE_PER_HR_COL)));
-			available.setAvailabilityId(rs.getLong(rs.findColumn(DBConstants.AVAILIBILITY_ID_COL)));
-			available.setBeginDateTime(rs.getTimestamp(rs.findColumn(DBConstants.BEGIN_DATE_TIME_COL)));
-			available.setEndDateTime(rs.getTimestamp(rs.findColumn(DBConstants.END_DATE_TIME_COL)));
-			available.setIsReserved(rs.getBoolean(rs.findColumn(DBConstants.IS_RESERVED_COL)));
-			reservation.setListingAvailibility(available);
-			reservations.put(reservation.getReservationId(), reservation);
+		PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement("SELECT r."+DBConstants.RESERVATION_ID_COL+", r."+DBConstants.SEEKER_ID_COL+
+					", r."+DBConstants.LENDER_ID_COL+", r."+DBConstants.LISTING_ID_COL+", r."+DBConstants.AVAILIBILITY_ID_COL+
+					", r."+DBConstants.AMOUNT_PAID_COL+", r."+DBConstants.TRANSACTION_ID_COL+
+					", a."+DBConstants.BEGIN_DATE_TIME_COL+", a."+DBConstants.END_DATE_TIME_COL+", a."+
+					DBConstants.IS_RESERVED_COL+" FROM "+DBConstants.RESERVATION_TB+" r INNER JOIN "+DBConstants.AVAILABILITY_TB+
+					" a ON r."+DBConstants.AVAILIBILITY_ID_COL+" = a."+DBConstants.AVAILIBILITY_ID_COL+" WHERE r."+
+					(isLender? DBConstants.LENDER_ID_COL : DBConstants.SEEKER_ID_COL)+" = "+id);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()){
+				Reservation reservation = new Reservation();
+				ListingAvailibility available = new ListingAvailibility();
+				reservation.setBtTransactionId(rs.getInt(rs.findColumn(DBConstants.TRANSACTION_ID_COL)));
+				reservation.setLenderId(rs.getLong(rs.findColumn(DBConstants.LENDER_ID_COL)));
+				reservation.setSeekerId(rs.getLong(rs.findColumn(DBConstants.SEEKER_ID_COL)));
+				reservation.setListingId(rs.getLong(rs.findColumn(DBConstants.LISTING_ID_COL)));
+				reservation.setReservationId(rs.getLong(rs.findColumn(DBConstants.RESERVATION_ID_COL)));
+				//reservation.setPricePerHour(rs.getInt(rs.findColumn(DBConstants.PRICE_PER_HR_COL)));
+				available.setAvailabilityId(rs.getLong(rs.findColumn(DBConstants.AVAILIBILITY_ID_COL)));
+				available.setBeginDateTime(rs.getTimestamp(rs.findColumn(DBConstants.BEGIN_DATE_TIME_COL)));
+				available.setEndDateTime(rs.getTimestamp(rs.findColumn(DBConstants.END_DATE_TIME_COL)));
+				available.setIsReserved(rs.getBoolean(rs.findColumn(DBConstants.IS_RESERVED_COL)));
+				reservation.setListingAvailibility(available);
+				reservations.put(reservation.getReservationId(), reservation);
+			}
+			System.out.println("after get reservations");
+			//if (reservations.isEmpty())
+			return reservations;
+		} catch (SQLException e) {
+			throw new DBException(DBException.GET_RESERVATION + " "+e.getMessage());
 		}
-		System.out.println("after get reservations");
-		return reservations;
+		
 	}
 	
-	public User getUser(String email) throws SQLException{
-		PreparedStatement ps = conn.prepareStatement("SELECT * FROM "+DBConstants.USER_TB+" WHERE "+DBConstants.USER_EMAIL_COL+" = '"+email+"'");
-		ResultSet rs = ps.executeQuery();
-		User user = new User();
-		if (rs.next()){
-			user.setEmail(email);
-			user.setName(rs.getString(rs.findColumn(DBConstants.USER_NAME_COL)));
-			user.setPassword(rs.getString(rs.findColumn(DBConstants.PASSWORD_COL)));
-			user.setUser_id(rs.getLong(rs.findColumn(DBConstants.USER_ID_COL)));
-		}
+	public User getUser(String email) throws DBException{
+		PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement("SELECT * FROM "+DBConstants.USER_TB+" WHERE "+DBConstants.USER_EMAIL_COL+" = '"+email+"'");
+			ResultSet rs = ps.executeQuery();
+			User user = new User();
+			if (rs.next()){
+				user.setEmail(email);
+				user.setName(rs.getString(rs.findColumn(DBConstants.USER_NAME_COL)));
+				user.setPassword(rs.getString(rs.findColumn(DBConstants.PASSWORD_COL)));
+				user.setUser_id(rs.getLong(rs.findColumn(DBConstants.USER_ID_COL)));
+			}
+			
+			getSeeker(user.getUser_id(), user);
+			getLender(user.getUser_id(), user);
 		
-		getSeeker(user.getUser_id(), user);
-		getLender(user.getUser_id(), user);
-	
-		System.out.println("user naem "+user.getName());
-		System.out.println("email "+user.getEmail());
-		return user;
+			System.out.println("user naem "+user.getName());
+			System.out.println("email "+user.getEmail());
+			return user;
+		} catch (SQLException e) {
+			throw new DBException(DBException.INVALID_USER_EMAIL+" "+DBException.GET_USER);
+		}
 	}
 	
-	public User createUser(User user) throws SQLException{
-		PreparedStatement ps = conn.prepareStatement("INSERT INTO "+DBConstants.USER_TB+" ("+
-				DBConstants.USER_EMAIL_COL+", "+DBConstants.USER_NAME_COL+", "+DBConstants.PASSWORD_COL+") VALUES ('"+
-				user.getEmail()+"', '"+user.getName()+"', '"+user.getPassword()+"')", Statement.RETURN_GENERATED_KEYS);
-	
-		System.out.println("INSERT INTO "+DBConstants.USER_TB+" ("+
-				DBConstants.USER_EMAIL_COL+", "+DBConstants.USER_NAME_COL+", "+DBConstants.PASSWORD_COL+") VALUES ("+
-				user.getEmail()+", "+user.getName()+", "+user.getPassword()+")");
-		
-		ps.executeUpdate();
-		ResultSet rs = ps.getGeneratedKeys();
-		System.out.println("about to print id");
-		if (rs.next()){
-			System.out.println(rs.getLong(1));
-			user.setUser_id(rs.getLong(1));
+	public User createUser(User user) throws DBException{
+		PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement("INSERT INTO "+DBConstants.USER_TB+" ("+
+					DBConstants.USER_EMAIL_COL+", "+DBConstants.USER_NAME_COL+", "+DBConstants.PASSWORD_COL+") VALUES ('"+
+					user.getEmail()+"', '"+user.getName()+"', '"+user.getPassword()+"')", Statement.RETURN_GENERATED_KEYS);
+			System.out.println("INSERT INTO "+DBConstants.USER_TB+" ("+
+					DBConstants.USER_EMAIL_COL+", "+DBConstants.USER_NAME_COL+", "+DBConstants.PASSWORD_COL+") VALUES ("+
+					user.getEmail()+", "+user.getName()+", "+user.getPassword()+")");
+			
+			ps.executeUpdate();
+			ResultSet rs = ps.getGeneratedKeys();
+			System.out.println("about to print id");
+			if (rs.next()){
+				System.out.println(rs.getLong(1));
+				user.setUser_id(rs.getLong(1));
+			}
+			
+			return user;
+		} catch (SQLException e) {
+			throw new DBException(DBException.INVALID_USER_EMAIL+" "+DBException.CREATE_USER);
 		}
+	
 		
-		return user;
 	}
 	
 	//left out profile pic for now
 	//hardcoded default role for now
-	public Seeker createSeeker(Seeker seeker) throws SQLException{
+	public Seeker createSeeker(Seeker seeker) throws SQLException, DBException{
+		
+		if (seeker.getUser_id() == 0) throw new DBException(DBException.CREATE_SEEKER+" "+DBException.INVALID_USER_ID);
+
+		PreparedStatement psCheck = conn.prepareStatement("SELECT "+DBConstants.SEEKER_ID_COL+" FROM "+DBConstants.SEEKER_TB+" WHERE "+DBConstants.USER_ID_COL+" = "+seeker.getUser_id());
+		ResultSet rsCheck = psCheck.executeQuery();
+		if (rsCheck.next()) throw new DBException(DBException.CREATE_SEEKER+" "+DBException.INVALID_USER_ID);
+		
 		PreparedStatement ps = conn.prepareStatement("INSERT INTO "+DBConstants.SEEKER_TB+" ("+DBConstants.USER_ID_COL+", "+DBConstants.PHONE_NUM_COL+", "+
 				DBConstants.IS_DEFAULT_ROLE_COL+") VALUES ("+seeker.getUser_id()+", '"+seeker.getProfile().getPhoneNumber()+"', "+true+")", Statement.RETURN_GENERATED_KEYS);
 		
@@ -563,7 +588,13 @@ public class DatabaseConnector {
 	
 	//left out profile pic for now
 	//hardcoded default role for now
-	public Lender createLender(Lender lender) throws SQLException{
+	public Lender createLender(Lender lender) throws SQLException, DBException{
+		if (lender.getUser_id() == 0) throw new DBException(DBException.CREATE_LENDER+" "+DBException.INVALID_USER_ID);
+		
+		PreparedStatement psCheck = conn.prepareStatement("SELECT "+DBConstants.LENDER_ID_COL+" FROM "+DBConstants.LENDER_TB+" WHERE "+DBConstants.USER_ID_COL+" = "+lender.getUser_id());
+		ResultSet rsCheck = psCheck.executeQuery();
+		if (rsCheck.next()) throw new DBException(DBException.CREATE_LENDER+" "+DBException.INVALID_USER_ID);
+		
 		PreparedStatement ps = conn.prepareStatement("INSERT INTO "+DBConstants.LENDER_TB+" ("+DBConstants.USER_ID_COL+", "+DBConstants.PHONE_NUM_COL+", "+
 				DBConstants.IS_DEFAULT_ROLE_COL+") VALUES ("+lender.getUser_id()+", '"+lender.getProfile().getPhoneNumber()+"', "+true+")", Statement.RETURN_GENERATED_KEYS);
 		
@@ -578,7 +609,9 @@ public class DatabaseConnector {
 	}
 	
 	//NOT DONE
-	public Listing createListing(Listing listing) throws SQLException{
+	public Listing createListing(Listing listing) throws SQLException, DBException{
+		
+		if (listing.getAddress() == null) throw new DBException(DBException.CREATE_LISTING+" "+DBException.INVALID_ADDRESS);
 		
 		System.out.println("in create listing");
 		Address address = listing.getAddress();
@@ -713,7 +746,15 @@ public class DatabaseConnector {
 		psUser.executeUpdate();
 	}
 	
-	public Reservation createReservation(Reservation reservation) throws SQLException{
+	public Reservation createReservation(Reservation reservation) throws SQLException, DBException{
+		
+		if (reservation.getLenderId() == 0 )throw new DBException(DBException.CREATE_RESERVATION+" "+DBException.INVALID_LENDER_ID);
+		if ( reservation.getListingId() == 0 )throw new DBException(DBException.CREATE_RESERVATION+" "+DBException.INVALID_LISTING_ID);
+		if ( reservation.getSeekerId() == 0 ) throw new DBException(DBException.CREATE_RESERVATION+" "+DBException.INVALID_SEEKER_ID);
+		if ( reservation.getListingAvailibility() == null) throw new DBException(DBException.CREATE_RESERVATION+" "+DBException.INVALID_AVAILABILITY);
+		if (reservation.getListingAvailibility().getAvailabilityId() == 0) throw new DBException(DBException.CREATE_RESERVATION+" "+DBException.INVALID_AVAILABILITY);
+			
+		
 		//not currently inserting amount paid or transaction_id
 		PreparedStatement psfav = conn.prepareStatement("INSERT INTO "+DBConstants.RESERVATION_TB+" ("+DBConstants.LISTING_ID_COL+
 				", "+DBConstants.LENDER_ID_COL+", "+DBConstants.SEEKER_ID_COL+", "+DBConstants.AVAILIBILITY_ID_COL+

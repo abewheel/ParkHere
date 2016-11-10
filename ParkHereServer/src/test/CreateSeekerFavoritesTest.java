@@ -21,6 +21,7 @@ import model.Profile;
 import model.Reservation;
 import model.Seeker;
 import model.User;
+import server.DBException;
 import server.DatabaseConnector;
 
 public class CreateSeekerFavoritesTest {
@@ -117,6 +118,9 @@ public class CreateSeekerFavoritesTest {
 			Assert.assertTrue("listing has correct title", favListing.getTitle().equals(listing.getTitle()));
 			
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

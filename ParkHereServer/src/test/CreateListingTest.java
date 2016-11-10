@@ -17,6 +17,7 @@ import model.Listing;
 import model.ListingAvailibility;
 import model.Profile;
 import model.User;
+import server.DBException;
 import server.DatabaseConnector;
 
 public class CreateListingTest {
@@ -41,7 +42,7 @@ public class CreateListingTest {
 	}
 	
 	@Test
-	public void testCreateListingAndQueryForListing(){
+	public void testCreateListingAndQueryForListing() throws DBException{
 		
 		
 		try {

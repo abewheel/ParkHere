@@ -11,6 +11,7 @@ import org.junit.Test;
 import model.Lender;
 import model.Profile;
 import model.User;
+import server.DBException;
 import server.DatabaseConnector;
 
 public class CreateLenderTest {
@@ -31,6 +32,11 @@ public class CreateLenderTest {
 			user = dbConn.createUser(user);
 			isSetUp = true;
 		}
+		
+	}
+	
+	@Test
+	public void testCreateLenderNoUserId(){
 		
 	}
 	
@@ -63,6 +69,9 @@ public class CreateLenderTest {
 			Assert.assertTrue("lender has been deleted", user.getLender() == null);
 			
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

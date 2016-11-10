@@ -19,6 +19,7 @@ import model.Listing;
 import model.ListingAvailibility;
 import model.Profile;
 import model.User;
+import server.DBException;
 import server.DatabaseConnector;
 
 public class SearchListingsTest {
@@ -94,6 +95,9 @@ public class SearchListingsTest {
 					laListings.add(listing.getListingId());
 				}
 			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (DBException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -186,6 +190,9 @@ public class SearchListingsTest {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (DBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 		}
@@ -230,6 +237,9 @@ public class SearchListingsTest {
 					//laListings.add(listing.getListingId());
 				//}
 			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (DBException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
