@@ -409,56 +409,68 @@ public class DatabaseConnector {
 		//return listings;
 	}
 	
-//	public Map<Long, Listing> searchUsingCategoriesInclusive(List<String> categories) throws SQLException{
-//		StringBuilder sb = new StringBuilder("SELECT "+DBConstants.LISTING_ID_COL+" FROM "+DBConstants.LISTING_CATEGORY_TB+
-//				" WHERE ");
-//		
-//		for (String cat : categories){
-//			
-//		}
-//		
-//		PreparedStatement psCatListings = conn.prepareStatement("SELECT "+DBConstants.LISTING_ID_COL+" FROM "+DBConstants.LISTING_CATEGORY_TB+
-//				" WHERE ")
-//		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LENDER_ID_COL+", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
-//				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
-//				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
-//				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
-//				", a."+DBConstants.STATE_COL+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
-//				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
-//				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+
-//				"l."+DBConstants.LISTING_ID_COL+" IN ("+//zipcode+"'");
-//	}
-//	
-//	public Map<Long, Listing> searchUsingCategoriesExclusive(List<String> categories) throws SQLException{
-//		StringBuilder sb = new StringBuilder("SELECT "+DBConstants.LISTING_ID_COL+" FROM "+DBConstants.LISTING_CATEGORY_TB+
-//				" WHERE ");
-//		
-//		for (String cat : categories){
-//			
-//		}
-//		
-//		PreparedStatement psCatListings = conn.prepareStatement("SELECT "+DBConstants.LISTING_ID_COL+" FROM "+DBConstants.LISTING_CATEGORY_TB+
-//				" WHERE ")
-//		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LENDER_ID_COL+", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
-//				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
-//				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
-//				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
-//				", a."+DBConstants.STATE_COL+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
-//				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
-//				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+
-//				"l."+DBConstants.LISTING_ID_COL+" IN ("+//zipcode+"'");
-//	}
-//	
-//	public Map<Long, Listing> searchUsingZipAndCategories(String zipcode, List<String> categories) throws SQLException{
-//		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LENDER_ID_COL+", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
-//				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
-//				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
-//				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
-//				", a."+DBConstants.STATE_COL+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
-//				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
-//				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+
-//				"a."+DBConstants.ZIP_CODE_COL+" = '"+zipcode+"'");
-//	}
+	public Map<Long, Listing> searchUsingCategoriesInclusive(List<String> categories) throws SQLException{
+		
+		StringBuilder sb = new StringBuilder("SELECT "+DBConstants.CATEGORY_ID_COL+" FROM "+DBConstants.CATEGORY_TB+
+				" WHERE "+DBConstants.CATEGORY_COL+" IN (");
+		
+		for (String cat : categories){
+			sb.append("'"+cat+"',");
+		}
+		
+		sb.deleteCharAt(sb.length()-1);
+		sb.append(")");
+		
+		PreparedStatement psCatListings = conn.prepareStatement(sb.toString());
+		
+		ResultSet rs = psCatListings.executeQuery();
+		if (rs.next()){
+			
+			StringBuilder catIds = new StringBuilder("SELECT "+DBConstants.LISTING_ID_COL+" FROM "+DBConstants.LISTING_CATEGORY_TB+
+					" WHERE "+DBConstants.CATEGORY_ID_COL+" IN (");
+			
+			//StringBuilder catIds = new StringBuilder();
+			catIds.append(rs.getLong(1)+",");
+			
+			while (rs.next()){
+				catIds.append(rs.getLong(1)+",");
+			}
+			
+			catIds.deleteCharAt(catIds.length()-1);
+			catIds.append(")");
+			
+			ResultSet rs2 = conn.prepareStatement(catIds.toString()).executeQuery();
+			
+			if (rs2.next()){
+				
+				StringBuilder lenderIds = new StringBuilder();
+				lenderIds.append(rs2.getLong(1)+",");
+				
+				while (rs2.next()){
+					lenderIds.append(rs2.getLong(1)+",");
+				}
+				
+				lenderIds.deleteCharAt(lenderIds.length()-1);
+				lenderIds.append(")");
+			
+			
+				PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LENDER_ID_COL+", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
+						", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
+						", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
+						", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
+						", a."+DBConstants.STATE_COL+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
+						"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
+						" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+
+						"l."+DBConstants.LISTING_ID_COL+" IN ("+lenderIds.toString());
+				
+				ResultSet rsListing = psListing.executeQuery();
+				return populateListing(rsListing);
+			}
+		}
+		
+		
+		return new HashMap<>();
+	}
 	
 	public Map<Long, Reservation> getReservations(long id, Boolean isLender) throws SQLException{
 		Map<Long, Reservation> reservations = new HashMap<>();
