@@ -20,17 +20,26 @@ public class CancellationPolicy {
     public static final String fiveDollarCharge = "Five dollar charge";
     public static final String tenDollarCharge = "Ten dollar charge";
     
-    public static HashMap<String, String> policies;
+    public static HashMap<String, String> policiesTodb;
     public static List<String> viewPolicies;
+    public static HashMap<String, String> dbToPolicy;
     
     public static void initialize(){
     	
-    	if (policies == null){
-    		policies = new HashMap<>();
-    		policies.put(noCharge, NO_CHARGE);
-    		policies.put(tenPercentOfCharge, TEN_PERCENT_OF_CHARGE);
-    		policies.put(fiveDollarCharge, FIVE_DOLLAR_CHARGE);
-    		policies.put(tenDollarCharge, TEN_DOLLAR_CHARGE);
+    	if (policiesTodb == null){
+    		policiesTodb = new HashMap<>();
+    		policiesTodb.put(noCharge, NO_CHARGE);
+    		policiesTodb.put(tenPercentOfCharge, TEN_PERCENT_OF_CHARGE);
+    		policiesTodb.put(fiveDollarCharge, FIVE_DOLLAR_CHARGE);
+    		policiesTodb.put(tenDollarCharge, TEN_DOLLAR_CHARGE);
+    	}
+    	
+    	if (dbToPolicy == null){
+    		dbToPolicy = new HashMap<>();
+    		dbToPolicy.put(NO_CHARGE, noCharge);
+    		dbToPolicy.put(TEN_PERCENT_OF_CHARGE, tenPercentOfCharge);
+    		dbToPolicy.put(TEN_DOLLAR_CHARGE, tenDollarCharge);
+    		dbToPolicy.put(FIVE_DOLLAR_CHARGE, fiveDollarCharge);
     	}
     	
     	if (viewPolicies == null){
@@ -40,5 +49,7 @@ public class CancellationPolicy {
     		viewPolicies.add(fiveDollarCharge);
     		viewPolicies.add(tenDollarCharge);
     	}
+    	
+    	
     }
 }

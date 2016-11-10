@@ -28,6 +28,7 @@ public class DatabaseConnector {
 		ResultSet rs = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
+			System.out.println("before db connnect");
 			conn = DriverManager.getConnection("jdbc:mysql://db4free.net/park_here?user=elautz&password=elautz&useSSL=false");
 			System.out.println("connected!");
 			//st = conn.createStatement();
@@ -262,6 +263,7 @@ public class DatabaseConnector {
 			ResultSet rsCats = psCategories.executeQuery();
 			listing.setCategories(new ArrayList<>());
 			while (rsCats.next()){
+				System.out.println("WE HAVE CATEGORIES");
 				listing.getCategories().add(rsCats.getString(1));
 			}
 			
