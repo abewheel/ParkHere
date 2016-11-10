@@ -10,13 +10,12 @@ public class Seeker extends Role implements Serializable{
 
     private long seeker_id;
     
-//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-//    	seeker_id = (Long) in.readLong();
-//    }
-//    
-//    private void writeObject(ObjectOutputStream out) throws IOException{
-//    	out.writeLong(seeker_id);
-//    }
+    @Override
+    public String toString(){
+    	String superString = super.toString();
+    	superString += "seekerId: "+seeker_id;
+    	return superString;
+    }
 
     public Map<Long, Listing> getFavorites(){
         return super.getListings();

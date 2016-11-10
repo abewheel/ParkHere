@@ -18,21 +18,17 @@ public class ListingAvailibility implements Serializable{
     private long availabilityId;
     private long listingId;
     
-//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-//    	beginDateTime = (Timestamp) in.readObject();
-//    	endDateTime = (Timestamp) in.readObject();
-//    	isReserved = in.readBoolean();
-//    	availabilityId = in.readLong();
-//    	listingId = in.readLong();
-//    }
-//    
-//    private void writeObject(ObjectOutputStream out) throws IOException{
-//    	out.writeObject(beginDateTime);
-//    	out.writeObject(endDateTime);
-//    	out.writeBoolean(isReserved);
-//    	out.writeLong(availabilityId);
-//    	out.writeLong(listingId);
-//    }
+    @Override
+    public String toString(){
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("begin time: "+beginDateTime.toString()+System.lineSeparator());
+    	sb.append("end time: "+endDateTime.toString()+System.lineSeparator());
+    	sb.append("is_reserved: "+isReserved.toString()+System.lineSeparator());
+    	sb.append("availabilityId: "+availabilityId+System.lineSeparator());
+    	sb.append("listingId: "+listingId+System.lineSeparator());
+    	return sb.toString();
+    }
+    
     public Timestamp getBeginDateTime() {
 		return beginDateTime;
 	}

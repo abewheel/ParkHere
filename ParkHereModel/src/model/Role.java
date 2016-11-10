@@ -5,7 +5,6 @@ package model;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public abstract class Role implements Serializable{
@@ -15,22 +14,26 @@ public abstract class Role implements Serializable{
     private Profile profile;
     private int bt_merchant_id;
     private long user_id;
-//
-//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-//    	reservations = (List<Reservation>) in.readObject();
-//    	listings = (List<Listing>) in.readObject();
-//    	profile = (Profile) in.readObject();
-//    	bt_merchant_id = in.readInt();
-//    	user_id = (Long) in.readLong();
-//    }
-//    
-//    private void writeObject(ObjectOutputStream out) throws IOException{
-//    	out.writeObject(reservations);
-//    	out.writeObject(listings);
-//    	out.writeObject(profile);
-//    	out.writeInt(bt_merchant_id);
-//    	out.writeLong(user_id);
-//    }
+
+    @Override
+    public String toString(){
+    	StringBuilder sb = new StringBuilder();
+//    	if (reservations != null){
+//    		sb.append("reservations: "+System.lineSeparator());
+//    		reservations.values().forEach(reservation -> sb.append(reservation.toString()));
+//    	
+//    	}
+//    	if (listings != null){
+//    		sb.append("listings: "+System.lineSeparator());
+//    		listings.values().forEach(listing -> sb.append(listing.toString()));
+//    	}
+    	if (profile != null){
+    		sb.append("profile: "+profile.toString()+ System.lineSeparator());
+    	}
+
+    	sb.append("user id: "+user_id+ System.lineSeparator());
+    	return sb.toString();
+    }
     
     public Map<Long, Reservation> getReservations() {
         return reservations;

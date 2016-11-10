@@ -13,25 +13,28 @@ public class Address implements Serializable{
 	private String state;
 	private String city;
 	private long addressId;
+
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		if (firstLine != null){
+			sb.append("firstLine: "+firstLine+System.lineSeparator());
+		}
+		if (secondLine != null){
+			sb.append("secondLine: "+secondLine+System.lineSeparator());
+		}
+		if (zipCode != null){
+			sb.append("zip: "+zipCode+System.lineSeparator());
+		}
+		if (city != null){
+			sb.append("city: "+city+System.lineSeparator());
+		}
+		if (state != null){
+			sb.append("state: "+state+System.lineSeparator());
+		}
+		return sb.toString();
+	}
 	
-//	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-//    	firstLine = (String) in.readObject();
-//    	secondLine = (String) in.readObject();
-//    	zipCode = (String) in.readObject();
-//    	state = (String) in.readObject();
-//    	city = (String) in.readObject();
-//    	addressId = (Long) in.readLong();
-//    }
-//    
-//    private void writeObject(ObjectOutputStream out) throws IOException{
-//    	out.writeObject(firstLine);
-//    	out.writeObject(secondLine);
-//    	out.writeObject(zipCode);
-//    	out.writeObject(state);
-//    	out.writeObject(city);
-//    	out.writeLong(addressId);
-//    }
-//	
 	public String getFirstLine() {
 		return firstLine;
 	}

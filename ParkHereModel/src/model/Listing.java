@@ -31,38 +31,7 @@ public class Listing implements Serializable{
     private List<String> categories;
     private String cancellationPolicy;
     private long listingId;
-    
-//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-//    	lender = (Lender) in.readObject();
-//    	title = (String) in.readObject();
-//    	price_per_hr = in.readDouble();
-//    	address = (Address) in.readObject();
-//    	//listing_images = (List<ImageIcon>) in.readObject();
-//    	description = (String) in.readObject();
-//    	availability_list = (List<ListingAvailibility>) in.readObject();
-//    	total_rating = in.readInt();
-//    	num_ratings = in.readInt();
-//    	categories = (List<String>)in.readObject();
-//    	cancellationPolicy = (String) in.readObject();
-//    	listingId = in.readLong();
-//    	lenderId = in.readLong();
-//    }
-//    
-//    private void writeObject(ObjectOutputStream out) throws IOException{
-//    	out.writeObject(lender);
-//    	out.writeObject(title);
-//    	out.writeDouble(price_per_hr);
-//    	out.writeObject(address);
-//    	//out.writeObject(listing_images);
-//    	out.writeObject(description);
-//    	out.writeObject(availability_list);
-//    	out.writeInt(total_rating);
-//    	out.writeInt(num_ratings);
-//    	out.writeObject(categories);
-//    	out.writeObject(cancellationPolicy);
-//    	out.writeLong(listingId);
-//    	out.writeLong(lenderId);
-//    }
+   
 
 	public void setPrice_per_hr(double price_per_hr) {
 		this.price_per_hr = price_per_hr;

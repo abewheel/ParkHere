@@ -10,13 +10,12 @@ public class Lender extends Role implements Serializable{
 
     private long lenderId;
     
-//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-//    	lenderId = in.readLong();
-//    }
-//    
-//    private void writeObject(ObjectOutputStream out) throws IOException{
-//    	out.writeLong(lenderId);
-//    }
+    @Override
+    public String toString(){
+    	String superString = super.toString();
+    	superString += "lenderId: "+lenderId;
+    	return superString;
+    }
 
     public long getLenderId(){
         return lenderId;

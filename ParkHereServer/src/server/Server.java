@@ -1,3 +1,4 @@
+package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -104,12 +105,20 @@ public class Server extends Thread {
 					seekMess.seeker = dbConn.createSeeker(seekMess.seeker);
 				}
 				
+				else if (seekMess.action.equals(Message.delete)){
+					System.out.println("received delete seeker message");
+					dbConn.deleteSeeker(seekMess.seeker.getSeekerId());
+				}
 				origThread.sendMessage(seekMess);
 			}
 			else if (message instanceof LenderMessage){
 				LenderMessage lenderMess = (LenderMessage) message;
 				if (lenderMess.action.equals(Message.insert)){
 					lenderMess.lender = dbConn.createLender(lenderMess.lender);
+				}
+				else if (lenderMess.action.equals(Message.delete)){
+					System.out.println("received delete lender message");
+					dbConn.removeListing(lenderMess.lender.getLenderId());
 				}
 				
 				origThread.sendMessage(lenderMess);

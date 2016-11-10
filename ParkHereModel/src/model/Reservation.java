@@ -24,33 +24,29 @@ public class Reservation implements Serializable{
     private long seekerId;
     private long lenderId;
 
-//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-//    	lender = (Lender) in.readObject();
-//    	seeker = (Seeker) in.readObject();
-//    	listing = (Listing) in.readObject();
-//    	listingAvailibility = (ListingAvailibility) in.readObject();
-//    	pricePerHour = in.readInt();
-//    	btTransactionId = in.readInt();
-//    	reservationId = (Long) in.readLong();
-//    	listingId = (Long) in.readLong();
-//    	seekerId = (Long) in.readLong();
-//    	lenderId = (Long) in.readLong();
-//    }
-//    
-//    private void writeObject(ObjectOutputStream out) throws IOException{
-//    	out.writeObject(lender);
-//    	out.writeObject(seeker);
-//    	out.writeObject(listing);
-//    	out.writeObject(listingAvailibility);
-//    	out.writeInt(pricePerHour);
-//    	out.writeInt(btTransactionId);
-//    	out.writeLong(reservationId);
-//    	out.writeLong(listingId);
-//    	out.writeLong(seekerId);
-//    	out.writeLong(lenderId);
-//    	
-//    }
-//    
+    @Override
+    public String toString(){
+    	StringBuilder sb = new StringBuilder();
+    	if (lender != null){
+    		sb.append("lender: "+lender.toString()+System.lineSeparator());
+    	}
+    	if (seeker != null){
+    		sb.append("seeker: "+seeker.toString()+System.lineSeparator());
+    	}
+    	if (listing != null){
+    		sb.append("listing: "+listing.toString()+System.lineSeparator());
+    	}
+    	if (listingAvailibility != null){
+    		sb.append("availability: "+listingAvailibility.toString()+System.lineSeparator());
+    	}
+    	sb.append("price: "+pricePerHour+System.lineSeparator());
+    	sb.append("reservationId: "+reservationId+System.lineSeparator());
+    	sb.append("listingId: "+listingId+System.lineSeparator());
+    	sb.append("lenderId: "+lenderId+System.lineSeparator());
+    	sb.append("seekerId: "+seekerId+System.lineSeparator());
+    	return sb.toString();
+    }
+    
     public long getLenderId(){
     	return lenderId;
     }
