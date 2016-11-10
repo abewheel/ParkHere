@@ -1,10 +1,6 @@
 package model;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Created by emmalautz on 10/19/16.
@@ -36,7 +32,7 @@ public class Lender extends Role implements Serializable{
     }
 
     @Override
-    public List<Listing> getListings() {
+    public Map<Long, Listing> getListings() {
         return super.getListings();
     }
 
@@ -46,7 +42,7 @@ public class Lender extends Role implements Serializable{
     }
 
     @Override
-    public void setListings(List<Listing> listings) {
+    public void setListings(Map<Long,Listing> listings) {
         super.setListings(listings);
     }
 }

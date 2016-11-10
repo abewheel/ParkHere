@@ -60,6 +60,7 @@ public class ServerComThread extends Thread{
 		//System.out.println(mess.user.getName());
 		//System.out.println(mess.user.getUser_id());
 		oos.reset();
+		System.out.println("sending: "+message.getClass()+" : "+message.action);
 		oos.writeObject(message);
 		//oos.writeObject("test string");
 		oos.flush();

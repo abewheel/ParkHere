@@ -89,6 +89,10 @@ public class Server extends Thread {
 					System.out.println("received create listing message");
 					listMess.listing = dbConn.createListing(listMess.listing);
 				}
+				else if (listMess.action.equals(Message.delete)){
+					System.out.println("received delete listing message");
+					dbConn.removeListing(listMess.listing.getListingId());
+				}
 				
 				origThread.sendMessage(listMess);
 				

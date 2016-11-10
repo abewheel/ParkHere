@@ -4,9 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.Address;
 import model.CancellationPolicy;
@@ -213,8 +214,8 @@ public class DatabaseConnector {
 		
 	}
 	
-	public List<Listing> getSeekerListings(long seekerId) throws SQLException {
-		List<Listing> favorites = new ArrayList<>();
+	public Map<Long, Listing> getSeekerListings(long seekerId) throws SQLException {
+		Map<Long, Listing> favorites = new HashMap<>();
 		
 		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LENDER_ID_COL+
 				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
@@ -231,7 +232,7 @@ public class DatabaseConnector {
 		return favorites;
 	}
 	
-	private void populateListing(List<Listing> listings, ResultSet rsListing) throws SQLException{
+	private void populateListing(Map<Long, Listing> listings, ResultSet rsListing) throws SQLException{
 		System.out.println("before get populate listings");
 		while (rsListing.next()){
 			Listing listing = new Listing();
@@ -280,15 +281,15 @@ public class DatabaseConnector {
 				listing.getAvailabilityList().add(av);
 			}
 			
-			listings.add(listing);
+			listings.put(listing.getListingId(), listing);
 		}
 		
 		System.out.println("after get listings");
 	}
 	
-	public List<Listing>getLenderListings(long lenderId, Lender lender) throws SQLException{
+	public Map<Long, Listing>getLenderListings(long lenderId, Lender lender) throws SQLException{
 		System.out.println("before get listings");
-		List<Listing> listings = new ArrayList<>();
+		Map<Long, Listing> listings = new HashMap<>();
 		
 		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LENDER_ID_COL+", +l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+
 				", l."+DBConstants.LISTING_TITLE_COL+", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
@@ -332,16 +333,16 @@ public class DatabaseConnector {
 	}
 	
 	public void removeListing(long listingId) throws SQLException{
-		PreparedStatement psAddress = conn.prepareStatement("DELETE FROM "+DBConstants.ADDRESS_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
-		psAddress.executeQuery();
-		PreparedStatement psAvailabilities = conn.prepareStatement("DELETE FROM "+DBConstants.AVAILABILITY_TB+" WEHRE "+DBConstants.LISTING_ID_COL+" = "+listingId);
-		psAvailabilities.executeQuery();
+	//	PreparedStatement psAddress = conn.prepareStatement("DELETE FROM "+DBConstants.ADDRESS_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
+		//psAddress.executeUpdate();
+		PreparedStatement psAvailabilities = conn.prepareStatement("DELETE FROM "+DBConstants.AVAILABILITY_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
+		psAvailabilities.executeUpdate();
 		PreparedStatement psCategories = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_CATEGORY_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
-		psCategories.executeQuery();
+		psCategories.executeUpdate();
 		PreparedStatement psImages = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_IMAGE_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
-		psImages.executeQuery();
+		psImages.executeUpdate();
 		PreparedStatement psListing = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
-		psListing.executeQuery();
+		psListing.executeUpdate();
 	}
 	
 	public Boolean canRemoveListing(long listingId) throws SQLException{
@@ -375,8 +376,8 @@ public class DatabaseConnector {
 
 	}
 	
-	public List<Listing> search(String zipcode) throws SQLException{
-		List<Listing> listings = new ArrayList<>();
+	public Map<Long, Listing> search(String zipcode) throws SQLException{
+		Map<Long, Listing> listings = new HashMap<>();
 		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+
 				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
 				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
@@ -391,8 +392,8 @@ public class DatabaseConnector {
 		return listings;
 	}
 	
-	public List<Reservation> getReservations(long id, Boolean isLender) throws SQLException{
-		List<Reservation> reservations = new ArrayList<>();
+	public Map<Long, Reservation> getReservations(long id, Boolean isLender) throws SQLException{
+		Map<Long, Reservation> reservations = new HashMap<>();
 		System.out.println("before get reservations");
 		PreparedStatement ps = conn.prepareStatement("SELECT r."+DBConstants.RESERVATION_ID_COL+", r."+DBConstants.SEEKER_ID_COL+
 				", r."+DBConstants.LENDER_ID_COL+", r."+DBConstants.LISTING_ID_COL+", r."+DBConstants.AVAILIBILITY_ID_COL+
@@ -418,7 +419,7 @@ public class DatabaseConnector {
 			available.setEndDateTime(rs.getTimestamp(rs.findColumn(DBConstants.END_DATE_TIME_COL)));
 			available.setIsReserved(rs.getBoolean(rs.findColumn(DBConstants.IS_RESERVED_COL)));
 			reservation.setListingAvailibility(available);
-			reservations.add(reservation);
+			reservations.put(reservation.getReservationId(), reservation);
 		}
 		System.out.println("after get reservations");
 		return reservations;
@@ -491,8 +492,8 @@ public class DatabaseConnector {
 			seeker.setSeekerId(rs.getLong(1));
 		}
 		
-		seeker.setReservations(new ArrayList<>());
-		seeker.setFavorites(new ArrayList<>());
+		seeker.setReservations(new HashMap<>());
+		seeker.setFavorites(new HashMap<>());
 		return seeker;
 	}
 	
@@ -507,8 +508,8 @@ public class DatabaseConnector {
 		if (rs.next()){
 			lender.setLenderId(rs.getLong(1));
 		}
-		lender.setListings(new ArrayList<>());
-		lender.setReservations(new ArrayList<>());
+		lender.setListings(new HashMap<>());
+		lender.setReservations(new HashMap<>());
 		return lender;
 	}
 	

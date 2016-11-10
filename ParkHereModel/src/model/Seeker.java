@@ -3,11 +3,8 @@ package model;
  * Created by emmalautz on 10/19/16.
  */
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 
 public class Seeker extends Role implements Serializable{
 
@@ -21,11 +18,11 @@ public class Seeker extends Role implements Serializable{
 //    	out.writeLong(seeker_id);
 //    }
 
-    public List<Listing> getFavorites(){
+    public Map<Long, Listing> getFavorites(){
         return super.getListings();
     }
     
-    public void setFavorites(List<Listing> listings){
+    public void setFavorites(Map<Long, Listing> listings){
     	super.setListings(listings);
     }
 

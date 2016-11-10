@@ -3,17 +3,15 @@ package model;
  * Created by emmalautz on 10/19/16.
  */
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Role implements Serializable{
 	
-    private List<Reservation> reservations;
-    private List<Listing> listings;
+    private Map<Long, Reservation> reservations;
+    private Map<Long, Listing> listings;
     private Profile profile;
     private int bt_merchant_id;
     private long user_id;
@@ -34,28 +32,28 @@ public abstract class Role implements Serializable{
 //    	out.writeLong(user_id);
 //    }
     
-    public List<Reservation> getReservations() {
+    public Map<Long, Reservation> getReservations() {
         return reservations;
     }
 
-    public void setReservations(List<Reservation> reservations) {
+    public void setReservations(Map<Long, Reservation> reservations) {
         this.reservations = reservations;
     }
 
-    protected List<Listing> getListings() {
+    protected Map<Long, Listing> getListings() {
         return listings;
     }
 
     protected void addListing(Listing listing){
-        if (listings == null) listings = new ArrayList<>();
-        listings.add(listing);
+        if (listings == null) listings = new HashMap<>();
+        listings.put(listing.getListingId(), listing);
     }
 
     protected void removeListing(Listing listing){
         if (listings != null) listings.remove(listing);
     }
 
-    protected void setListings(List<Listing> listings) {
+    protected void setListings(Map<Long, Listing> listings) {
         this.listings = listings;
     }
 
