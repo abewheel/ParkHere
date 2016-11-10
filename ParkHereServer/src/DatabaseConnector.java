@@ -260,6 +260,7 @@ public class DatabaseConnector {
 					" = "+listing.getListingId());
 			System.out.println("before get listing categories");
 			ResultSet rsCats = psCategories.executeQuery();
+			listing.setCategories(new ArrayList<>());
 			while (rsCats.next()){
 				listing.getCategories().add(rsCats.getString(1));
 			}
@@ -528,13 +529,14 @@ public class DatabaseConnector {
 			address.setAddressId(rsAddress.getLong(1));
 		}
 		
+		
 		//String sql = "INSERT INTO "+DBConstants.AVAILABILITY_TB+" "
 		PreparedStatement psListing = conn.prepareStatement("INSERT INTO "+DBConstants.LISTING_TB+" ("+DBConstants.LENDER_ID_COL+", "+DBConstants.LISTING_TITLE_COL+
 				", "+DBConstants.DESCRIPTION_COL+", "+DBConstants.TOTAL_RATING_COL+", "+DBConstants.NUM_RATINGS_COL+", "+
 				DBConstants.CANCELLATION_POLICY_ID_COL+", "+DBConstants.PRICE_PER_HR_COL+", "+DBConstants.ADDRESS_ID_COL+") VALUES ("+listing.getLenderId()+
 				", '"+listing.getTitle()+"', '"+listing.getDescription()+"', 0, 0, (SELECT "+DBConstants.CANCELLATION_POLICY_ID_COL+" FROM "+DBConstants.CANCELLATION_POLICY_TB+
 			//	" WHERE "+DBConstants.CANCELLATION_POLICY_COL+" = '"+listing.getCancellationPolicy()+"'), "+listing.getPricePerHr()+", "+
-				" WHERE "+DBConstants.CANCELLATION_POLICY_COL+" = '"+CancellationPolicy.FIVE_DOLLAR_CHARGE+"'), "+listing.getPricePerHr()+", "+
+				" WHERE "+DBConstants.CANCELLATION_POLICY_COL+" = '"+listing.getCancellationPolicy()+"'), "+listing.getPricePerHr()+", "+
 				address.getAddressId()+")", Statement.RETURN_GENERATED_KEYS);
 		
 		psListing.executeUpdate();
@@ -542,6 +544,27 @@ public class DatabaseConnector {
 		if (rsListing.next()){
 			listing.setListingId(rsListing.getLong(1));
 		}
+		
+		StringBuilder sb = new StringBuilder("INSERT INTO "+DBConstants.LISTING_CATEGORY_TB+" ("+DBConstants.LISTING_ID_COL+", "+DBConstants.CATEGORY_ID_COL+") VALUES ");
+		if (listing.getCategories() != null){
+			int size = listing.getCategories().size();
+			int index = 1;
+			for (String category : listing.getCategories()){
+				if (index < size){
+					sb.append(" ("+listing.getListingId()+", (SELECT "+DBConstants.CATEGORY_ID_COL+" FROM "+DBConstants.CATEGORY_TB+" WHERE "+
+				DBConstants.CATEGORY_COL+" = '"+category+"')), ");
+				}
+				index++;
+			}
+			
+			String lastCategory = listing.getCategories().get(size-1);
+			sb.append("("+listing.getListingId()+", (SELECT "+DBConstants.CATEGORY_ID_COL+" FROM "+DBConstants.CATEGORY_TB+" WHERE "+
+					DBConstants.CATEGORY_COL+" = '"+lastCategory+"'))");
+			
+			PreparedStatement psCategories = conn.prepareStatement(sb.toString());
+			psCategories.executeUpdate();
+		}
+		
 		
 		if (listing.getAvailabilityList()!= null && !listing.getAvailabilityList().isEmpty()){
 			
