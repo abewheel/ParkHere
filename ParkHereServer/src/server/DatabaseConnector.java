@@ -556,6 +556,7 @@ public class DatabaseConnector {
 			
 			return user;
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 			throw new DBException(DBException.INVALID_USER_EMAIL+" "+DBException.CREATE_USER);
 		}
 	

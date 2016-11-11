@@ -1,12 +1,14 @@
 package test;
 
 import java.sql.SQLException;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import model.Lender;
 import model.Profile;
 import model.Seeker;
 import model.User;
@@ -26,7 +28,7 @@ public class CreateSeekerTest {
 		if (!isSetUp){
 			dbConn = new DatabaseConnector();
 			user = new User();
-			user.setEmail("test_email1");
+			user.setEmail(""+UUID.randomUUID());
 			user.setName("test_name1");
 			user.setPassword("test_password1");
 			user = dbConn.createUser(user);
@@ -71,6 +73,25 @@ public class CreateSeekerTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (DBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testCreateSeekerNoUserId(){
+		try {
+			Seeker seeker= new Seeker();
+			//eeker.setUser_id(user.getUser_id());
+			seeker.setProfile(new Profile());
+			seeker.getProfile().setPhoneNumber("5305305533");
+			seeker = dbConn.createSeeker(seeker);
+		}
+		catch (DBException dbe){
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.CREATE_SEEKER));
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.INVALID_USER_ID));
+			
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

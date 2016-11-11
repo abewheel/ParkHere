@@ -1,12 +1,6 @@
 package model;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Date;
 /**
  * Created by emmalautz on 10/19/16.
  */

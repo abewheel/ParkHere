@@ -3,6 +3,7 @@ package test;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -32,7 +33,7 @@ public class CreateListingTest {
 		if (!isSetUp){
 			dbConn = new DatabaseConnector();
 			user = new User();
-			user.setEmail("test_email1");
+			user.setEmail(""+UUID.randomUUID());
 			user.setName("test_name1");
 			user.setPassword("test_password1");
 			user = dbConn.createUser(user);
@@ -43,7 +44,6 @@ public class CreateListingTest {
 	
 	@Test
 	public void testCreateListingAndQueryForListing() throws DBException{
-		
 		
 		try {
 			Lender lender;
@@ -90,7 +90,6 @@ public class CreateListingTest {
 			
 			Assert.assertEquals("lender should have one listing: "+lender.getListings().size(), lender.getListings().size(), 1);
 			
-			//Iterator it = lender.getListings()
 			Listing dbListing = null;
 			for (Listing list : lender.getListings().values()) dbListing = list;
 
@@ -106,7 +105,6 @@ public class CreateListingTest {
 				Assert.assertTrue(dbListing.getCategories().contains(cat));
 			}
 			
-		//	Assert.assertEquals("total rating is 0", 0, dbListing.getAverageRating());
 			Assert.assertTrue("correct size of availabilities", dbListing.getAvailabilityList().size() == listing.getAvailabilityList().size());
 
 			dbConn.removeListing(listing.getListingId());
@@ -122,6 +120,54 @@ public class CreateListingTest {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testCreateListingNoAddress(){
+		Lender lender;
+		lender = new Lender();
+		lender.setProfile(new Profile());
+		lender.getProfile().setPhoneNumber("98765");
+		lender.setUser_id(user.getUser_id());
+		try {
+			lender = dbConn.createLender(lender);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (DBException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		Listing listing= new Listing();
+		listing.setTitle("test listing");
+		listing.setDescription("test listing desc");
+		listing.setLenderId(lender.getLenderId());
+		listing.setCancellationPolicy(CancellationPolicy.FIVE_DOLLAR_CHARGE);
+		listing.setAvailabilityList(new ArrayList<>());
+		listing.setCategories(new ArrayList<>());
+		listing.getCategories().add(Category.COMPACT);
+		listing.getCategories().add(Category.COVERED);
+		ListingAvailibility la1 = new ListingAvailibility();
+		la1.setBeginDateTime(new Timestamp(System.currentTimeMillis()+3500));
+		la1.setEndDateTime(new Timestamp(System.currentTimeMillis()+1200));
+		ListingAvailibility la2 = new ListingAvailibility();
+		la2.setBeginDateTime(new Timestamp(System.currentTimeMillis()+4900));
+		la2.setEndDateTime(new Timestamp(System.currentTimeMillis()+300));
+		ListingAvailibility la3 = new ListingAvailibility();
+		la3.setBeginDateTime(new Timestamp(System.currentTimeMillis()+8900));
+		la3.setEndDateTime(new Timestamp(System.currentTimeMillis()+800));
+		listing.addAvailibility(la1);
+		listing.addAvailibility(la2);
+		listing.addAvailibility(la3);
+		listing.setPrice_per_hr(6.70);
+		
+		try {
+			dbConn.createListing(listing);
+		} catch (SQLException | DBException dbe) {
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.CREATE_LISTING));
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.INVALID_ADDRESS));
 		}
 	}
 	

@@ -2,6 +2,7 @@ package test;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -26,7 +27,7 @@ public class CreateLenderTest {
 		if (!isSetUp){
 			dbConn = new DatabaseConnector();
 			user = new User();
-			user.setEmail("test_email1");
+			user.setEmail(""+UUID.randomUUID());
 			user.setName("test_name1");
 			user.setPassword("test_password1");
 			user = dbConn.createUser(user);
@@ -37,7 +38,21 @@ public class CreateLenderTest {
 	
 	@Test
 	public void testCreateLenderNoUserId(){
-		
+		try {
+			Lender lender = new Lender();
+			//lender.setUser_id(user.getUser_id());
+			lender.setProfile(new Profile());
+			lender.getProfile().setPhoneNumber("5305305533");
+			lender = dbConn.createLender(lender);
+		}
+		catch (DBException dbe){
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.CREATE_LENDER));
+			Assert.assertTrue("exception message is expected", dbe.getMessage().contains(DBException.INVALID_USER_ID));
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
