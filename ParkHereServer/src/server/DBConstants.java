@@ -22,6 +22,8 @@ public class DBConstants {
 	public static final String SECOND_LINE_COL = "second_line";
 	public static final String CITY_COL = "city";
 	public static final String STATE_COL = "state";
+	public static final String LATITUDE_COL = "latitude";
+	public static final String LONGITUDE_COL = "longitude";
 	
 	//availability
 	public static final String AVAILIBILITY_ID_COL = "availability_id";
@@ -86,10 +88,13 @@ public class DBConstants {
 	
 	//user
 	public static final String USER_EMAIL_COL = "user_email";
-	public static final String USER_NAME_COL = "name";
+	public static final String FIRST_NAME_COL = "first_name";
+	public static final String LAST_NAME_COL = "last_name";
 	public static final String PASSWORD_COL = "password";
 	//USER_ID_COL
 	
+	//search
+	public static final String DISTANCE_ALIAS = "distance";
 	
 	
 }

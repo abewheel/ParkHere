@@ -10,8 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import messages.ListingResult;
+import messages.SearchMessage;
 import model.Address;
-import model.CancellationPolicy;
 import model.Lender;
 import model.Listing;
 import model.ListingAvailibility;
@@ -32,181 +33,7 @@ public class DatabaseConnector {
 			System.out.println("before db connnect");
 			conn = DriverManager.getConnection("jdbc:mysql://db4free.net/park_here?user=elautz&password=elautz&useSSL=false");
 			System.out.println("connected!");
-			//st = conn.createStatement();
-//			
-//			ps = conn.prepareStatement("SELECT * FROM cancellation_policy");
-			
-//			User user = new User();
-//			user.setEmail("EMMA");
-//			user.setName("NAME");
-//			user.setPassword("PASSWORD");
-//			createUser(user);
-//			System.out.println("user : "+user.getUser_id());
-//			
-//			Lender lender = new Lender();
-//			Profile lendProf = new Profile();
-//			
-//			Seeker seeker = new Seeker();
-//			Profile seekerProf = new Profile();
-//			
-//			lender.setProfile(lendProf);
-//			lender.setUser_id(user.getUser_id());
-//			lender.setBt_merchant_id(2);
-//			lendProf.setPhoneNumber(1232345);
-//			
-//			createLender(lender);
-//			System.out.println("lender: "+lender.getLenderId());
-//			
-//			Listing listing = new Listing();
-//			Listing listing2 = new Listing();
-//			Listing listing3 = new Listing();
-//			
-//			Address one = new Address();
-//			Address two = new Address();
-//			Address three = new Address();
-//			
-//			one.setFirstLine("first line");
-//			one.setSecondLine("second line");
-//			one.setCity("Los Angeles");
-//			one.setState("CA");
-//			one.setZipCode("90007");
-//			
-//			two.setFirstLine("first 2");
-//			two.setSecondLine("second");
-//			two.setState("CA");
-//			two.setCity("Davis");
-//			two.setZipCode("90007");
-//			
-//			three.setFirstLine("three one");
-//			three.setSecondLine("three two");
-//			three.setCity("Sacramento");
-//			three.setState("CA");
-//			three.setZipCode("90007");
-//			
-//			listing.setAddress(one);
-//			listing.setLenderId(lender.getLenderId());
-//			listing.setTitle("title 1");
-//			listing.setDescription("desc 1");
-//			listing.setCancellationPolicy(CancellationPolicy.TEN_DOLLAR_CHARGE);
-//			listing.setPrice_per_hr(10);
-//			
-//			ListingAvailibility la1 = new ListingAvailibility();
-//			la1.setBeginDateTime(new Timestamp(100000));
-//			la1.setEndDateTime(new Timestamp(765432));
-//			//la1.setIsReserved(true);
-//			la1.setListingId(listing.getListingId());
-//			ListingAvailibility la2 = new ListingAvailibility();
-//			la2.setBeginDateTime(new Timestamp(102200));
-//			la2.setEndDateTime(new Timestamp(7622342));
-//			//la1.setIsReserved(true);
-//			la2.setListingId(listing.getListingId());
-//			ListingAvailibility la3 = new ListingAvailibility();
-//			la3.setBeginDateTime(new Timestamp(10001100));
-//			la3.setEndDateTime(new Timestamp(76543211));
-//			//la1.setIsReserved(true);
-//			la3.setListingId(listing2.getListingId());
-//			ListingAvailibility la4 = new ListingAvailibility();
-//			la4.setBeginDateTime(new Timestamp(1033000));
-//			la4.setEndDateTime(new Timestamp(76543332));
-//			//la1.setIsReserved(true);
-//			la4.setListingId(listing2.getListingId());
-//			ListingAvailibility la5 = new ListingAvailibility();
-//			la5.setBeginDateTime(new Timestamp(10009900));
-//			la5.setEndDateTime(new Timestamp(765432999));
-//			//la1.setIsReserved(true);
-//			la5.setListingId(listing3.getListingId());
-//			ListingAvailibility la6 = new ListingAvailibility();
-//			la6.setBeginDateTime(new Timestamp(11213000));
-//			la6.setEndDateTime(new Timestamp(765456432));
-//			//la1.setIsReserved(true);
-//			la6.setListingId(listing3.getListingId());
-//			
-//			listing2.setAvailabilityList(new ArrayList<>());
-//			listing.setAvailabilityList(new ArrayList<>());
-//			listing3.setAvailabilityList(new ArrayList<>());
-//			listing.addAvailibility(la1);
-//			listing.addAvailibility(la2);
-//			listing2.addAvailibility(la3);
-//			listing2.addAvailibility(la4);
-//			listing3.addAvailibility(la5);
-//			listing3.addAvailibility(la6);
-//			
-//			listing2.setAddress(two);
-//			listing2.setLenderId(lender.getLenderId());
-//			listing2.setTitle("title 2");
-//			listing2.setDescription("desc 2");
-//			listing2.setCancellationPolicy(CancellationPolicy.NO_CHARGE);
-//			listing2.setPrice_per_hr(15);
-//			
-//			listing3.setAddress(three);
-//			listing3.setLenderId(lender.getLenderId());
-//			listing3.setTitle("title 3");
-//			listing3.setDescription("desc 3");
-//			listing3.setCancellationPolicy(CancellationPolicy.FIVE_DOLLAR_CHARGE);
-//			listing3.setPrice_per_hr(20);
-//			
-//			createListing(listing);
-//			System.out.println("listing : "+listing.getListingId());
-//			System.out.println("address1 : "+one.getAddressId());
-//			createListing(listing2);
-//			System.out.println("listing2 : "+listing2.getListingId());
-//			System.out.println("address2 : "+two.getAddressId());
-//			createListing(listing3);
-//			System.out.println("listing3 : "+listing3.getListingId());
-//			System.out.println("address3 : "+three.getAddressId());
-//			
-//			System.out.println("available1: "+la1.getAvailabilityId());
-//			System.out.println("available2: "+la2.getAvailabilityId());
-//			System.out.println("available3: "+la3.getAvailabilityId());
-//			System.out.println("available4: "+la4.getAvailabilityId());
-//			System.out.println("available5: "+la5.getAvailabilityId());
-//			System.out.println("available6: "+la6.getAvailabilityId());
-//			
-//			seeker.setBt_merchant_id(5);
-//			seeker.setUser_id(user.getUser_id());
-//			seeker.setProfile(seekerProf);
-//			seekerProf.setPhoneNumber(98765);
-//			
-//			createSeeker(seeker);
-//			System.out.println("seeker : "+seeker.getSeekerId());
-//			
-//			this.createSeekerFavorite(seeker.getSeekerId(), listing.getListingId());
-//			this.createSeekerFavorite(seeker.getSeekerId(), listing2.getListingId());
-//			
-//			Reservation reservation = new Reservation();
-//			reservation.setBTTransactionId(6);
-//			reservation.setLenderId(lender.getLenderId());
-//			reservation.setListingId(listing.getLenderId());
-//			reservation.setSeekerId(seeker.getSeekerId());
-//			reservation.setPricePerHour((int) listing.getPricePerHr());
-//			reservation.setListingAvailibility(la2);
-//			
-//			createReservation(reservation);
-//			System.out.println("reservation : "+reservation.getReservationId());
-//			
-//			User userQueried = getUser(user.getEmail());
-//			System.out.println((userQueried.getUser_id() == user.getUser_id()) +" : correct user id returned");
-//			Seeker seekerQueried = userQueried.getSeeker();
-//			Lender lenderQueried = userQueried.getLender();
-//			System.out.println((seekerQueried.getSeekerId() == seeker.getSeekerId())+" : corrrect seeker id returned");
-//			System.out.println((lenderQueried.getLenderId() == lender.getLenderId())+" : correct lender id returned");
-//			
-//			
-//			System.out.println((seeker.getReservations().isEmpty()) + " : reservations are empty");
-//			
-			
-			
-			//ps.setString(1, name); // set first variable in prepared statement
-//			rs = ps.executeQuery();
-//			//System.out.println(rs.);
-//			while (rs.next()) {
-//				Integer fname = rs.getInt("cancellation_policy_id");
-//				String lname = rs.getString("cancellation_policy");
-//				//int studentID = rs.getInt("studentID");
-//				System.out.println ("id = " + fname);
-//				System.out.println ("policy = " + lname);
-//				//System.out.println ("studentID = " + studentID);
-//			}
+
 		}
 		catch (SQLException sqle){
 			System.out.println("sql excep: "+sqle.getMessage());
@@ -229,63 +56,68 @@ public class DatabaseConnector {
 		
 		
 		ResultSet rsListing = psListing.executeQuery();
-		return populateListing(rsListing);
+		return populateListings(rsListing);
 		//return favorites;
 	}
 	
-	private Map<Long, Listing> populateListing(ResultSet rsListing) throws SQLException{
+	private Listing populateListing(ResultSet rsListing) throws SQLException{
+		Listing listing = new Listing();
+		//set images
+		Address address = new Address();
+		address.setAddressId(rsListing.getLong(rsListing.findColumn(DBConstants.ADDRESS_ID_COL)));
+		address.setFirstLine(rsListing.getString(rsListing.findColumn(DBConstants.FIRST_LINE_COL)));
+		address.setSecondLine(rsListing.getString(rsListing.findColumn(DBConstants.SECOND_LINE_COL)));
+		address.setCity(rsListing.getString(rsListing.findColumn(DBConstants.CITY_COL)));
+		address.setState(rsListing.getString(rsListing.findColumn(DBConstants.STATE_COL)));
+		address.setZipCode(rsListing.getString(rsListing.findColumn(DBConstants.ZIP_CODE_COL)));
+		System.out.println("before set lender id on listing");
+		listing.setLenderId(rsListing.getLong(rsListing.findColumn(DBConstants.LENDER_ID_COL)));
+		System.out.println("after set lender id on listing");
+		listing.setAddress(address);
+		listing.setCancellationPolicy(rsListing.getString(rsListing.findColumn(DBConstants.CANCELLATION_POLICY_COL)));
+		System.out.println("cancellation policy retrieved: "+listing.getCancellationPolicy());
+		listing.setDescription(rsListing.getString(rsListing.findColumn(DBConstants.DESCRIPTION_COL)));
+		listing.setTitle(rsListing.getString(rsListing.findColumn(DBConstants.LISTING_TITLE_COL)));
+		listing.setListingId(rsListing.getLong(rsListing.findColumn(DBConstants.LISTING_ID_COL)));
+		listing.setNumberOfRatings(rsListing.getInt(rsListing.findColumn(DBConstants.NUM_RATINGS_COL)));
+		listing.setTotalRating(rsListing.getInt(rsListing.findColumn(DBConstants.TOTAL_RATING_COL)));
+		
+		PreparedStatement psCategories = conn.prepareStatement("SELECT "+DBConstants.CATEGORY_COL+" FROM "+DBConstants.LISTING_CATEGORY_TB+
+				" l INNER JOIN "+DBConstants.CATEGORY_TB+" c ON l."+DBConstants.CATEGORY_ID_COL+" = c."+DBConstants.CATEGORY_ID_COL+" WHERE "+DBConstants.LISTING_ID_COL+
+				" = "+listing.getListingId());
+		System.out.println("before get listing categories");
+		ResultSet rsCats = psCategories.executeQuery();
+		listing.setCategories(new ArrayList<>());
+		while (rsCats.next()){
+			System.out.println("WE HAVE CATEGORIES");
+			listing.getCategories().add(rsCats.getString(1));
+		}
+		
+		PreparedStatement psAvailable = conn.prepareStatement("SELECT "+DBConstants.AVAILIBILITY_ID_COL+", "+
+		DBConstants.BEGIN_DATE_TIME_COL+", "+DBConstants.END_DATE_TIME_COL+", "+DBConstants.IS_RESERVED_COL+" FROM "+DBConstants.AVAILABILITY_TB+
+		" WHERE "+DBConstants.LISTING_ID_COL+" = "+listing.getListingId());
+		System.out.println("before get listing availabilities");
+		ResultSet rsAvailable = psAvailable.executeQuery();
+		if (listing.getAvailabilityList() == null) listing.setAvailabilityList(new ArrayList<>());
+		while (rsAvailable.next()){
+			ListingAvailibility av = new ListingAvailibility();
+			av.setListingId(listing.getListingId());
+			av.setAvailabilityId(rsAvailable.getLong(rsAvailable.findColumn(DBConstants.AVAILIBILITY_ID_COL)));
+			av.setBeginDateTime(rsAvailable.getTimestamp(rsAvailable.findColumn(DBConstants.BEGIN_DATE_TIME_COL)));
+			av.setEndDateTime(rsAvailable.getTimestamp(rsAvailable.findColumn(DBConstants.END_DATE_TIME_COL)));
+			av.setIsReserved(rsAvailable.getBoolean(rsAvailable.findColumn(DBConstants.IS_RESERVED_COL)));
+			
+			listing.getAvailabilityList().add(av);
+		}
+		return listing;
+	}
+	
+	private Map<Long, Listing> populateListings(ResultSet rsListing) throws SQLException{
 		Map<Long, Listing> listings = new HashMap<>();
 		System.out.println("before get populate listings");
 		while (rsListing.next()){
-			Listing listing = new Listing();
-			//set images
-			Address address = new Address();
-			address.setAddressId(rsListing.getLong(rsListing.findColumn(DBConstants.ADDRESS_ID_COL)));
-			address.setFirstLine(rsListing.getString(rsListing.findColumn(DBConstants.FIRST_LINE_COL)));
-			address.setSecondLine(rsListing.getString(rsListing.findColumn(DBConstants.SECOND_LINE_COL)));
-			address.setCity(rsListing.getString(rsListing.findColumn(DBConstants.CITY_COL)));
-			address.setState(rsListing.getString(rsListing.findColumn(DBConstants.STATE_COL)));
-			address.setZipCode(rsListing.getString(rsListing.findColumn(DBConstants.ZIP_CODE_COL)));
-			System.out.println("before set lender id on listing");
-			listing.setLenderId(rsListing.getLong(rsListing.findColumn(DBConstants.LENDER_ID_COL)));
-			System.out.println("after set lender id on listing");
-			listing.setAddress(address);
-			listing.setCancellationPolicy(rsListing.getString(rsListing.findColumn(DBConstants.CANCELLATION_POLICY_COL)));
-			System.out.println("cancellation policy retrieved: "+listing.getCancellationPolicy());
-			listing.setDescription(rsListing.getString(rsListing.findColumn(DBConstants.DESCRIPTION_COL)));
-			listing.setTitle(rsListing.getString(rsListing.findColumn(DBConstants.LISTING_TITLE_COL)));
-			listing.setListingId(rsListing.getLong(rsListing.findColumn(DBConstants.LISTING_ID_COL)));
-			listing.setNumberOfRatings(rsListing.getInt(rsListing.findColumn(DBConstants.NUM_RATINGS_COL)));
-			listing.setTotalRating(rsListing.getInt(rsListing.findColumn(DBConstants.TOTAL_RATING_COL)));
 			
-			PreparedStatement psCategories = conn.prepareStatement("SELECT "+DBConstants.CATEGORY_COL+" FROM "+DBConstants.LISTING_CATEGORY_TB+
-					" l INNER JOIN "+DBConstants.CATEGORY_TB+" c ON l."+DBConstants.CATEGORY_ID_COL+" = c."+DBConstants.CATEGORY_ID_COL+" WHERE "+DBConstants.LISTING_ID_COL+
-					" = "+listing.getListingId());
-			System.out.println("before get listing categories");
-			ResultSet rsCats = psCategories.executeQuery();
-			listing.setCategories(new ArrayList<>());
-			while (rsCats.next()){
-				System.out.println("WE HAVE CATEGORIES");
-				listing.getCategories().add(rsCats.getString(1));
-			}
-			
-			PreparedStatement psAvailable = conn.prepareStatement("SELECT "+DBConstants.AVAILIBILITY_ID_COL+", "+
-			DBConstants.BEGIN_DATE_TIME_COL+", "+DBConstants.END_DATE_TIME_COL+", "+DBConstants.IS_RESERVED_COL+" FROM "+DBConstants.AVAILABILITY_TB+
-			" WHERE "+DBConstants.LISTING_ID_COL+" = "+listing.getListingId());
-			System.out.println("before get listing availabilities");
-			ResultSet rsAvailable = psAvailable.executeQuery();
-			if (listing.getAvailabilityList() == null) listing.setAvailabilityList(new ArrayList<>());
-			while (rsAvailable.next()){
-				ListingAvailibility av = new ListingAvailibility();
-				av.setListingId(listing.getListingId());
-				av.setAvailabilityId(rsAvailable.getLong(rsAvailable.findColumn(DBConstants.AVAILIBILITY_ID_COL)));
-				av.setBeginDateTime(rsAvailable.getTimestamp(rsAvailable.findColumn(DBConstants.BEGIN_DATE_TIME_COL)));
-				av.setEndDateTime(rsAvailable.getTimestamp(rsAvailable.findColumn(DBConstants.END_DATE_TIME_COL)));
-				av.setIsReserved(rsAvailable.getBoolean(rsAvailable.findColumn(DBConstants.IS_RESERVED_COL)));
-				
-				listing.getAvailabilityList().add(av);
-			}
-			
+			Listing listing = populateListing(rsListing);
 			listings.put(listing.getListingId(), listing);
 			System.out.println(listing.getCancellationPolicy());
 		}
@@ -307,7 +139,7 @@ public class DatabaseConnector {
 				"l."+DBConstants.LENDER_ID_COL+" = "+lenderId);
 		
 		ResultSet rsListing = psListing.executeQuery();
-		return populateListing(rsListing);
+		return populateListings(rsListing);
 		
 		//System.out.println(listings.size());
 	//	System.out.println(listings.get(0) == null);
@@ -405,7 +237,7 @@ public class DatabaseConnector {
 				"a."+DBConstants.ZIP_CODE_COL+" = '"+zipcode+"'");
 		//PreparedStatement ps = conn.prepareStatement("SELECT )
 		ResultSet rs = psListing.executeQuery();
-		return populateListing(rs);
+		return populateListings(rs);
 		//return listings;
 	}
 	
@@ -464,7 +296,7 @@ public class DatabaseConnector {
 						"l."+DBConstants.LISTING_ID_COL+" IN ("+lenderIds.toString());
 				
 				ResultSet rsListing = psListing.executeQuery();
-				return populateListing(rsListing);
+				return populateListings(rsListing);
 			}
 		}
 		
@@ -520,7 +352,8 @@ public class DatabaseConnector {
 			User user = new User();
 			if (rs.next()){
 				user.setEmail(email);
-				user.setName(rs.getString(rs.findColumn(DBConstants.USER_NAME_COL)));
+				user.setFirstName(rs.getString(rs.findColumn(DBConstants.FIRST_NAME_COL)));
+				user.setLastName(rs.getString(rs.findColumn(DBConstants.LAST_NAME_COL)));
 				user.setPassword(rs.getString(rs.findColumn(DBConstants.PASSWORD_COL)));
 				user.setUser_id(rs.getLong(rs.findColumn(DBConstants.USER_ID_COL)));
 			}
@@ -528,7 +361,7 @@ public class DatabaseConnector {
 			getSeeker(user.getUser_id(), user);
 			getLender(user.getUser_id(), user);
 		
-			System.out.println("user naem "+user.getName());
+			System.out.println("user naem "+user.getFirstName());
 			System.out.println("email "+user.getEmail());
 			return user;
 		} catch (SQLException e) {
@@ -540,11 +373,11 @@ public class DatabaseConnector {
 		PreparedStatement ps;
 		try {
 			ps = conn.prepareStatement("INSERT INTO "+DBConstants.USER_TB+" ("+
-					DBConstants.USER_EMAIL_COL+", "+DBConstants.USER_NAME_COL+", "+DBConstants.PASSWORD_COL+") VALUES ('"+
-					user.getEmail()+"', '"+user.getName()+"', '"+user.getPassword()+"')", Statement.RETURN_GENERATED_KEYS);
-			System.out.println("INSERT INTO "+DBConstants.USER_TB+" ("+
-					DBConstants.USER_EMAIL_COL+", "+DBConstants.USER_NAME_COL+", "+DBConstants.PASSWORD_COL+") VALUES ("+
-					user.getEmail()+", "+user.getName()+", "+user.getPassword()+")");
+					DBConstants.USER_EMAIL_COL+", "+DBConstants.FIRST_NAME_COL+", "+DBConstants.LAST_NAME_COL+", "+DBConstants.PASSWORD_COL+") VALUES ('"+
+					user.getEmail()+"', '"+user.getFirstName()+"', '"+user.getLastName()+"', '"+user.getPassword()+"')", Statement.RETURN_GENERATED_KEYS);
+//			System.out.println("INSERT INTO "+DBConstants.USER_TB+" ("+
+//					DBConstants.USER_EMAIL_COL+", "+DBConstants.USER_NAME_COL+", "+DBConstants.PASSWORD_COL+") VALUES ("+
+//					user.getEmail()+", "+user.getName()+", "+user.getPassword()+")");
 			
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
@@ -560,6 +393,44 @@ public class DatabaseConnector {
 			throw new DBException(DBException.INVALID_USER_EMAIL+" "+DBException.CREATE_USER);
 		}
 	
+		
+	}
+	
+	public Map<Long, ListingResult> searchByCoordinates(SearchMessage searchMessage) throws SQLException{
+		Map<Long, ListingResult> results = new HashMap<>();
+		
+		double latitude = searchMessage.latitude;
+		double longitude = searchMessage.longitude;
+		
+		double minLat = latitude - 10;
+		double minLong = longitude - 10;
+		double maxLat = latitude + 10;
+		double maxLong = longitude + 10;
+		
+		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LENDER_ID_COL+", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
+				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
+				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
+				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
+				", a."+DBConstants.STATE_COL+" ( 3959 * acos( cos( radians(42.290763) )  * cos( radians( a."+DBConstants.LATITUDE_COL+" ) ) * "+
+				"cos( radians( a."+DBConstants.LONGITUDE_COL+" ) - radians(-71.35368) ) "
+	             +" + sin( radians(42.290763) ) "
+	              +"* sin( radians( a."+DBConstants.LATITUDE_COL+" ) ) ) ) AS "+DBConstants.DISTANCE_ALIAS+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
+				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
+				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+
+				"a."+DBConstants.LATITUDE_COL+" between "+minLat+" and "+maxLat+" and a."+DBConstants.LONGITUDE_COL
+				+" BETWEEN "+minLong+" AND "+maxLong+" HAVING "+DBConstants.DISTANCE_ALIAS+" < "+searchMessage.miles+" ORDER BY "+DBConstants.DISTANCE_ALIAS);
+		
+		
+		ResultSet rs = psListing.executeQuery();
+		while (rs.next()){
+			Listing listing = populateListing(rs);
+			ListingResult listingResult = new ListingResult();
+			listingResult.listing = listing;
+			listingResult.distance = rs.getDouble(rs.findColumn(DBConstants.DISTANCE_ALIAS));
+			results.put(listing.getListingId(),  listingResult);
+		}
+		
+		return results;
 		
 	}
 	

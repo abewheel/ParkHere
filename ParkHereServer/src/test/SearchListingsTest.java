@@ -36,7 +36,8 @@ public class SearchListingsTest {
 			dbConn = new DatabaseConnector();
 			user = new User();
 			user.setEmail("test_email2");
-			user.setName("test_name2");
+			user.setFirstName("test_name2");
+			user.setLastName("test_name2");
 			user.setPassword("test_password2");
 			user = dbConn.createUser(user);
 			isSetUp = true;

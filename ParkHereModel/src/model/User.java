@@ -1,8 +1,5 @@
 package model;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -16,8 +13,10 @@ public class User implements Serializable{
     private Lender lender;
     private  Role current_role;
     private String email;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String password;
+    private String bt_customer_id;
 
     @Override
     public String toString(){
@@ -26,9 +25,17 @@ public class User implements Serializable{
     	if (lender != null) sb.append("lender: "+lender.toString()+System.lineSeparator());
     	sb.append("userId: "+user_id+System.lineSeparator());
     	sb.append("email: "+email+System.lineSeparator());
-    	sb.append("name: "+name+System.lineSeparator());
+    	sb.append("name: "+firstName+" "+lastName+System.lineSeparator());
     	sb.append("password: "+password+System.lineSeparator());
     	return sb.toString();
+    }
+    
+    public String getBTCutomerId(){
+    	return bt_customer_id;
+    }
+    
+    public void setBTCustomerId(String id){
+    	this.bt_customer_id = id;
     }
     
     public long getUser_id() {
@@ -71,12 +78,20 @@ public class User implements Serializable{
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String name) {
+        this.firstName = name;
+    }
+    
+    public String getLastName() {
+        return firstName;
+    }
+
+    public void setLastName(String name) {
+        this.lastName = name;
     }
 
     public String getPassword() {

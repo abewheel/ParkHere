@@ -53,7 +53,8 @@ public class CreateUserTest {
 			User user = new User();
 			user.setEmail("test email");
 			user.setPassword("test pass");
-			user.setName("test name");
+			user.setFirstName("test name");
+			user.setLastName("test name");
 			User createdUser = dbConn.createUser(user);
 			
 			Assert.assertNotEquals("user has an id", -1, createdUser.getUser_id());
@@ -80,7 +81,8 @@ public class CreateUserTest {
 			User user = new User();
 			user.setEmail("test email");
 			user.setPassword("test pass");
-			user.setName("test name");
+			user.setFirstName("test name");
+			user.setLastName("test name");
 			User createdUser = dbConn.createUser(user);
 			
 			Assert.assertNotEquals("user has an id", -1, createdUser.getUser_id());
@@ -107,7 +109,8 @@ public class CreateUserTest {
 			User user = new User();
 			user.setEmail("test email");
 			user.setPassword("test pass");
-			user.setName("test name");
+			user.setFirstName("test name");
+			user.setLastName("test name");
 			User createdUser = dbConn.createUser(user);
 			
 			Assert.assertNotEquals("user has an id", -1, createdUser.getUser_id());

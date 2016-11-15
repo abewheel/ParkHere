@@ -40,7 +40,8 @@ public class CreateSeekerFavoritesTest {
 			dbConn = new DatabaseConnector();
 			user1 = new User();
 			user1.setEmail(""+UUID.randomUUID());
-			user1.setName("test_name2541");
+			user1.setLastName("test_name2541");
+			user1.setFirstName("test_name2541");
 			user1.setPassword("pass8348764543759p");
 			System.out.println("before creating user");
 			user1 = dbConn.createUser(user1);

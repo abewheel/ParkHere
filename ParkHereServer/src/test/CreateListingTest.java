@@ -34,7 +34,8 @@ public class CreateListingTest {
 			dbConn = new DatabaseConnector();
 			user = new User();
 			user.setEmail(""+UUID.randomUUID());
-			user.setName("test_name1");
+			user.setFirstName("test_name1");
+			user.setLastName("test_nameasdf1");
 			user.setPassword("test_password1");
 			user = dbConn.createUser(user);
 			isSetUp = true;

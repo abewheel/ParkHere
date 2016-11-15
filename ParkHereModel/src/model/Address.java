@@ -13,6 +13,8 @@ public class Address implements Serializable{
 	private String state;
 	private String city;
 	private long addressId;
+	private double longitude;
+	private double latitude;
 
 	@Override
 	public String toString(){
@@ -32,6 +34,8 @@ public class Address implements Serializable{
 		if (state != null){
 			sb.append("state: "+state+System.lineSeparator());
 		}
+		sb.append("longitude: "+longitude+System.lineSeparator());
+		sb.append("latitude: "+latitude+System.lineSeparator());
 		return sb.toString();
 	}
 	
@@ -70,5 +74,21 @@ public class Address implements Serializable{
 	}
 	public void setAddressId(long addressId) {
 		this.addressId = addressId;
+	}
+	
+	public void setLatitude(double latitude){
+		this.latitude = latitude;
+	}
+	
+	public void setLongitude(double longitude){
+		this.longitude = longitude;
+	}
+	
+	public double getLatitude(){
+		return latitude;
+	}
+	
+	public double getLongitude(){
+		return longitude;
 	}
 }

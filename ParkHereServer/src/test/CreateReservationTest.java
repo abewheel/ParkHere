@@ -42,12 +42,14 @@ public class CreateReservationTest {
 			dbConn = new DatabaseConnector();
 			user1 = new User();
 			user1.setEmail(""+UUID.randomUUID());
-			user1.setName("test_name1");
+			user1.setFirstName("test_name1");
+			user1.setLastName("tesasdft_name1");
 			user1.setPassword("pass834759p");
 			user1 = dbConn.createUser(user1);
 			user2 = new User();
 			user2.setEmail(""+UUID.randomUUID());
-			user2.setName("test_name3");
+			user2.setFirstName("test_name3");
+			user2.setLastName("test_name3");
 			user2.setPassword("pass!!!!");
 			user2 = dbConn.createUser(user2);
 			

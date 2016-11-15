@@ -28,7 +28,8 @@ public class CreateLenderTest {
 			dbConn = new DatabaseConnector();
 			user = new User();
 			user.setEmail(""+UUID.randomUUID());
-			user.setName("test_name1");
+			user.setFirstName("test_name1");
+			user.setFirstName("test_name1Last");
 			user.setPassword("test_password1");
 			user = dbConn.createUser(user);
 			isSetUp = true;

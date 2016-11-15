@@ -63,7 +63,7 @@ public class Server extends Thread {
 				}
 				else if (mess.action.equals(Message.insert)){
 					System.out.println("in server correct message");
-					System.out.println(mess.user.getName());
+					//System.out.println(mess.user.getName());
 					System.out.println(mess.user.getEmail());
 					mess.user = dbConn.createUser(mess.user);
 					//return mess;
@@ -125,7 +125,7 @@ public class Server extends Thread {
 			}
 			else if (message instanceof SearchMessage){
 				SearchMessage searchMess = (SearchMessage) message;
-				searchMess.returnListings = dbConn.search(searchMess.zipcode);
+				searchMess.returnListings = dbConn.searchByCoordinates(searchMess);
 				origThread.sendMessage(searchMess);
 			}
 
