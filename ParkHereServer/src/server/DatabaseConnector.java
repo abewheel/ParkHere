@@ -409,12 +409,17 @@ public class DatabaseConnector {
 		double maxLat = latitude + 5;
 		double maxLong = longitude + 5;
 		
+		System.out.println("minLat: "+minLat);
+		System.out.println("maxLat: "+maxLat);
+		System.out.println("minLon: "+minLong);
+		System.out.println("maxLon: "+maxLong);
+		
 		StringBuilder sb = new StringBuilder("SELECT l."+DBConstants.LENDER_ID_COL+", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
 				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
 				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
 				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+", a."+DBConstants.LATITUDE_COL+", a."+DBConstants.LONGITUDE_COL+
-				", a."+DBConstants.STATE_COL+", ( 3959 * acos( cos( radians(42.290763) )  * cos( radians( a."+DBConstants.LATITUDE_COL+" ) ) * "+
-				"cos( radians( a."+DBConstants.LONGITUDE_COL+" ) - radians(-71.35368) ) + sin( radians(42.290763) ) "
+				", a."+DBConstants.STATE_COL+", ( 3959 * acos( cos( radians("+searchMessage.advanced.getLat()+") )  * cos( radians( a."+DBConstants.LATITUDE_COL+" ) ) * "+
+				"cos( radians( a."+DBConstants.LONGITUDE_COL+" ) - radians("+searchMessage.advanced.getLon()+") ) + sin( radians("+searchMessage.advanced.getLat()+") ) "
 	              +"* sin( radians( a."+DBConstants.LATITUDE_COL+" ) ) ) ) AS "+DBConstants.DISTANCE_ALIAS+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
 				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
 				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+
@@ -435,7 +440,7 @@ public class DatabaseConnector {
 		
 			
 		sb.append(" l."+DBConstants.PRICE_PER_HR_COL+" < "+searchMessage.advanced.getPrice()+" AND a."+DBConstants.LATITUDE_COL+" BETWEEN "+minLat+" AND "+maxLat+" AND a."+DBConstants.LONGITUDE_COL
-				+" BETWEEN "+minLong+" AND "+maxLong
+				+" BETWEEN "+minLong+" AND "+maxLong +" HAVING "+DBConstants.DISTANCE_ALIAS+" < "+searchMessage.advanced.getDistance()
 						+ " ORDER BY "+DBConstants.DISTANCE_ALIAS);
 		
 		System.out.println(sb.toString());
@@ -450,6 +455,8 @@ public class DatabaseConnector {
 			System.out.println(listing.getAddress().getFirstLine());
 			listingResult.distance = rs.getDouble(rs.findColumn(DBConstants.DISTANCE_ALIAS));
 			System.out.println("distance: "+listingResult.distance);
+			System.out.println("lat: "+listing.getAddress().getLatitude());
+			System.out.println("lat: "+listing.getAddress().getLongitude());
 			results.put(listing.getListingId(),  listingResult);
 		}
 		
