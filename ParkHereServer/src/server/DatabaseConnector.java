@@ -420,17 +420,20 @@ public class DatabaseConnector {
 				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+
 				" INNER JOIN "+DBConstants.LISTING_CATEGORY_TB+" lc ON l."+DBConstants.LISTING_ID_COL+" = lc."+DBConstants.LISTING_ID_COL+
 				" INNER JOIN "+DBConstants.CATEGORY_TB+" ca ON ca."+DBConstants.CATEGORY_ID_COL+" = lc."+DBConstants.CATEGORY_ID_COL+
-				" WHERE ca."+DBConstants.CATEGORY_COL+" IN (");
+				" WHERE ");
 				
-				
-		for (String cat : searchMessage.advanced.getCategories()){
-			sb.append("'"+cat+"',");
+		if (searchMessage.advanced.getCategories() != null && !searchMessage.advanced.getCategories().isEmpty()){
+			sb.append("ca."+DBConstants.CATEGORY_COL+" IN (");
+			for (String cat : searchMessage.advanced.getCategories()){
+				sb.append("'"+cat+"',");
+			}
+			
+			sb.deleteCharAt(sb.length()-1);
+			sb.append(") AND");
 		}
 		
-		sb.deleteCharAt(sb.length()-1);
-		sb.append(")");
 			
-		sb.append(" AND l."+DBConstants.PRICE_PER_HR_COL+" < "+searchMessage.advanced.getPrice()+" AND a."+DBConstants.LATITUDE_COL+" BETWEEN "+minLat+" AND "+maxLat+" AND a."+DBConstants.LONGITUDE_COL
+		sb.append(" l."+DBConstants.PRICE_PER_HR_COL+" < "+searchMessage.advanced.getPrice()+" AND a."+DBConstants.LATITUDE_COL+" BETWEEN "+minLat+" AND "+maxLat+" AND a."+DBConstants.LONGITUDE_COL
 				+" BETWEEN "+minLong+" AND "+maxLong+" HAVING "+DBConstants.DISTANCE_ALIAS+" < "+searchMessage.advanced.getDistance()
 						+ " ORDER BY "+DBConstants.DISTANCE_ALIAS);
 		
