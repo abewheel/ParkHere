@@ -70,6 +70,8 @@ public class DatabaseConnector {
 		address.setCity(rsListing.getString(rsListing.findColumn(DBConstants.CITY_COL)));
 		address.setState(rsListing.getString(rsListing.findColumn(DBConstants.STATE_COL)));
 		address.setZipCode(rsListing.getString(rsListing.findColumn(DBConstants.ZIP_CODE_COL)));
+		address.setLatitude(rsListing.getDouble(rsListing.findColumn(DBConstants.LATITUDE_COL)));
+		address.setLongitude(rsListing.getDouble(rsListing.findColumn(DBConstants.LONGITUDE_COL)));
 		System.out.println("before set lender id on listing");
 		listing.setLenderId(rsListing.getLong(rsListing.findColumn(DBConstants.LENDER_ID_COL)));
 		System.out.println("after set lender id on listing");
@@ -133,7 +135,7 @@ public class DatabaseConnector {
 				", l."+DBConstants.LISTING_TITLE_COL+", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
 				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
 				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
-				", a."+DBConstants.STATE_COL+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
+				", a."+DBConstants.STATE_COL+", a."+DBConstants.LONGITUDE_COL+", a."+DBConstants.LATITUDE_COL+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
 				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
 				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+
 				"l."+DBConstants.LENDER_ID_COL+" = "+lenderId);
@@ -501,8 +503,8 @@ public class DatabaseConnector {
 		System.out.println("in create listing");
 		Address address = listing.getAddress();
 		PreparedStatement psAddress = conn.prepareStatement("INSERT INTO "+DBConstants.ADDRESS_TB+" ("+DBConstants.FIRST_LINE_COL+", "+DBConstants.SECOND_LINE_COL+
-				", "+DBConstants.ZIP_CODE_COL+", "+DBConstants.CITY_COL+", "+DBConstants.STATE_COL+") VALUES ('"+address.getFirstLine()+
-				"', '"+address.getSecondLine()+"', '"+address.getZipCode()+"', '"+address.getCity()+"', '"+address.getState()+"')", Statement.RETURN_GENERATED_KEYS);
+				", "+DBConstants.ZIP_CODE_COL+", "+DBConstants.CITY_COL+", "+DBConstants.STATE_COL+", "+DBConstants.LONGITUDE_COL+", "+DBConstants.LATITUDE_COL+") VALUES ('"+address.getFirstLine()+
+				"', '"+address.getSecondLine()+"', '"+address.getZipCode()+"', '"+address.getCity()+"', '"+address.getState()+"', "+address.getLongitude()+", "+address.getLatitude()+")", Statement.RETURN_GENERATED_KEYS);
 		
 		psAddress.executeUpdate();
 		ResultSet rsAddress = psAddress.getGeneratedKeys();
