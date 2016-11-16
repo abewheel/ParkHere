@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import model.ListingResult;
 import messages.SearchMessage;
 import model.Address;
 import model.Lender;
 import model.Listing;
 import model.ListingAvailibility;
+import model.ListingResult;
 import model.Profile;
 import model.Reservation;
 import model.Seeker;
@@ -402,25 +402,38 @@ public class DatabaseConnector {
 		double latitude = searchMessage.advanced.getLat();
 		double longitude = searchMessage.advanced.getLon();
 		
-		double minLat = latitude - 10;
-		double minLong = longitude - 10;
-		double maxLat = latitude + 10;
-		double maxLong = longitude + 10;
+		double minLat = latitude - 5;
+		double minLong = longitude - 5;
+		double maxLat = latitude + 5;
+		double maxLong = longitude + 5;
 		
-		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LENDER_ID_COL+", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
+		StringBuilder sb = new StringBuilder("SELECT l."+DBConstants.LENDER_ID_COL+", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
 				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
 				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
 				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
 				", a."+DBConstants.STATE_COL+" ( 3959 * acos( cos( radians(42.290763) )  * cos( radians( a."+DBConstants.LATITUDE_COL+" ) ) * "+
-				"cos( radians( a."+DBConstants.LONGITUDE_COL+" ) - radians(-71.35368) ) "
-	             +" + sin( radians(42.290763) ) "
+				"cos( radians( a."+DBConstants.LONGITUDE_COL+" ) - radians(-71.35368) ) + sin( radians(42.290763) ) "
 	              +"* sin( radians( a."+DBConstants.LATITUDE_COL+" ) ) ) ) AS "+DBConstants.DISTANCE_ALIAS+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
 				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
-				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+
-				"a."+DBConstants.LATITUDE_COL+" between "+minLat+" and "+maxLat+" and a."+DBConstants.LONGITUDE_COL
-				+" BETWEEN "+minLong+" AND "+maxLong+" HAVING "+DBConstants.DISTANCE_ALIAS+" < "+searchMessage.advanced.getDistance()+" ORDER BY "+DBConstants.DISTANCE_ALIAS);
+				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+
+				" INNER JOIN "+DBConstants.LISTING_CATEGORY_TB+" lc ON l."+DBConstants.LISTING_ID_COL+" = lc."+DBConstants.LISTING_ID_COL+
+				" INNER JOIN "+DBConstants.CATEGORY_TB+" c ON c."+DBConstants.CATEGORY_ID_COL+" = lc."+DBConstants.CATEGORY_ID_COL+
+				" WHERE c."+DBConstants.CATEGORY_COL+" IN (");
+				
+				
+		for (String cat : searchMessage.advanced.getCategories()){
+			sb.append("'"+cat+"',");
+		}
 		
+		sb.deleteCharAt(sb.length()-1);
+		sb.append(")");
+			
+		sb.append(" AND l.price < "+searchMessage.advanced.getPrice()+" AND a."+DBConstants.LATITUDE_COL+" between "+minLat+" and "+maxLat+" and a."+DBConstants.LONGITUDE_COL
+				+" BETWEEN "+minLong+" AND "+maxLong+" HAVING "+DBConstants.DISTANCE_ALIAS+" < "+searchMessage.advanced.getDistance()+" "
+						+ " ORDER BY "+DBConstants.DISTANCE_ALIAS);
 		
+
+		PreparedStatement psListing = conn.prepareStatement(sb.toString());
 		ResultSet rs = psListing.executeQuery();
 		while (rs.next()){
 			Listing listing = populateListing(rs);
