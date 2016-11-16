@@ -1,8 +1,8 @@
 package model;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by emmalautz on 10/23/16.

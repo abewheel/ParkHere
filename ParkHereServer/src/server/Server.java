@@ -5,8 +5,11 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import messages.CreateCustomerMessage;
+import messages.GetClientTokenMessage;
 import messages.LenderMessage;
 import messages.ListingMessage;
+import messages.MerchantAccountMessage;
 import messages.Message;
 import messages.ReservationMessage;
 import messages.SearchMessage;
@@ -15,12 +18,14 @@ import messages.UserMessage;
 
 public class Server extends Thread {
 	
-	DatabaseConnector dbConn;
+	private DatabaseConnector dbConn;
+	private BrainTreeConnector btConn;
 	private static final int port = 6789;
 	private ServerSocket ss = null;
 	private Vector<ServerComThread> serverThreads;
 	public Server(){
 		dbConn = new DatabaseConnector();
+		btConn = new BrainTreeConnector();
 		serverThreads = new Vector<>();
 		try {
 			ss = new ServerSocket(port);
@@ -127,6 +132,24 @@ public class Server extends Thread {
 				SearchMessage searchMess = (SearchMessage) message;
 				searchMess.returnListings = dbConn.searchByCoordinates(searchMess);
 				origThread.sendMessage(searchMess);
+			}
+			else if (message instanceof CreateCustomerMessage){
+				CreateCustomerMessage mess = (CreateCustomerMessage) message;
+				mess.customerId = btConn.createClient(mess.user, mess.user.getLender());
+				dbConn.addCustomerId(mess.customerId, mess.user.getSeeker().getSeekerId());
+				origThread.sendMessage(mess);
+				
+			}
+			else if (message instanceof GetClientTokenMessage){
+				GetClientTokenMessage mess = (GetClientTokenMessage) message;
+				mess.clientToken = btConn.getClientToken(mess.customerId);
+				origThread.sendMessage(mess);
+			}
+			else if (message instanceof MerchantAccountMessage){
+				MerchantAccountMessage mess = (MerchantAccountMessage) message;
+				mess.merchantId = btConn.createMerchant(mess);
+				dbConn.addMerchantId(mess.merchantId, mess.lender.getLenderId());
+				origThread.sendMessage(mess);
 			}
 
 		}

@@ -9,12 +9,21 @@ import java.util.Map;
 public class Lender extends Role implements Serializable{
 
     private long lenderId;
+    private String merchantId;
     
     @Override
     public String toString(){
     	String superString = super.toString();
     	superString += "lenderId: "+lenderId;
     	return superString;
+    }
+    
+    public void setMerchantId(String merchantId){
+    	this.merchantId = merchantId;
+    }
+    
+    public String getMerchantId(){
+    	return merchantId;
     }
 
     public long getLenderId(){

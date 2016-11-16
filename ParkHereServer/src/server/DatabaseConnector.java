@@ -413,14 +413,14 @@ public class DatabaseConnector {
 				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
 				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
 				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
-				", a."+DBConstants.STATE_COL+" ( 3959 * acos( cos( radians(42.290763) )  * cos( radians( a."+DBConstants.LATITUDE_COL+" ) ) * "+
+				", a."+DBConstants.STATE_COL+", ( 3959 * acos( cos( radians(42.290763) )  * cos( radians( a."+DBConstants.LATITUDE_COL+" ) ) * "+
 				"cos( radians( a."+DBConstants.LONGITUDE_COL+" ) - radians(-71.35368) ) + sin( radians(42.290763) ) "
 	              +"* sin( radians( a."+DBConstants.LATITUDE_COL+" ) ) ) ) AS "+DBConstants.DISTANCE_ALIAS+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
 				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
 				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+
 				" INNER JOIN "+DBConstants.LISTING_CATEGORY_TB+" lc ON l."+DBConstants.LISTING_ID_COL+" = lc."+DBConstants.LISTING_ID_COL+
-				" INNER JOIN "+DBConstants.CATEGORY_TB+" c ON c."+DBConstants.CATEGORY_ID_COL+" = lc."+DBConstants.CATEGORY_ID_COL+
-				" WHERE c."+DBConstants.CATEGORY_COL+" IN (");
+				" INNER JOIN "+DBConstants.CATEGORY_TB+" ca ON ca."+DBConstants.CATEGORY_ID_COL+" = lc."+DBConstants.CATEGORY_ID_COL+
+				" WHERE ca."+DBConstants.CATEGORY_COL+" IN (");
 				
 				
 		for (String cat : searchMessage.advanced.getCategories()){
@@ -430,8 +430,8 @@ public class DatabaseConnector {
 		sb.deleteCharAt(sb.length()-1);
 		sb.append(")");
 			
-		sb.append(" AND l.price < "+searchMessage.advanced.getPrice()+" AND a."+DBConstants.LATITUDE_COL+" between "+minLat+" and "+maxLat+" and a."+DBConstants.LONGITUDE_COL
-				+" BETWEEN "+minLong+" AND "+maxLong+" HAVING "+DBConstants.DISTANCE_ALIAS+" < "+searchMessage.advanced.getDistance()+" "
+		sb.append(" AND l."+DBConstants.PRICE_PER_HR_COL+" < "+searchMessage.advanced.getPrice()+" AND a."+DBConstants.LATITUDE_COL+" BETWEEN "+minLat+" AND "+maxLat+" AND a."+DBConstants.LONGITUDE_COL
+				+" BETWEEN "+minLong+" AND "+maxLong+" HAVING "+DBConstants.DISTANCE_ALIAS+" < "+searchMessage.advanced.getDistance()
 						+ " ORDER BY "+DBConstants.DISTANCE_ALIAS);
 		
 
@@ -495,6 +495,45 @@ public class DatabaseConnector {
 		return lender;
 	}
 	
+	public void purge() throws SQLException{
+		PreparedStatement ps1 = conn.prepareStatement("DELETE FROM "+DBConstants.ADDRESS_TB);
+		PreparedStatement ps2 = conn.prepareStatement("DELETE FROM "+DBConstants.AVAILABILITY_TB);
+		PreparedStatement ps4 = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_CATEGORY_TB);
+		PreparedStatement ps9 = conn.prepareStatement("DELETE FROM "+DBConstants.RESERVATION_TB);
+		PreparedStatement ps5 = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_IMAGE_TB);
+		PreparedStatement ps7 = conn.prepareStatement("DELETE FROM "+DBConstants.SEEKER_FAVORITES_TB);
+		PreparedStatement ps6 = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_TB);
+		PreparedStatement ps3 = conn.prepareStatement("DELETE FROM "+DBConstants.LENDER_TB);
+		PreparedStatement ps8 = conn.prepareStatement("DELETE FROM "+DBConstants.SEEKER_TB);
+		PreparedStatement ps10 = conn.prepareStatement("DELETE FROM "+DBConstants.USER_TB);
+	
+		
+		
+		ps2.executeUpdate();
+		ps4.executeUpdate();
+		ps9.executeUpdate();
+		ps5.executeUpdate();
+		ps7.executeUpdate();
+		ps6.executeUpdate();
+		ps1.executeUpdate();
+		
+		ps3.executeUpdate();
+		ps8.executeUpdate();
+	
+		ps10.executeUpdate();
+	}
+	
+	public void addMerchantId(String merchantId, long lenderId) throws SQLException{
+		PreparedStatement ps = conn.prepareStatement("UPDATE "+DBConstants.LENDER_TB+" SET "+DBConstants.MERCHANT_ID_COL+" = '"+merchantId+"' WHERE "+
+				DBConstants.LENDER_ID_COL + " = "+lenderId);
+		ps.executeUpdate();
+	}
+	
+	public void addCustomerId(String customerId, long seekerId) throws SQLException{
+		PreparedStatement ps = conn.prepareStatement("UPDATE "+DBConstants.SEEKER_TB+" SET "+DBConstants.CUSTOMER_ID_COL+" = '"+customerId+"' WHERE "+
+				DBConstants.LENDER_ID_COL + " = "+seekerId);
+		ps.executeUpdate();
+	}
 	//NOT DONE
 	public Listing createListing(Listing listing) throws SQLException, DBException{
 		

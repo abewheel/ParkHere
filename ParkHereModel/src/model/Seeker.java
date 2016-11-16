@@ -9,12 +9,21 @@ import java.util.Map;
 public class Seeker extends Role implements Serializable{
 
     private long seeker_id;
+    private String customerId;
     
     @Override
     public String toString(){
     	String superString = super.toString();
     	superString += "seekerId: "+seeker_id;
     	return superString;
+    }
+    
+    public String getCustomerId(){
+    	return customerId;
+    }
+    
+    public void setCustomerId(String customerId){
+    	this.customerId = customerId;
     }
 
     public Map<Long, Listing> getFavorites(){

@@ -6,12 +6,7 @@ package model;
 //import android.location.Address;
 //import android.media.Image;
 
-//import java.awt.Image;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 //import javax.swing.ImageIcon;

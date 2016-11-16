@@ -46,6 +46,7 @@ public class DBConstants {
 	public static final String PHONE_NUM_COL = "phone_number";
 	public static final String PROFILE_PIC_COL = "profile_pic";
 	public static final String IS_DEFAULT_ROLE_COL = "is_default_role";
+	public static final String MERCHANT_ID_COL = "merchant_id";
 	
 	//listing
 	//LISTING_ID_COL
@@ -81,6 +82,7 @@ public class DBConstants {
 	//PHONE_NUMBER_COL
 	//PROFILE_PIC_COL
 	//IS_DEFAULT_ROLE_COL
+	public static final String CUSTOMER_ID_COL = "customer_id";
 	
 	//seeker favorites
 	//SEEKER_ID_COL

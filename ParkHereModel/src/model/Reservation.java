@@ -1,10 +1,6 @@
 package model;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by emmalautz on 10/19/16.
