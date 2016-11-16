@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import messages.ListingResult;
+import model.ListingResult;
 import messages.SearchMessage;
 import model.Address;
 import model.Lender;
@@ -399,8 +399,8 @@ public class DatabaseConnector {
 	public Map<Long, ListingResult> searchByCoordinates(SearchMessage searchMessage) throws SQLException{
 		Map<Long, ListingResult> results = new HashMap<>();
 		
-		double latitude = searchMessage.latitude;
-		double longitude = searchMessage.longitude;
+		double latitude = searchMessage.advanced.getLat();
+		double longitude = searchMessage.advanced.getLon();
 		
 		double minLat = latitude - 10;
 		double minLong = longitude - 10;
@@ -418,7 +418,7 @@ public class DatabaseConnector {
 				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
 				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+
 				"a."+DBConstants.LATITUDE_COL+" between "+minLat+" and "+maxLat+" and a."+DBConstants.LONGITUDE_COL
-				+" BETWEEN "+minLong+" AND "+maxLong+" HAVING "+DBConstants.DISTANCE_ALIAS+" < "+searchMessage.miles+" ORDER BY "+DBConstants.DISTANCE_ALIAS);
+				+" BETWEEN "+minLong+" AND "+maxLong+" HAVING "+DBConstants.DISTANCE_ALIAS+" < "+searchMessage.advanced.getDistance()+" ORDER BY "+DBConstants.DISTANCE_ALIAS);
 		
 		
 		ResultSet rs = psListing.executeQuery();

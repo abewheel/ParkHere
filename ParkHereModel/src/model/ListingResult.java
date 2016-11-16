@@ -1,6 +1,4 @@
-package messages;
-
-import model.Listing;
+package model;
 
 public class ListingResult {
 	public Listing listing;
