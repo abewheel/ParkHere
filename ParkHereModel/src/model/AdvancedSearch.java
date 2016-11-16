@@ -7,12 +7,13 @@ import java.util.ArrayList;
 public class AdvancedSearch implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private int price, distance, rating;
+	private int price, distance;
+	private float rating;
 	private List<String> categories;
     private String startTime, endTime;
     private double lat, lon;
 
-    public AdvancedSearch(int price, int distance, int rating, boolean covered, boolean handicapped,
+    public AdvancedSearch(int price, int distance, float rating, boolean covered, boolean handicapped,
                           boolean compact, boolean tandem, boolean truck, String startTime,
                           String endTime, double lat, double lon) {
         this.price = price;
@@ -38,7 +39,7 @@ public class AdvancedSearch implements Serializable {
         return distance;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 
