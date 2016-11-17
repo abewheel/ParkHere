@@ -9,10 +9,12 @@ import messages.CreateCustomerMessage;
 import messages.GetClientTokenMessage;
 import messages.LenderMessage;
 import messages.ListingMessage;
+import messages.ListingReviewMessage;
 import messages.MerchantAccountMessage;
 import messages.Message;
 import messages.ReservationMessage;
 import messages.SearchMessage;
+import messages.SeekerFavoriteMessage;
 import messages.SeekerMessage;
 import messages.UserMessage;
 
@@ -155,6 +157,16 @@ public class Server extends Thread {
 				MerchantAccountMessage mess = (MerchantAccountMessage) message;
 				mess.merchantId = btConn.createMerchant(mess);
 				dbConn.addMerchantId(mess.merchantId, mess.lender.getLenderId());
+				origThread.sendMessage(mess);
+			}
+			else if (message instanceof SeekerFavoriteMessage){
+				SeekerFavoriteMessage mess = (SeekerFavoriteMessage) message;
+				dbConn.createSeekerFavorite(mess.seekerId, mess.listingId);
+				origThread.sendMessage(mess);
+			}
+			else if (message instanceof ListingReviewMessage){
+				ListingReviewMessage mess = (ListingReviewMessage) message;
+				dbConn.addListingComment(mess.comment, mess.listingId, mess.userId);
 				origThread.sendMessage(mess);
 			}
 

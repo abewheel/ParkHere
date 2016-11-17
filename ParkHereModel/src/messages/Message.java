@@ -9,6 +9,7 @@ public abstract class Message implements Serializable{
 	public static final String search = "SEARCH";
 	public static final String check_validity = "CHECK";
 	public static final String delete = "DELETE";
+	public static final String favorite = "FAVORITE";
 	
 	public String action;
 }

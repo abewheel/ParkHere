@@ -115,6 +115,7 @@ public class BrainTreeConnector {
 			    tosAccepted(true).
 			    masterMerchantAccountId(masterMerchantId);
 		}
+		
 		Result<MerchantAccount> result = gateway.merchantAccount().create(request);
 		MerchantAccount ma = result.getTarget();
 		return ma.getId();

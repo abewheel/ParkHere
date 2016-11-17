@@ -95,6 +95,13 @@ public class DatabaseConnector {
 			listing.getCategories().add(rsCats.getString(1));
 		}
 		
+		PreparedStatement psComments = conn.prepareStatement("SELECT * FROM "+DBConstants.LISTING_COMMENT_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listing.getListingId());
+		ResultSet rsComments = psComments.executeQuery();
+		listing.setComments(new ArrayList<>());
+		while (rsComments.next()){
+			listing.getComments().add(rsComments.getString(rsComments.findColumn(DBConstants.COMMENT_COL)));
+		}
+		
 		PreparedStatement psAvailable = conn.prepareStatement("SELECT "+DBConstants.AVAILIBILITY_ID_COL+", "+
 		DBConstants.BEGIN_DATE_TIME_COL+", "+DBConstants.END_DATE_TIME_COL+", "+DBConstants.IS_RESERVED_COL+" FROM "+DBConstants.AVAILABILITY_TB+
 		" WHERE "+DBConstants.LISTING_ID_COL+" = "+listing.getListingId());
@@ -231,84 +238,22 @@ public class DatabaseConnector {
 
 	}
 	
-	public Map<Long, Listing> search(String zipcode) throws SQLException{
-		//Map<Long, Listing> listings = new HashMap<>();
-		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LENDER_ID_COL+", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
-				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
-				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
-				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
-				", a."+DBConstants.STATE_COL+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
-				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
-				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+
-				"a."+DBConstants.ZIP_CODE_COL+" = '"+zipcode+"'");
-		//PreparedStatement ps = conn.prepareStatement("SELECT )
-		ResultSet rs = psListing.executeQuery();
-		return populateListings(rs);
-		//return listings;
-	}
-	
-	public Map<Long, Listing> searchUsingCategoriesInclusive(List<String> categories) throws SQLException{
-		
-		StringBuilder sb = new StringBuilder("SELECT "+DBConstants.CATEGORY_ID_COL+" FROM "+DBConstants.CATEGORY_TB+
-				" WHERE "+DBConstants.CATEGORY_COL+" IN (");
-		
-		for (String cat : categories){
-			sb.append("'"+cat+"',");
-		}
-		
-		sb.deleteCharAt(sb.length()-1);
-		sb.append(")");
-		
-		PreparedStatement psCatListings = conn.prepareStatement(sb.toString());
-		
-		ResultSet rs = psCatListings.executeQuery();
-		if (rs.next()){
-			
-			StringBuilder catIds = new StringBuilder("SELECT "+DBConstants.LISTING_ID_COL+" FROM "+DBConstants.LISTING_CATEGORY_TB+
-					" WHERE "+DBConstants.CATEGORY_ID_COL+" IN (");
-			
-			//StringBuilder catIds = new StringBuilder();
-			catIds.append(rs.getLong(1)+",");
-			
-			while (rs.next()){
-				catIds.append(rs.getLong(1)+",");
-			}
-			
-			catIds.deleteCharAt(catIds.length()-1);
-			catIds.append(")");
-			
-			ResultSet rs2 = conn.prepareStatement(catIds.toString()).executeQuery();
-			
-			if (rs2.next()){
-				
-				StringBuilder lenderIds = new StringBuilder();
-				lenderIds.append(rs2.getLong(1)+",");
-				
-				while (rs2.next()){
-					lenderIds.append(rs2.getLong(1)+",");
-				}
-				
-				lenderIds.deleteCharAt(lenderIds.length()-1);
-				lenderIds.append(")");
-			
-			
-				PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LENDER_ID_COL+", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
-						", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
-						", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
-						", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
-						", a."+DBConstants.STATE_COL+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
-						"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
-						" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+
-						"l."+DBConstants.LISTING_ID_COL+" IN ("+lenderIds.toString());
-				
-				ResultSet rsListing = psListing.executeQuery();
-				return populateListings(rsListing);
-			}
-		}
-		
-		
-		return new HashMap<>();
-	}
+//	public Map<Long, Listing> search(String zipcode) throws SQLException{
+//		//Map<Long, Listing> listings = new HashMap<>();
+//		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LENDER_ID_COL+", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
+//				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+
+//				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
+//				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
+//				", a."+DBConstants.STATE_COL+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
+//				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
+//				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+
+//				"a."+DBConstants.ZIP_CODE_COL+" = '"+zipcode+"'");
+//		//PreparedStatement ps = conn.prepareStatement("SELECT )
+//		ResultSet rs = psListing.executeQuery();
+//		return populateListings(rs);
+//		//return listings;
+//	}
+//	
 	
 	public Map<Long, Reservation> getReservations(long id, Boolean isLender) throws DBException{
 		Map<Long, Reservation> reservations = new HashMap<>();
@@ -436,7 +381,7 @@ public class DatabaseConnector {
 			System.out.println(searchMessage.advanced.getStartTime().toString());
 			System.out.println(searchMessage.advanced.getEndTime().toString());
 			sb.append(" EXISTS (SELECT NULL FROM "+DBConstants.AVAILABILITY_TB+" av WHERE av."+DBConstants.LISTING_ID_COL+" = "+
-					" l."+DBConstants.LISTING_ID_COL+" AND "+DBConstants.BEGIN_DATE_TIME_COL+" > ? AND "+DBConstants.END_DATE_TIME_COL+" < ? ) AND ");
+					" l."+DBConstants.LISTING_ID_COL+" AND "+DBConstants.BEGIN_DATE_TIME_COL+" > ? AND "+DBConstants.END_DATE_TIME_COL+" < ? AND "+DBConstants.IS_RESERVED_COL+" = FALSE) AND ");
 		}
 				
 		if (searchMessage.advanced.getCategories() != null && !searchMessage.advanced.getCategories().isEmpty()){
@@ -705,6 +650,17 @@ public class DatabaseConnector {
 		}
 		//insert images
 		return listing;
+	}
+	
+	public void addListingComment(String comment, Long listingId, Long userId) throws SQLException{
+		
+		StringBuilder sb = new StringBuilder("INSERT INTO "+DBConstants.LISTING_COMMENT_TB+" ("+DBConstants.LISTING_ID_COL+", "+DBConstants.COMMENT_COL);
+		sb.append(userId == null ? "" : DBConstants.USER_ID_COL);
+		sb.append(") VALUES ("+listingId+", '"+comment+"'");
+		sb.append(userId == null ? ")" : userId+")");
+		
+		PreparedStatement ps = conn.prepareStatement(sb.toString());
+		ps.executeUpdate();
 	}
 	
 	public void createSeekerFavorite(long seekerId, long listingId) throws SQLException{

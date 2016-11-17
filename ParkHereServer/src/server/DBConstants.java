@@ -14,6 +14,7 @@ public class DBConstants {
 	public static final String LISTING_IMAGE_TB = "listing_image";
 	public static final String RESERVATION_TB = "reservation";
 	public static final String SEEKER_FAVORITES_TB = "seeker_favorites";
+	public static final String LISTING_COMMENT_TB = "listing_comment";
 	
 	//address col
 	public static final String ADDRESS_ID_COL = "address_id";
@@ -97,6 +98,11 @@ public class DBConstants {
 	
 	//search
 	public static final String DISTANCE_ALIAS = "distance";
+	
+	//listing_comment
+	//LISTING_ID_COL
+	//USER_ID_COL
+	public static final String COMMENT_COL = "comment";
 	
 	
 }

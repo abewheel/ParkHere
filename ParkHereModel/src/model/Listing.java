@@ -24,9 +24,17 @@ public class Listing implements Serializable{
     private Integer total_rating;
     private Integer num_ratings;
     private List<String> categories;
+    private List<String> comments;
     private String cancellationPolicy;
     private long listingId;
    
+    public void setComments(List<String> comments){
+    	this.comments = comments;
+    }
+    
+    public List<String> getComments(){
+    	return comments;
+    }
 
 	public void setPrice_per_hr(double price_per_hr) {
 		this.price_per_hr = price_per_hr;
@@ -110,7 +118,7 @@ public class Listing implements Serializable{
     }
 
     public double getAverageRating() {
-        return (total_rating)/ (num_ratings);
+        return num_ratings == 0 ? 0 : (total_rating)/ (num_ratings);
     }
 
     public void setTotalRating (int total_rating) {
@@ -136,4 +144,5 @@ public class Listing implements Serializable{
     public void setCancellationPolicy(String cancellationPolicy) {
         this.cancellationPolicy = cancellationPolicy;
     }
+    
 }
