@@ -12,6 +12,7 @@ import messages.ListingMessage;
 import messages.ListingReviewMessage;
 import messages.MerchantAccountMessage;
 import messages.Message;
+import messages.ProfilePicMessage;
 import messages.ReservationMessage;
 import messages.SearchMessage;
 import messages.SeekerFavoriteMessage;
@@ -170,6 +171,10 @@ public class Server extends Thread {
 				ListingReviewMessage mess = (ListingReviewMessage) message;
 				dbConn.addListingComment(mess.comment, mess.listingId, mess.userId);
 				origThread.sendMessage(mess);
+			}
+			else if (message instanceof ProfilePicMessage){
+				dbConn.addProfilePic((ProfilePicMessage)message);
+				origThread.sendMessage(message);
 			}
 
 		}

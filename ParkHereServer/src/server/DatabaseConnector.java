@@ -1,4 +1,5 @@
 package server;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,9 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import messages.ProfilePicMessage;
 import messages.SearchMessage;
 import model.Address;
 import model.Lender;
@@ -156,6 +157,26 @@ public class DatabaseConnector {
 		
 	}
 	
+	public void addProfilePic(ProfilePicMessage message){
+		ProfilePicMessage mess = (ProfilePicMessage) message;
+		
+		
+		try {
+			Blob blob = new javax.sql.rowset.serial.SerialBlob(message.picture);
+			String table = mess.isLender ? DBConstants.LENDER_TB : DBConstants.SEEKER_TB;
+			String col = mess.isLender ? DBConstants.LENDER_ID_COL : DBConstants.SEEKER_ID_COL;
+			
+			PreparedStatement ps = conn.prepareStatement("UPDATE "+table+" SET "+DBConstants.PROFILE_PIC_COL+" = ? WHERE "+ col +" = "+mess.id);
+			ps.setBlob(1, blob);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public void getLender(long userId, User user) throws SQLException, DBException{
 		PreparedStatement psLender = conn.prepareStatement("SELECT * FROM "+DBConstants.LENDER_TB+" WHERE "+DBConstants.USER_ID_COL+" = "+userId);
 		ResultSet rsLender = psLender.executeQuery();
@@ -171,7 +192,14 @@ public class DatabaseConnector {
 			//profile pic
 			//merchant id
 			lender.setProfile(profile);
-			
+			Blob blob = rsLender.getBlob(rsLender.findColumn(DBConstants.PROFILE_PIC_COL));
+			if (blob != null){
+				int blobLength = (int) blob.length();  
+				byte[] blobAsBytes = blob.getBytes(1, blobLength);
+				lender.setProfilePicture(blobAsBytes);
+				//release the blob and free up memory. (since JDBC 4.0)
+				blob.free();
+			}
 			lender.setListings(getLenderListings(lender.getLenderId()));
 			lender.setMerchantId(rsLender.getString(rsLender.findColumn(DBConstants.MERCHANT_ID_COL)));
 			lender.setReservations(getReservations(lender.getLenderId(), true));

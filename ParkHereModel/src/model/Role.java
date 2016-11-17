@@ -14,8 +14,17 @@ public abstract class Role implements Serializable{
     private Profile profile;
     private int bt_merchant_id;
     private long user_id;
+    private byte[] profilePicture;
 
-    @Override
+    public byte[] getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(byte[] profilePicture) {
+		this.profilePicture = profilePicture;
+	}
+
+	@Override
     public String toString(){
     	StringBuilder sb = new StringBuilder();
 //    	if (reservations != null){
