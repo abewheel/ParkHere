@@ -136,7 +136,6 @@ public class DatabaseConnector {
 			System.out.println(e.getMessage());
 		}
 		return listings;
-		//System.out.println("after get listings");
 	}
 	
 	public Map<Long, Listing>getLenderListings(long lenderId) throws SQLException{
@@ -155,10 +154,6 @@ public class DatabaseConnector {
 		ResultSet rsListing = psListing.executeQuery();
 		return populateListings(rsListing);
 		
-		//System.out.println(listings.size());
-	//	System.out.println(listings.get(0) == null);
-		//System.out.println("after get listings");
-		//return listings;
 	}
 	
 	public void getLender(long userId, User user) throws SQLException, DBException{
@@ -191,8 +186,7 @@ public class DatabaseConnector {
 	}
 	
 	public void removeListing(long listingId) throws SQLException{
-	//	PreparedStatement psAddress = conn.prepareStatement("DELETE FROM "+DBConstants.ADDRESS_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
-		//psAddress.executeUpdate();
+	
 		PreparedStatement psAvailabilities = conn.prepareStatement("DELETE FROM "+DBConstants.AVAILABILITY_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
 		psAvailabilities.executeUpdate();
 		PreparedStatement psCategories = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_CATEGORY_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
@@ -224,7 +218,6 @@ public class DatabaseConnector {
 			//profile pic
 			//merchant id
 			seeker.setProfile(profile);
-			//seeker.setIsDefau
 			seeker.setFavorites(getSeekerListings(seeker.getSeekerId()));
 			seeker.setReservations(getReservations(seeker.getSeekerId(), false));
 			
@@ -349,9 +342,6 @@ public class DatabaseConnector {
 			ps = conn.prepareStatement("INSERT INTO "+DBConstants.USER_TB+" ("+
 					DBConstants.USER_EMAIL_COL+", "+DBConstants.FIRST_NAME_COL+", "+DBConstants.LAST_NAME_COL+", "+DBConstants.PASSWORD_COL+") VALUES ('"+
 					user.getEmail()+"', '"+user.getFirstName()+"', '"+user.getLastName()+"', '"+user.getPassword()+"')", Statement.RETURN_GENERATED_KEYS);
-//			System.out.println("INSERT INTO "+DBConstants.USER_TB+" ("+
-//					DBConstants.USER_EMAIL_COL+", "+DBConstants.USER_NAME_COL+", "+DBConstants.PASSWORD_COL+") VALUES ("+
-//					user.getEmail()+", "+user.getName()+", "+user.getPassword()+")");
 			
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
