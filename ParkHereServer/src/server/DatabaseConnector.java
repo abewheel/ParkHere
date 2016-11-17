@@ -633,7 +633,7 @@ public class DatabaseConnector {
 		}
 		
 		StringBuilder sb = new StringBuilder("INSERT INTO "+DBConstants.LISTING_CATEGORY_TB+" ("+DBConstants.LISTING_ID_COL+", "+DBConstants.CATEGORY_ID_COL+") VALUES ");
-		if (listing.getCategories() != null){
+		if (listing.getCategories() != null && !listing.getCategories().isEmpty()){
 			int size = listing.getCategories().size();
 			int index = 1;
 			for (String category : listing.getCategories()){
@@ -768,6 +768,7 @@ public class DatabaseConnector {
 		ResultSet rs = psfav.getGeneratedKeys();
 		if (rs.next()){
 			reservation.setReservationId(rs.getLong(1));
+			//reservation.set
 		}
 		
 //		PreparedStatement psAvail = conn.prepareStatement("UPDATE "+DBConstants.AVAILABILITY_TB+" SET "+DBConstants.IS_RESERVED_COL+" = TRUE WHERE "+
