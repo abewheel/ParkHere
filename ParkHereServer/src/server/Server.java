@@ -130,7 +130,13 @@ public class Server extends Thread {
 			}
 			else if (message instanceof SearchMessage){
 				SearchMessage searchMess = (SearchMessage) message;
-				searchMess.returnListings = dbConn.searchByCoordinates(searchMess);
+				if (searchMess.useTimes){
+					searchMess.returnListings = dbConn.searchByCoordinatesAndDate(searchMess);
+				}
+				else{
+					searchMess.returnListings = dbConn.searchByCoordinates(searchMess);
+				}
+				
 				origThread.sendMessage(searchMess);
 			}
 			else if (message instanceof CreateCustomerMessage){

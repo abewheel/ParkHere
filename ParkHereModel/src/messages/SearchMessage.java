@@ -9,4 +9,5 @@ import model.ListingResult;
 public class SearchMessage extends Message implements Serializable{
 	public Map<Long, ListingResult> returnListings;
 	public AdvancedSearch advanced;
+	public Boolean useTimes;
 }

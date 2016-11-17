@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,12 +11,13 @@ public class AdvancedSearch implements Serializable {
 	private int price, distance;
 	private float rating;
 	private List<String> categories;
-    private String startTime, endTime;
+    //private String startTime, endTime;
+	private Timestamp startTime, endTime;
     private double lat, lon;
 
     public AdvancedSearch(int price, int distance, float rating, boolean covered, boolean handicapped,
-                          boolean compact, boolean tandem, boolean truck, String startTime,
-                          String endTime, double lat, double lon) {
+                          boolean compact, boolean tandem, boolean truck, Timestamp startTime,
+                          Timestamp endTime, double lat, double lon) {
         this.price = price;
         this.distance = distance;
         this.rating = rating;
@@ -47,11 +49,11 @@ public class AdvancedSearch implements Serializable {
     	return categories;
     }
 
-    public String getStartTime() {
+    public Timestamp getStartTime() {
         return startTime;
     }
 
-    public String getEndTime() {
+    public Timestamp getEndTime() {
         return endTime;
     }
     
