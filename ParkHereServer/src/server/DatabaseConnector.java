@@ -426,6 +426,9 @@ public class DatabaseConnector {
 			psListing.setTimestamp(4, searchMessage.advanced.getEndTime());
 			psListing.setTimestamp(5, searchMessage.advanced.getStartTime());
 			psListing.setTimestamp(6, searchMessage.advanced.getEndTime());
+			
+			System.out.println(searchMessage.advanced.getStartTime());
+			System.out.println(searchMessage.advanced.getEndTime());
 		}
 		System.out.println(sb.toString());
 		ResultSet rs = psListing.executeQuery();
