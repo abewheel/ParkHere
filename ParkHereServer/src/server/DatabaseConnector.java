@@ -49,7 +49,7 @@ public class DatabaseConnector {
 		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LENDER_ID_COL+
 				", l."+DBConstants.TOTAL_RATING_COL+", l."+DBConstants.NUM_RATINGS_COL+", l."+DBConstants.PRICE_PER_HR_COL+", l."+DBConstants.LISTING_TITLE_COL+
 				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
-				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
+				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+", a."+DBConstants.LATITUDE_COL+", a."+DBConstants.LONGITUDE_COL+
 				", a."+DBConstants.STATE_COL+" FROM "+DBConstants.SEEKER_FAVORITES_TB+" sf INNER JOIN "+ DBConstants.LISTING_TB+" l ON sf."+DBConstants.LISTING_ID_COL+
 				" = l."+DBConstants.LISTING_ID_COL+" INNER JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
 				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+"sf."+DBConstants.SEEKER_ID_COL+" = "+seekerId);
@@ -114,14 +114,18 @@ public class DatabaseConnector {
 		return listing;
 	}
 	
-	private Map<Long, Listing> populateListings(ResultSet rsListing) throws SQLException{
+	private Map<Long, Listing> populateListings(ResultSet rsListing){
 		Map<Long, Listing> listings = new HashMap<>();
 		System.out.println("before get populate listings");
-		while (rsListing.next()){
-			
-			Listing listing = populateListing(rsListing);
-			listings.put(listing.getListingId(), listing);
-			System.out.println(listing.getCancellationPolicy());
+		try {
+			while (rsListing.next()){
+				
+				Listing listing = populateListing(rsListing);
+				listings.put(listing.getListingId(), listing);
+				System.out.println(listing.getCancellationPolicy());
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
 		return listings;
 		//System.out.println("after get listings");
