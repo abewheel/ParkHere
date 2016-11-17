@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * Created by emmalautz on 10/19/16.
@@ -11,7 +12,9 @@ public class Reservation implements Serializable{
     private Lender lender;
     private Seeker seeker;
     private Listing listing;
-    private ListingAvailibility listingAvailibility;
+   // private ListingAvailibility listingAvailibility;
+    private Timestamp beginDate;
+    private Timestamp endDate;
     private int pricePerHour;
     private int btTransactionId;
     private long reservationId;
@@ -32,9 +35,7 @@ public class Reservation implements Serializable{
     	if (listing != null){
     		sb.append("listing: "+listing.toString()+System.lineSeparator());
     	}
-    	if (listingAvailibility != null){
-    		sb.append("availability: "+listingAvailibility.toString()+System.lineSeparator());
-    	}
+    	
     	sb.append("price: "+pricePerHour+System.lineSeparator());
     	sb.append("reservationId: "+reservationId+System.lineSeparator());
     	sb.append("listingId: "+listingId+System.lineSeparator());
@@ -99,13 +100,22 @@ public class Reservation implements Serializable{
         this.listing = listing;
     }
 
+    
 
-    public ListingAvailibility getListingAvailibility() {
-		return listingAvailibility;
+	public Timestamp getBeginDate() {
+		return beginDate;
 	}
 
-	public void setListingAvailibility(ListingAvailibility listingAvailibility) {
-		this.listingAvailibility = listingAvailibility;
+	public void setBeginDate(Timestamp beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public Timestamp getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Timestamp endDate) {
+		this.endDate = endDate;
 	}
 
 	public int getBtTransactionId() {

@@ -255,30 +255,31 @@ public class DatabaseConnector {
 		PreparedStatement ps;
 		try {
 			ps = conn.prepareStatement("SELECT r."+DBConstants.RESERVATION_ID_COL+", r."+DBConstants.SEEKER_ID_COL+
-					", r."+DBConstants.LENDER_ID_COL+", r."+DBConstants.LISTING_ID_COL+", r."+DBConstants.AVAILIBILITY_ID_COL+
+					", r."+DBConstants.LENDER_ID_COL+", r."+DBConstants.LISTING_ID_COL+
 					", r."+DBConstants.AMOUNT_PAID_COL+", r."+DBConstants.TRANSACTION_ID_COL+
-					", a."+DBConstants.BEGIN_DATE_TIME_COL+", a."+DBConstants.END_DATE_TIME_COL+", a."+
-					DBConstants.IS_RESERVED_COL+" FROM "+DBConstants.RESERVATION_TB+" r INNER JOIN "+DBConstants.AVAILABILITY_TB+
-					" a ON r."+DBConstants.AVAILIBILITY_ID_COL+" = a."+DBConstants.AVAILIBILITY_ID_COL+" WHERE r."+
+					", r."+DBConstants.BEGIN_DATE_TIME_COL+", r."+DBConstants.END_DATE_TIME_COL+
+					" FROM "+DBConstants.RESERVATION_TB+" r WHERE r."+
 					(isLender? DBConstants.LENDER_ID_COL : DBConstants.SEEKER_ID_COL)+" = "+id);
 			
 			ResultSet rs = ps.executeQuery();
 			
 			while (rs.next()){
 				Reservation reservation = new Reservation();
-				ListingAvailibility available = new ListingAvailibility();
+				//ListingAvailibility available = new ListingAvailibility();
 				reservation.setBtTransactionId(rs.getInt(rs.findColumn(DBConstants.TRANSACTION_ID_COL)));
 				reservation.setLenderId(rs.getLong(rs.findColumn(DBConstants.LENDER_ID_COL)));
 				reservation.setSeekerId(rs.getLong(rs.findColumn(DBConstants.SEEKER_ID_COL)));
 				reservation.setListingId(rs.getLong(rs.findColumn(DBConstants.LISTING_ID_COL)));
 				reservation.setReservationId(rs.getLong(rs.findColumn(DBConstants.RESERVATION_ID_COL)));
 				reservation.setListing(getListing(reservation.getListingId()));
+				reservation.setBeginDate(rs.getTimestamp(rs.findColumn(DBConstants.BEGIN_DATE_TIME_COL)));
+				reservation.setEndDate(rs.getTimestamp(rs.findColumn(DBConstants.END_DATE_TIME_COL)));
 				//reservation.setPricePerHour(rs.getInt(rs.findColumn(DBConstants.PRICE_PER_HR_COL)));
-				available.setAvailabilityId(rs.getLong(rs.findColumn(DBConstants.AVAILIBILITY_ID_COL)));
-				available.setBeginDateTime(rs.getTimestamp(rs.findColumn(DBConstants.BEGIN_DATE_TIME_COL)));
-				available.setEndDateTime(rs.getTimestamp(rs.findColumn(DBConstants.END_DATE_TIME_COL)));
-				available.setIsReserved(rs.getBoolean(rs.findColumn(DBConstants.IS_RESERVED_COL)));
-				reservation.setListingAvailibility(available);
+			//	available.setAvailabilityId(rs.getLong(rs.findColumn(DBConstants.AVAILIBILITY_ID_COL)));
+			//	available.setBeginDateTime(rs.getTimestamp(rs.findColumn(DBConstants.BEGIN_DATE_TIME_COL)));
+			//	available.setEndDateTime(rs.getTimestamp(rs.findColumn(DBConstants.END_DATE_TIME_COL)));
+			//	available.setIsReserved(rs.getBoolean(rs.findColumn(DBConstants.IS_RESERVED_COL)));
+			//	reservation.setListingAvailibility(available);
 				reservations.put(reservation.getReservationId(), reservation);
 			}
 			System.out.println("after get reservations");
@@ -743,22 +744,29 @@ public class DatabaseConnector {
 		if (reservation.getLenderId() == 0 )throw new DBException(DBException.CREATE_RESERVATION+" "+DBException.INVALID_LENDER_ID);
 		if ( reservation.getListingId() == 0 )throw new DBException(DBException.CREATE_RESERVATION+" "+DBException.INVALID_LISTING_ID);
 		if ( reservation.getSeekerId() == 0 ) throw new DBException(DBException.CREATE_RESERVATION+" "+DBException.INVALID_SEEKER_ID);
-		if ( reservation.getListingAvailibility() == null) throw new DBException(DBException.CREATE_RESERVATION+" "+DBException.INVALID_AVAILABILITY);
-		if (reservation.getListingAvailibility().getAvailabilityId() == 0) throw new DBException(DBException.CREATE_RESERVATION+" "+DBException.INVALID_AVAILABILITY);
+		//if ( reservation.getListingAvailibility() == null) throw new DBException(DBException.CREATE_RESERVATION+" "+DBException.INVALID_AVAILABILITY);
+		//if (reservation.getListingAvailibility().getAvailabilityId() == 0) throw new DBException(DBException.CREATE_RESERVATION+" "+DBException.INVALID_AVAILABILITY);
 			
 		
 		//not currently inserting amount paid or transaction_id
 		PreparedStatement psfav = conn.prepareStatement("INSERT INTO "+DBConstants.RESERVATION_TB+" ("+DBConstants.LISTING_ID_COL+
-				", "+DBConstants.LENDER_ID_COL+", "+DBConstants.SEEKER_ID_COL+", "+DBConstants.AVAILIBILITY_ID_COL+
-				") VALUES ("+ reservation.getListingId()+", "+reservation.getLenderId()+", "+reservation.getSeekerId()+", "+reservation.getListingAvailibility().getAvailabilityId()+")", 
+				", "+DBConstants.LENDER_ID_COL+", "+DBConstants.SEEKER_ID_COL+", "+DBConstants.END_DATE_TIME_COL+", "+DBConstants.BEGIN_DATE_TIME_COL+
+				") VALUES ("+ reservation.getListingId()+", "+reservation.getLenderId()+", "+reservation.getSeekerId()+", ?, ? )", 
 				Statement.RETURN_GENERATED_KEYS);
+		psfav.setTimestamp(1, reservation.getEndDate());
+		psfav.setTimestamp(2, reservation.getBeginDate());
 		psfav.executeUpdate();
 		ResultSet rs = psfav.getGeneratedKeys();
 		if (rs.next()){
 			reservation.setReservationId(rs.getLong(1));
 		}
 		
-		PreparedStatement psAvail = conn.prepareStatement("UPDATE "+DBConstants.AVAILABILITY_TB+" SET "+DBConstants.IS_RESERVED_COL+" = TRUE WHERE "+DBConstants.AVAILIBILITY_ID_COL+" = "+reservation.getListingAvailibility().getAvailabilityId());
+		PreparedStatement psAvail = conn.prepareStatement("UPDATE "+DBConstants.AVAILABILITY_TB+" SET "+DBConstants.IS_RESERVED_COL+" = TRUE WHERE "+
+		DBConstants.LISTING_ID_COL+" = "+reservation.getListingId()+" AND ("+DBConstants.END_DATE_TIME_COL+" BETWEEN ? AND ?) OR ("+DBConstants.BEGIN_DATE_TIME_COL+" BETWEEN ? AND ?)");
+		psAvail.setTimestamp(1, reservation.getBeginDate());
+		psAvail.setTimestamp(2, reservation.getEndDate());
+		psAvail.setTimestamp(3, reservation.getBeginDate());
+		psAvail.setTimestamp(4, reservation.getEndDate());
 		psAvail.executeUpdate();
 		
 		return reservation;

@@ -73,7 +73,8 @@ public class DBConstants {
 	public static final String SEEKER_ID_COL = "seeker_id";
 	//LENDER_ID_COL
 	//LISTING_ID_COL
-	//AVAILABILITY_ID_COL
+	//public static final String BEGIN_DATE_TIME_COL = "begin_date_time";
+	//public static final String END_DATE_TIME_COL = "end_date_time";
 	public static final String AMOUNT_PAID_COL = "amount_paid";
 	public static final String TRANSACTION_ID_COL = "transaction_id";
 	
