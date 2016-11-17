@@ -395,8 +395,13 @@ public class DatabaseConnector {
 			System.out.println(searchMessage.advanced.getStartTime().toString());
 			System.out.println(searchMessage.advanced.getEndTime().toString());
 			sb.append(" EXISTS (SELECT NULL FROM "+DBConstants.AVAILABILITY_TB+" av WHERE av."+DBConstants.LISTING_ID_COL+" = "+
-					" l."+DBConstants.LISTING_ID_COL+" AND "+DBConstants.BEGIN_DATE_TIME_COL+" > ? AND "+DBConstants.END_DATE_TIME_COL+" < ? AND "+DBConstants.IS_RESERVED_COL+" = FALSE) AND ");
+					" l."+DBConstants.LISTING_ID_COL+" AND av."+DBConstants.BEGIN_DATE_TIME_COL+" <= ? AND av."+DBConstants.END_DATE_TIME_COL+" >= ?) AND ");
+			
+			sb.append(" NOT EXISTS(SELECT NULL FROM "+DBConstants.RESERVATION_TB+" r WHERE r."+DBConstants.LISTING_ID_COL+" = l."+DBConstants.LISTING_ID_COL
+					+" AND (r."+DBConstants.END_DATE_TIME_COL+
+				" BETWEEN ? AND ?) OR (r."+DBConstants.BEGIN_DATE_TIME_COL+" BETWEEN ? AND ?)) AND ");
 		}
+		
 				
 		if (searchMessage.advanced.getCategories() != null && !searchMessage.advanced.getCategories().isEmpty()){
 			sb.append("ca."+DBConstants.CATEGORY_COL+" IN (");
@@ -417,6 +422,10 @@ public class DatabaseConnector {
 		if (searchMessage.advanced.getEndTime() != null){
 			psListing.setTimestamp(1, searchMessage.advanced.getStartTime());
 			psListing.setTimestamp(2, searchMessage.advanced.getEndTime());
+			psListing.setTimestamp(3, searchMessage.advanced.getStartTime());
+			psListing.setTimestamp(4, searchMessage.advanced.getEndTime());
+			psListing.setTimestamp(5, searchMessage.advanced.getStartTime());
+			psListing.setTimestamp(6, searchMessage.advanced.getEndTime());
 		}
 		System.out.println(sb.toString());
 		ResultSet rs = psListing.executeQuery();
@@ -761,13 +770,13 @@ public class DatabaseConnector {
 			reservation.setReservationId(rs.getLong(1));
 		}
 		
-		PreparedStatement psAvail = conn.prepareStatement("UPDATE "+DBConstants.AVAILABILITY_TB+" SET "+DBConstants.IS_RESERVED_COL+" = TRUE WHERE "+
-		DBConstants.LISTING_ID_COL+" = "+reservation.getListingId()+" AND ("+DBConstants.END_DATE_TIME_COL+" BETWEEN ? AND ?) OR ("+DBConstants.BEGIN_DATE_TIME_COL+" BETWEEN ? AND ?)");
-		psAvail.setTimestamp(1, reservation.getBeginDate());
-		psAvail.setTimestamp(2, reservation.getEndDate());
-		psAvail.setTimestamp(3, reservation.getBeginDate());
-		psAvail.setTimestamp(4, reservation.getEndDate());
-		psAvail.executeUpdate();
+//		PreparedStatement psAvail = conn.prepareStatement("UPDATE "+DBConstants.AVAILABILITY_TB+" SET "+DBConstants.IS_RESERVED_COL+" = TRUE WHERE "+
+//		DBConstants.LISTING_ID_COL+" = "+reservation.getListingId()+" AND ("+DBConstants.END_DATE_TIME_COL+" BETWEEN ? AND ?) OR ("+DBConstants.BEGIN_DATE_TIME_COL+" BETWEEN ? AND ?)");
+//		psAvail.setTimestamp(1, reservation.getBeginDate());
+//		psAvail.setTimestamp(2, reservation.getEndDate());
+//		psAvail.setTimestamp(3, reservation.getBeginDate());
+//		psAvail.setTimestamp(4, reservation.getEndDate());
+//		psAvail.executeUpdate();
 		
 		return reservation;
 	}
