@@ -1,6 +1,6 @@
 package model;
-
-public class MerchantPayment {
+import java.io.Serializable;
+public class MerchantPayment implements Serializable{
 	private String dateOfBirth;
 	private Address address;
 	

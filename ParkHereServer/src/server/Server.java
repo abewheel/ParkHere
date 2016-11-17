@@ -149,11 +149,13 @@ public class Server extends Thread {
 				
 			}
 			else if (message instanceof GetClientTokenMessage){
+				
 				GetClientTokenMessage mess = (GetClientTokenMessage) message;
-				mess.clientToken = btConn.getClientToken(mess.customerId);
+				mess.clientToken = btConn.getClientTokenNoCustomerId();
 				origThread.sendMessage(mess);
 			}
 			else if (message instanceof MerchantAccountMessage){
+				System.out.println("create merchant account");
 				MerchantAccountMessage mess = (MerchantAccountMessage) message;
 				mess.merchantId = btConn.createMerchant(mess);
 				dbConn.addMerchantId(mess.merchantId, mess.lender.getLenderId());

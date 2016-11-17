@@ -173,6 +173,7 @@ public class DatabaseConnector {
 			lender.setProfile(profile);
 			
 			lender.setListings(getLenderListings(lender.getLenderId()));
+			lender.setMerchantId(rsLender.getString(rsLender.findColumn(DBConstants.MERCHANT_ID_COL)));
 			lender.setReservations(getReservations(lender.getLenderId(), true));
 			System.out.println("after  get listings and reservations");
 			user.setLender(lender);
@@ -592,6 +593,7 @@ public class DatabaseConnector {
 	}
 	
 	public void addMerchantId(String merchantId, long lenderId) throws SQLException{
+		System.out.println("in add merchant id in database");
 		PreparedStatement ps = conn.prepareStatement("UPDATE "+DBConstants.LENDER_TB+" SET "+DBConstants.MERCHANT_ID_COL+" = '"+merchantId+"' WHERE "+
 				DBConstants.LENDER_ID_COL + " = "+lenderId);
 		ps.executeUpdate();

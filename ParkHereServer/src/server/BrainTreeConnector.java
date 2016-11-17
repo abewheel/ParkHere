@@ -1,5 +1,7 @@
 package server;
 
+import java.math.BigDecimal;
+
 import com.braintreegateway.BraintreeGateway;
 import com.braintreegateway.ClientTokenRequest;
 import com.braintreegateway.Customer;
@@ -10,6 +12,8 @@ import com.braintreegateway.MerchantAccountRequest;
 import com.braintreegateway.PaymentMethod;
 import com.braintreegateway.PaymentMethodRequest;
 import com.braintreegateway.Result;
+import com.braintreegateway.Transaction;
+import com.braintreegateway.TransactionRequest;
 
 import messages.MerchantAccountMessage;
 import model.BankPayment;
@@ -38,6 +42,10 @@ public class BrainTreeConnector {
 		//String clientToken = gateway.clientToken().generate();
 	}
 	
+	public String getClientTokenNoCustomerId(){
+		return gateway.clientToken().generate();
+	}
+	
 	
 	public String createClient(User user, Role role){
 		CustomerRequest request = new CustomerRequest()
@@ -63,7 +71,23 @@ public class BrainTreeConnector {
 		Result<? extends PaymentMethod> result = gateway.paymentMethod().create(request);
 	}
 	
+	public String createTransaction(String customerPaymentToken, String merchantId, String amount ){
+		TransactionRequest request = new TransactionRequest()
+			    .amount(new BigDecimal(amount))
+			    .paymentMethodToken(customerPaymentToken)
+			    .merchantAccountId(merchantId)
+			    .options()
+			        .submitForSettlement(true)
+			        .done();
+
+			Result<Transaction> result = gateway.transaction().sale(request);
+			Transaction transaction = result.getTarget();
+			return transaction.getId();
+	}
+	
 	public String createMerchant(MerchantAccountMessage info){
+		
+		System.out.println("create merchant account");
 		Boolean isBank = (info.merchantPayment instanceof BankPayment);
 		MerchantAccountRequest request = null;
 		if (isBank){
@@ -119,6 +143,11 @@ public class BrainTreeConnector {
 		Result<MerchantAccount> result = gateway.merchantAccount().create(request);
 		MerchantAccount ma = result.getTarget();
 		return ma.getId();
+	}
+	
+	
+	public Customer getCustomer(String customerId){
+		return gateway.customer().find(customerId);
 	}
 
 }
