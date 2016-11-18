@@ -2,6 +2,10 @@ package action;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 
 import messages.CreateCustomerMessage;
 import messages.GetClientTokenMessage;
@@ -105,9 +109,39 @@ class ReservationAction extends Action{
 	@Override
 	public void execute(Message message, DatabaseConnector dbConn, BrainTreeConnector btConn, ServerComThread comThread) throws IOException, SQLException, DBException {
 		ReservationMessage resMess = (ReservationMessage) message;
-		
+		System.out.println("in reservation action");
 		if (resMess.action.equals(Message.insert)){
-			resMess.reservation = dbConn.createReservation(resMess.reservation);
+			//String amount = "";
+			System.out.println(resMess.reservation.getEndDate().toString());
+			System.out.println(resMess.reservation.getBeginDate().toString());
+			//LocalDate today = resMess.reservation.getEndDate().toLocalDateTime().toLocalDate();
+			//LocalDate birthday = resMess.reservation.getBeginDate().toLocalDateTime().toLocalDate();
+			long milliseconds1 = resMess.reservation.getBeginDate().getTime();
+			  long milliseconds2 = resMess.reservation.getEndDate().getTime();
+
+			  long diff = milliseconds2 - milliseconds1;
+			//  long diffSeconds = diff / 1000;
+			  long diffMinutes = diff / (60 * 1000);
+			//  long diffHours = diff / (60 * 60 * 1000);
+			 // long diffDays = diff / (24 * 60 * 60 * 1000);
+
+			double hours = (double) diffMinutes / 60.0;
+		//	Period p = Period.between(birthday, today);
+			System.out.println("before calculating pay");
+			//long p2 = ChronoUnit.DAYS.between(birthday, today);
+//			double p2 = 0.5;
+//			p2 = p2 * 24;
+			System.out.println(hours);
+			System.out.println("listing pricer per hr "+ resMess.reservation.getListing().getPricePerHr());
+			double paid = (double) hours * resMess.reservation.getListing().getPricePerHr();
+			System.out.println(paid);
+			//sysout
+			System.out.println("nonce" + resMess.nonce);
+			System.out.println("lender"+resMess.reservation.getLender());
+			System.out.println("merchant id"+resMess.reservation.getLender().getMerchantId());
+			String id = btConn.createTransactionNoClient(resMess.nonce, resMess.reservation.getLender().getMerchantId(), Double.toString(paid));
+			
+			resMess.reservation = dbConn.createReservation(resMess.reservation, id);
 		}
 		
 		comThread.sendMessage(resMess);

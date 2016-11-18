@@ -16,7 +16,7 @@ public class Reservation implements Serializable{
     private Timestamp beginDate;
     private Timestamp endDate;
     private int pricePerHour;
-    private int btTransactionId;
+    private String btTransactionId;
     private long reservationId;
     
     private long listingId;
@@ -128,13 +128,6 @@ public class Reservation implements Serializable{
 		this.endDate = endDate;
 	}
 
-	public int getBtTransactionId() {
-		return btTransactionId;
-	}
-
-	public void setBtTransactionId(int bt_transaction_id) {
-		this.btTransactionId = bt_transaction_id;
-	}
 
 	public int getPricePerHour() {
         return pricePerHour;
@@ -144,11 +137,11 @@ public class Reservation implements Serializable{
         this.pricePerHour = price_per_hour;
     }
 
-    public int getBTTransactionId() {
+    public String getBTTransactionId() {
         return btTransactionId;
     }
 
-    public void setBTTransactionId(int bt_transaction_id) {
+    public void setBTTransactionId(String bt_transaction_id) {
         this.btTransactionId = bt_transaction_id;
     }
 

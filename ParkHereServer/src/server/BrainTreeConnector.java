@@ -14,6 +14,8 @@ import com.braintreegateway.PaymentMethodRequest;
 import com.braintreegateway.Result;
 import com.braintreegateway.Transaction;
 import com.braintreegateway.TransactionRequest;
+import com.braintreegateway.ValidationError;
+import com.braintreegateway.ValidationErrors;
 
 import messages.MerchantAccountMessage;
 import model.BankPayment;
@@ -71,6 +73,8 @@ public class BrainTreeConnector {
 		Result<? extends PaymentMethod> result = gateway.paymentMethod().create(request);
 	}
 	
+	
+	
 	public String createTransaction(String customerPaymentToken, String merchantId, String amount ){
 		TransactionRequest request = new TransactionRequest()
 			    .amount(new BigDecimal(amount))
@@ -81,6 +85,23 @@ public class BrainTreeConnector {
 			        .done();
 
 			Result<Transaction> result = gateway.transaction().sale(request);
+			Transaction transaction = result.getTarget();
+			return transaction.getId();
+	}
+	
+	public String createTransactionNoClient(String customerPaymentNonce, String merchantId, String amount ){
+		System.out.println("in create transaction");
+		TransactionRequest request = new TransactionRequest()
+			    .amount(new BigDecimal(amount))
+			    .paymentMethodNonce(customerPaymentNonce)
+			    //.merchantAccountId(merchantId)
+			    .options()
+			        .submitForSettlement(true)
+			        .done();
+
+			Result<Transaction> result = gateway.transaction().sale(request);
+			System.out.println(result.isSuccess());
+	
 			Transaction transaction = result.getTarget();
 			return transaction.getId();
 	}
