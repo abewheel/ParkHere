@@ -18,7 +18,7 @@ public class Listing implements Serializable{
     private String title;
     double price_per_hr;
     private Address address;
-   // private List<ImageIcon> listing_images;
+    private List<byte[]> listing_images;
     private String description;
     private List<ListingAvailibility> availability_list;
     private Integer total_rating;
@@ -84,14 +84,14 @@ public class Listing implements Serializable{
         this.address = address;
     }
 
-//    public List<ImageIcon> getListingImages() {
-//        return listing_images;
-//    }
-//
-//    public void setListingImages(List<ImageIcon> listing_images) {
-//        this.listing_images = listing_images;
-//    }
-//
+    public List<byte[]> getListingImages() {
+        return listing_images;
+    }
+
+    public void setListingImages(List<byte[]> listing_images) {
+        this.listing_images = listing_images;
+    }
+
 //    public void addImage(ImageIcon image){
 //        if (listing_images == null) listing_images = new ArrayList<>();
 //        listing_images.add(image);

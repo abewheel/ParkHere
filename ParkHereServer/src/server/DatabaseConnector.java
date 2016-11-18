@@ -286,12 +286,18 @@ public class DatabaseConnector {
 //	}
 //	
 	
+	public void setReservationReviewed(long reservationId) throws SQLException{
+		
+		PreparedStatement ps = conn.prepareStatement("UPDATE "+DBConstants.RESERVATION_TB+" SET "+DBConstants.IS_REVIEWED_COL+" = TRUE WHERE "+DBConstants.RESERVATION_ID_COL+" = "+reservationId);
+		ps.executeUpdate();
+	}
+	
 	public Map<Long, Reservation> getReservations(long id, Boolean isLender) throws DBException{
 		Map<Long, Reservation> reservations = new HashMap<>();
 		System.out.println("before get reservations");
 		PreparedStatement ps;
 		try {
-			ps = conn.prepareStatement("SELECT r."+DBConstants.RESERVATION_ID_COL+", r."+DBConstants.SEEKER_ID_COL+
+			ps = conn.prepareStatement("SELECT r."+DBConstants.RESERVATION_ID_COL+", r."+DBConstants.SEEKER_ID_COL+", r."+DBConstants.IS_REVIEWED_COL+
 					", r."+DBConstants.LENDER_ID_COL+", r."+DBConstants.LISTING_ID_COL+
 					", r."+DBConstants.AMOUNT_PAID_COL+", r."+DBConstants.TRANSACTION_ID_COL+
 					", r."+DBConstants.BEGIN_DATE_TIME_COL+", r."+DBConstants.END_DATE_TIME_COL+
@@ -309,6 +315,7 @@ public class DatabaseConnector {
 				reservation.setListingId(rs.getLong(rs.findColumn(DBConstants.LISTING_ID_COL)));
 				reservation.setReservationId(rs.getLong(rs.findColumn(DBConstants.RESERVATION_ID_COL)));
 				reservation.setListing(getListing(reservation.getListingId()));
+				reservation.setIsReviewed(rs.getBoolean(rs.findColumn(DBConstants.IS_REVIEWED_COL)));
 				reservation.setBeginDate(rs.getTimestamp(rs.findColumn(DBConstants.BEGIN_DATE_TIME_COL)));
 				reservation.setEndDate(rs.getTimestamp(rs.findColumn(DBConstants.END_DATE_TIME_COL)));
 				//reservation.setPricePerHour(rs.getInt(rs.findColumn(DBConstants.PRICE_PER_HR_COL)));

@@ -22,8 +22,18 @@ public class Reservation implements Serializable{
     private long listingId;
     private long seekerId;
     private long lenderId;
+    
+    private Boolean isReviewed;
 
-    @Override
+    public Boolean isReviewed() {
+		return isReviewed;
+	}
+
+	public void setIsReviewed(Boolean isReviewed) {
+		this.isReviewed = isReviewed;
+	}
+
+	@Override
     public String toString(){
     	StringBuilder sb = new StringBuilder();
     	if (lender != null){

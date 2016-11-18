@@ -71,6 +71,7 @@ public class DBConstants {
 	//reservation
 	public static final String RESERVATION_ID_COL = "reservation_id";
 	public static final String SEEKER_ID_COL = "seeker_id";
+	public static final String IS_REVIEWED_COL = "is_reviewed";
 	//LENDER_ID_COL
 	//LISTING_ID_COL
 	//public static final String BEGIN_DATE_TIME_COL = "begin_date_time";
