@@ -247,6 +247,14 @@ public class DatabaseConnector {
 			//profile pic
 			//merchant id
 			seeker.setProfile(profile);
+			Blob blob = rsSeeker.getBlob(rsSeeker.findColumn(DBConstants.PROFILE_PIC_COL));
+			if (blob != null){
+				int blobLength = (int) blob.length();  
+				byte[] blobAsBytes = blob.getBytes(1, blobLength);
+				seeker.setProfilePicture(blobAsBytes);
+				//release the blob and free up memory. (since JDBC 4.0)
+				blob.free();
+			}
 			seeker.setFavorites(getSeekerListings(seeker.getSeekerId()));
 			seeker.setReservations(getReservations(seeker.getSeekerId(), false));
 			
