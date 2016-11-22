@@ -282,7 +282,7 @@ public class DatabaseConnector {
 		if (!mess.comment.equals("")){
 			addListingComment(mess.comment, mess.reservation.getListingId(), null);
 		}
-		
+	
 		PreparedStatement ps = conn.prepareStatement("UPDATE "+DBConstants.LISTING_TB+" SET "+DBConstants.TOTAL_RATING_COL+" = "
 				+DBConstants.TOTAL_RATING_COL+" + "+mess.rate+", "+DBConstants.NUM_RATINGS_COL+" = "+DBConstants.NUM_RATINGS_COL+
 				" + 1 WHERE "+DBConstants.LISTING_ID_COL+" = "+mess.reservation.getListingId());

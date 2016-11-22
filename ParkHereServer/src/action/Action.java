@@ -140,9 +140,19 @@ class ReservationAction extends Action{
 			System.out.println("nonce" + resMess.nonce);
 			System.out.println("lender"+resMess.reservation.getLender());
 			System.out.println("merchant id"+resMess.reservation.getLender().getMerchantId());
-			String id = btConn.createTransactionNoClient(resMess.nonce, resMess.reservation.getLender().getMerchantId(), Double.toString(paid));
+			try{
+				String id = btConn.createTransactionNoClient(resMess.nonce, resMess.reservation.getLender().getMerchantId(), Double.toString(paid));
+				
+				resMess.reservation = dbConn.createReservation(resMess.reservation, id);
+				resMess.success = true;
+			}
+			catch (NullPointerException e){
+				resMess.success = false;
+			}
+			finally{
+				comThread.sendMessage(resMess);
+			}
 			
-			resMess.reservation = dbConn.createReservation(resMess.reservation, id);
 		}
 		
 		comThread.sendMessage(resMess);
@@ -224,9 +234,18 @@ class MerchantAccountAction extends Action{
 	public void execute(Message message, DatabaseConnector dbConn, BrainTreeConnector btConn, ServerComThread comThread) throws IOException, SQLException, DBException {
 		System.out.println("create merchant account");
 		MerchantAccountMessage mess = (MerchantAccountMessage) message;
-		mess.merchantId = btConn.createMerchant(mess);
-		dbConn.addMerchantId(mess.merchantId, mess.lender.getLenderId());
-		comThread.sendMessage(mess);
+		try{
+			mess.merchantId = btConn.createMerchant(mess);
+			dbConn.addMerchantId(mess.merchantId, mess.lender.getLenderId());
+			mess.success = true;
+		}
+		catch (NullPointerException e){
+			mess.success = false;
+		}
+		finally{
+			comThread.sendMessage(mess);
+		}
+		
 	}
 	
 }

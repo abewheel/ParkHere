@@ -9,4 +9,5 @@ public class MerchantAccountMessage extends Message{
 	public Lender lender;
 	public User user;
 	public String merchantId;
+	public Boolean success;
 }

@@ -7,4 +7,5 @@ import model.Reservation;
 public class ReservationMessage extends Message implements Serializable{
 	public Reservation reservation;
 	public String nonce;
+	public Boolean success;
 }
