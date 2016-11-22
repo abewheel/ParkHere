@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import messages.ListingReviewMessage;
 import messages.ProfilePicMessage;
 import messages.SearchMessage;
 import model.Address;
@@ -84,7 +85,7 @@ public class DatabaseConnector {
 		listing.setListingId(rsListing.getLong(rsListing.findColumn(DBConstants.LISTING_ID_COL)));
 		listing.setPrice_per_hr(rsListing.getDouble(rsListing.findColumn(DBConstants.PRICE_PER_HR_COL)));
 		listing.setNumberOfRatings(rsListing.getInt(rsListing.findColumn(DBConstants.NUM_RATINGS_COL)));
-		listing.setTotalRating(rsListing.getInt(rsListing.findColumn(DBConstants.TOTAL_RATING_COL)));
+		listing.setTotalRating(rsListing.getDouble(rsListing.findColumn(DBConstants.TOTAL_RATING_COL)));
 		
 		PreparedStatement psCategories = conn.prepareStatement("SELECT "+DBConstants.CATEGORY_COL+" FROM "+DBConstants.LISTING_CATEGORY_TB+
 				" l INNER JOIN "+DBConstants.CATEGORY_TB+" c ON l."+DBConstants.CATEGORY_ID_COL+" = c."+DBConstants.CATEGORY_ID_COL+" WHERE "+DBConstants.LISTING_ID_COL+
@@ -273,6 +274,19 @@ public class DatabaseConnector {
 	public void setReservationReviewed(long reservationId) throws SQLException{
 		
 		PreparedStatement ps = conn.prepareStatement("UPDATE "+DBConstants.RESERVATION_TB+" SET "+DBConstants.IS_REVIEWED_COL+" = TRUE WHERE "+DBConstants.RESERVATION_ID_COL+" = "+reservationId);
+		ps.executeUpdate();
+	}
+	
+	public void addReview(ListingReviewMessage mess) throws SQLException{
+		setReservationReviewed(mess.reservation.getReservationId());
+		if (!mess.comment.equals("")){
+			addListingComment(mess.comment, mess.reservation.getListingId(), null);
+		}
+		
+		PreparedStatement ps = conn.prepareStatement("UPDATE "+DBConstants.LISTING_TB+" SET "+DBConstants.TOTAL_RATING_COL+" = "
+				+DBConstants.TOTAL_RATING_COL+" + "+mess.rate+", "+DBConstants.NUM_RATINGS_COL+" = "+DBConstants.NUM_RATINGS_COL+
+				" + 1 WHERE "+DBConstants.LISTING_ID_COL+" = "+mess.reservation.getListingId());
+		
 		ps.executeUpdate();
 	}
 	

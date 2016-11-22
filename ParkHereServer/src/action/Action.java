@@ -97,7 +97,8 @@ class ListingReviewAction extends Action{
 	@Override
 	public void execute(Message message, DatabaseConnector dbConn, BrainTreeConnector btConn, ServerComThread comThread) throws IOException, SQLException, DBException {
 		ListingReviewMessage mess = (ListingReviewMessage) message;
-		dbConn.addListingComment(mess.comment, mess.listingId, mess.userId);
+		//dbConn.addListingComment(mess.comment, mess.listingId, mess.userId);
+		dbConn.addReview(mess);
 		comThread.sendMessage(mess);
 		
 	}

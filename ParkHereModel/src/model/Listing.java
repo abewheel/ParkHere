@@ -21,7 +21,7 @@ public class Listing implements Serializable{
     private List<byte[]> listing_images;
     private String description;
     private List<ListingAvailibility> availability_list;
-    private Integer total_rating;
+    private Double total_rating;
     private Integer num_ratings;
     private List<String> categories;
     private List<String> comments;
@@ -118,10 +118,10 @@ public class Listing implements Serializable{
     }
 
     public double getAverageRating() {
-        return num_ratings == 0 ? 0 : (total_rating)/ (num_ratings);
+        return num_ratings == 0 ? 0 : (total_rating)/ (double)(num_ratings);
     }
 
-    public void setTotalRating (int total_rating) {
+    public void setTotalRating (double total_rating) {
         this.total_rating = total_rating;
     }
 
