@@ -24,17 +24,27 @@ public class Listing implements Serializable{
     private Double total_rating;
     private Integer num_ratings;
     private List<String> categories;
-    private List<String> comments;
+    private List<Review> reviews;
+   // private List<String> comments;
     private String cancellationPolicy;
     private long listingId;
+    private Boolean deleted;
    
-    public void setComments(List<String> comments){
-    	this.comments = comments;
-    }
-    
-    public List<String> getComments(){
-    	return comments;
-    }
+    public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
 
 	public void setPrice_per_hr(double price_per_hr) {
 		this.price_per_hr = price_per_hr;

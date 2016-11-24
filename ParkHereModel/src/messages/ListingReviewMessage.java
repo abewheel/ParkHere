@@ -6,5 +6,5 @@ public class ListingReviewMessage extends Message{
 	public Reservation reservation;
 	public double rate;
 	public String comment;
-	public Long userId;
+	public String userName;
 }

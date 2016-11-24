@@ -2,14 +2,11 @@ package action;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
 
 import messages.CreateCustomerMessage;
 import messages.GetClientTokenMessage;
 import messages.LenderMessage;
+import messages.ListingAvailabilityMessage;
 import messages.ListingMessage;
 import messages.ListingReviewMessage;
 import messages.MerchantAccountMessage;
@@ -61,10 +58,10 @@ class LenderAction extends Action{
 		if (lenderMess.action.equals(Message.insert)){
 			lenderMess.lender = dbConn.createLender(lenderMess.lender);
 		}
-		else if (lenderMess.action.equals(Message.delete)){
-			System.out.println("received delete lender message");
-			dbConn.removeListing(lenderMess.lender.getLenderId());
-		}
+//		else if (lenderMess.action.equals(Message.delete)){
+//			System.out.println("received delete lender message");
+//			dbConn.removeListing(lenderMess.lender.getLenderId());
+//		}
 		
 		comThread.sendMessage(lenderMess);
 		
@@ -83,11 +80,23 @@ class ListingAction extends Action{
 		}
 		else if (listMess.action.equals(Message.delete)){
 			System.out.println("received delete listing message");
-			dbConn.removeListing(listMess.listing.getListingId());
+			dbConn.deleteListing(listMess.listing.getListingId());
 		}
 		
 		comThread.sendMessage(listMess);
 		
+	}
+	
+}
+
+class ListingAvailabilityAction extends Action{
+
+	@Override
+	public void execute(Message message, DatabaseConnector dbConn, BrainTreeConnector btConn, ServerComThread comThread)
+			throws IOException, SQLException, DBException {
+		if (message.action.equals(Message.delete)){
+			dbConn.deleteListingAvailability(((ListingAvailabilityMessage) message).availability_id);
+		}
 	}
 	
 }
@@ -165,7 +174,13 @@ class SeekerFavoriteAction extends Action{
 	@Override
 	public void execute(Message message, DatabaseConnector dbConn, BrainTreeConnector btConn, ServerComThread comThread) throws IOException, SQLException, DBException {
 		SeekerFavoriteMessage mess = (SeekerFavoriteMessage) message;
-		dbConn.createSeekerFavorite(mess.seekerId, mess.listingId);
+		if (mess.action.equals(Message.insert)){
+			dbConn.createSeekerFavorite(mess.seekerId, mess.listingId);
+		}
+		else{
+			dbConn.deleteSeekerFavorite(mess.seekerId, mess.listingId);
+		}
+		
 		comThread.sendMessage(mess);	
 	}
 	
@@ -181,10 +196,10 @@ class SeekerAction extends Action{
 			seekMess.seeker = dbConn.createSeeker(seekMess.seeker);
 		}
 		
-		else if (seekMess.action.equals(Message.delete)){
-			System.out.println("received delete seeker message");
-			dbConn.deleteSeeker(seekMess.seeker.getSeekerId());
-		}
+//		else if (seekMess.action.equals(Message.delete)){
+//			System.out.println("received delete seeker message");
+//			dbConn.deleteSeeker(seekMess.seeker.getSeekerId());
+//		}
 		comThread.sendMessage(seekMess);
 		
 	}
@@ -256,12 +271,12 @@ class SearchAction extends Action{
 	public void execute(Message message, DatabaseConnector dbConn, BrainTreeConnector btConn, ServerComThread comThread)
 			throws IOException, SQLException, DBException {
 		SearchMessage searchMess = (SearchMessage) message;
-		if (searchMess.useTimes){
+	//	if (searchMess.useTimes){
 			searchMess.returnListings = dbConn.searchByCoordinatesAndDate(searchMess);
-		}
-		else{
-			searchMess.returnListings = dbConn.searchByCoordinates(searchMess);
-		}
+	//	}
+//		else{
+//			searchMess.returnListings = dbConn.searchByCoordinates(searchMess);
+//		}
 		
 		comThread.sendMessage(searchMess);
 		

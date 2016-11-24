@@ -5,6 +5,7 @@ import java.util.HashMap;
 import messages.CreateCustomerMessage;
 import messages.GetClientTokenMessage;
 import messages.LenderMessage;
+import messages.ListingAvailabilityMessage;
 import messages.ListingMessage;
 import messages.ListingReviewMessage;
 import messages.MerchantAccountMessage;
@@ -35,6 +36,7 @@ public class ActionFactory {
 			factory.put(SeekerFavoriteMessage.class, new SeekerFavoriteAction());
 			factory.put(SeekerMessage.class, new SeekerAction());
 			factory.put(UserMessage.class, new UserAction());
+			factory.put(ListingAvailabilityMessage.class, new ListingAvailabilityAction());
 		}
 	}
 	

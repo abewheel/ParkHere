@@ -11,8 +11,17 @@ public class ListingAvailibility implements Serializable{
     private Boolean isReserved;
     private long availabilityId;
     private long listingId;
+    private Boolean deleted;
     
-    @Override
+    public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	@Override
     public String toString(){
     	StringBuilder sb = new StringBuilder();
     	sb.append("begin time: "+beginDateTime.toString()+System.lineSeparator());
