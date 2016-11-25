@@ -442,7 +442,7 @@ public class DatabaseConnector {
 		System.out.println("minLon: "+minLong);
 		System.out.println("maxLon: "+maxLong);
 		
-		StringBuilder sb = new StringBuilder("SELECT l."+DBConstants.LENDER_ID_COL+", lend."+DBConstants.MERCHANT_ID_COL+
+		StringBuilder sb = new StringBuilder("SELECT l."+DBConstants.LENDER_ID_COL+", lend."+DBConstants.MERCHANT_ID_COL+", l."+DBConstants.CATEGORIES_COL+
 				", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
 				", l."+DBConstants.PRICE_PER_HR_COL+", l."+DBConstants.DELETED_COL+
 				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
@@ -453,9 +453,9 @@ public class DatabaseConnector {
 				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
 				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+
 				" INNER JOIN "+DBConstants.LENDER_TB+" lend ON l."+DBConstants.LENDER_ID_COL+" = lend."+DBConstants.LENDER_ID_COL+
-				(!searchMessage.advanced.getCategories().isEmpty() ? 
-						" INNER JOIN "+DBConstants.LISTING_CATEGORY_TB+" lc ON l."+DBConstants.LISTING_ID_COL+" = lc."+DBConstants.LISTING_ID_COL+
-						" INNER JOIN "+DBConstants.CATEGORY_TB+" ca ON ca."+DBConstants.CATEGORY_ID_COL+" = lc."+DBConstants.CATEGORY_ID_COL : "")+
+//				(!searchMessage.advanced.getCategories().isEmpty() ? 
+//						" INNER JOIN "+DBConstants.LISTING_CATEGORY_TB+" lc ON l."+DBConstants.LISTING_ID_COL+" = lc."+DBConstants.LISTING_ID_COL+
+//						" INNER JOIN "+DBConstants.CATEGORY_TB+" ca ON ca."+DBConstants.CATEGORY_ID_COL+" = lc."+DBConstants.CATEGORY_ID_COL : "")+
 				" WHERE ");
 		
 		if (searchMessage.advanced.getEndTime() != null){
@@ -471,13 +471,27 @@ public class DatabaseConnector {
 		
 				
 		if (searchMessage.advanced.getCategories() != null && !searchMessage.advanced.getCategories().isEmpty()){
-			sb.append("ca."+DBConstants.CATEGORY_COL+" IN (");
-			for (String cat : searchMessage.advanced.getCategories()){
-				sb.append("'"+cat+"',");
-			}
-			
-			sb.deleteCharAt(sb.length()-1);
-			sb.append(") AND ");
+		
+			//if (searchMessage.advanced.getCategories().size() > 3){
+				
+				for (String cat : searchMessage.advanced.getCategories()){
+					sb.append("JSON_SEARCH(l."+DBConstants.CATEGORIES_COL+", 'all', '"+cat+"') IS NOT NULL AND ");
+				}
+			//}
+//			else{
+//				
+//				for (String cat : searchMessage.advanced.getCategories()){
+//					
+//				}
+//			}
+//			
+//			sb.append("ca."+DBConstants.CATEGORY_COL+" IN (");
+//			for (String cat : searchMessage.advanced.getCategories()){
+//				sb.append("'"+cat+"',");
+//			}
+//			
+//			sb.deleteCharAt(sb.length()-1);
+//			sb.append(") AND ");
 		}
 		
 		sb.append("l."+DBConstants.PRICE_PER_HR_COL+" < "+searchMessage.advanced.getPrice()+" AND a."+DBConstants.LATITUDE_COL+" BETWEEN "+minLat+" AND "+maxLat+" AND a."+DBConstants.LONGITUDE_COL
