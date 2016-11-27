@@ -107,7 +107,7 @@ public class DBConstants {
 	public static final String COMMENT_COL = "comment";
 	public static final String DELETED_COL = "deleted";
 	public static final String RATING_COL = "rating";
-	public static final String LISTING_IMAGE_ID = "listing_image_id";
+	public static final String LISTING_IMAGE_ID_COL = "listing_image_id";
 	public static final String CATEGORIES_COL = "categories";
 	
 	

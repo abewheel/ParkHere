@@ -5,8 +5,10 @@ import java.sql.SQLException;
 
 import messages.CreateCustomerMessage;
 import messages.GetClientTokenMessage;
+import messages.GetListingImagesMessage;
 import messages.LenderMessage;
 import messages.ListingAvailabilityMessage;
+import messages.ListingImageMessage;
 import messages.ListingMessage;
 import messages.ListingReviewMessage;
 import messages.MerchantAccountMessage;
@@ -76,7 +78,11 @@ class ListingAction extends Action{
 		ListingMessage listMess = (ListingMessage) message;
 		if (listMess.action.equals(Message.insert)){
 			System.out.println("received create listing message");
-			listMess.listing = dbConn.createListing(listMess.listing);
+			listMess.listing = dbConn.createListing(listMess);
+		}
+		else if (listMess.action.equals(Message.update)){
+			System.out.println("received delete listing message");
+			dbConn.removeListing(listMess.listing.getListingId());
 		}
 		else if (listMess.action.equals(Message.delete)){
 			System.out.println("received delete listing message");
@@ -280,6 +286,29 @@ class SearchAction extends Action{
 		
 		comThread.sendMessage(searchMess);
 		
+	}
+	
+}
+
+class ListingImageAction extends Action{
+
+	@Override
+	public void execute(Message message, DatabaseConnector dbConn, BrainTreeConnector btConn, ServerComThread comThread)
+			throws IOException, SQLException, DBException {
+		dbConn.deleteListingImages(((ListingImageMessage)message).imagesToDelete);
+		comThread.sendMessage(message);
+	}
+	
+}
+
+class GetListingImagesAction extends Action{
+
+	@Override
+	public void execute(Message message, DatabaseConnector dbConn, BrainTreeConnector btConn, ServerComThread comThread)
+			throws IOException, SQLException, DBException {
+		GetListingImagesMessage mess = (GetListingImagesMessage) message;
+		mess.images = dbConn.getListingImages(mess.id);
+		comThread.sendMessage(mess);
 	}
 	
 }

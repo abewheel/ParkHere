@@ -5,7 +5,8 @@ import java.io.Serializable;
 public class ListingImage implements Serializable{
 	private byte[] image;
 	private long listing_image_id;
-	private Boolean deleted;
+//	private Boolean deleted;
+	
 	public byte[] getImage() {
 		return image;
 	}
@@ -18,11 +19,11 @@ public class ListingImage implements Serializable{
 	public void setListing_image_id(long listing_image_id) {
 		this.listing_image_id = listing_image_id;
 	}
-	public Boolean getDeleted() {
-		return deleted;
-	}
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
-	}
+//	public Boolean getDeleted() {
+//		return deleted;
+//	}
+//	public void setDeleted(Boolean deleted) {
+//		this.deleted = deleted;
+//	}
 
 }

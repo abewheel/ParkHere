@@ -7,20 +7,23 @@ package model;
 //import android.media.Image;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 //import javax.swing.ImageIcon;
 
 public class Listing implements Serializable{
-
+	//deleteable member variables
+	private HashMap<Long, ListingImage> listing_images;
+    private HashMap<Long, ListingAvailibility> availability_list;
+    
     private Lender lender;
     private long lenderId;
     private String title;
     double price_per_hr;
     private Address address;
-    private List<byte[]> listing_images;
+    
     private String description;
-    private List<ListingAvailibility> availability_list;
     private Double total_rating;
     private Integer num_ratings;
     private List<String> categories;
@@ -94,11 +97,11 @@ public class Listing implements Serializable{
         this.address = address;
     }
 
-    public List<byte[]> getListingImages() {
+    public HashMap<Long, ListingImage> getListingImages() {
         return listing_images;
     }
 
-    public void setListingImages(List<byte[]> listing_images) {
+    public void setListingImages(HashMap<Long, ListingImage> listing_images) {
         this.listing_images = listing_images;
     }
 
@@ -115,15 +118,15 @@ public class Listing implements Serializable{
         this.description = description;
     }
 
-    public List<ListingAvailibility> getAvailabilityList() {
+    public HashMap<Long, ListingAvailibility> getAvailabilityList() {
         return availability_list;
     }
 
     public void addAvailibility(ListingAvailibility availibility){
-        availability_list.add(availibility);
+        availability_list.put(availibility.getAvailabilityId(), availibility);
     }
 
-    public void setAvailabilityList(List<ListingAvailibility> availability_list) {
+    public void setAvailabilityList(HashMap<Long, ListingAvailibility> availability_list) {
         this.availability_list = availability_list;
     }
 

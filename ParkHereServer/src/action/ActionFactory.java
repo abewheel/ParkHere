@@ -4,8 +4,10 @@ import java.util.HashMap;
 
 import messages.CreateCustomerMessage;
 import messages.GetClientTokenMessage;
+import messages.GetListingImagesMessage;
 import messages.LenderMessage;
 import messages.ListingAvailabilityMessage;
+import messages.ListingImageMessage;
 import messages.ListingMessage;
 import messages.ListingReviewMessage;
 import messages.MerchantAccountMessage;
@@ -37,6 +39,8 @@ public class ActionFactory {
 			factory.put(SeekerMessage.class, new SeekerAction());
 			factory.put(UserMessage.class, new UserAction());
 			factory.put(ListingAvailabilityMessage.class, new ListingAvailabilityAction());
+			factory.put(ListingImageMessage.class, new ListingImageAction());
+			factory.put(GetListingImagesMessage.class, new GetListingImagesAction());
 		}
 	}
 	
