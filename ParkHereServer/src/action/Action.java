@@ -14,6 +14,7 @@ import messages.ListingReviewMessage;
 import messages.MerchantAccountMessage;
 import messages.Message;
 import messages.ProfilePicMessage;
+import messages.RegisterGCMMessage;
 import messages.ReservationMessage;
 import messages.SearchMessage;
 import messages.SeekerFavoriteMessage;
@@ -82,7 +83,7 @@ class ListingAction extends Action{
 		}
 		else if (listMess.action.equals(Message.update)){
 			System.out.println("received delete listing message");
-			dbConn.removeListing(listMess.listing.getListingId());
+			dbConn.removeListing(listMess);
 		}
 		else if (listMess.action.equals(Message.delete)){
 			System.out.println("received delete listing message");
@@ -308,6 +309,18 @@ class GetListingImagesAction extends Action{
 			throws IOException, SQLException, DBException {
 		GetListingImagesMessage mess = (GetListingImagesMessage) message;
 		mess.images = dbConn.getListingImages(mess.id);
+		comThread.sendMessage(mess);
+	}
+	
+}
+
+class RegisterGCMAction extends Action{
+
+	@Override
+	public void execute(Message message, DatabaseConnector dbConn, BrainTreeConnector btConn, ServerComThread comThread)
+			throws IOException, SQLException, DBException {
+		RegisterGCMMessage mess = (RegisterGCMMessage) message;
+		dbConn.addGCMToken(mess.registrationToken, mess.user.getUser_id());
 		comThread.sendMessage(mess);
 	}
 	

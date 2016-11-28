@@ -13,6 +13,7 @@ import messages.ListingReviewMessage;
 import messages.MerchantAccountMessage;
 import messages.Message;
 import messages.ProfilePicMessage;
+import messages.RegisterGCMMessage;
 import messages.ReservationMessage;
 import messages.SearchMessage;
 import messages.SeekerFavoriteMessage;
@@ -41,6 +42,7 @@ public class ActionFactory {
 			factory.put(ListingAvailabilityMessage.class, new ListingAvailabilityAction());
 			factory.put(ListingImageMessage.class, new ListingImageAction());
 			factory.put(GetListingImagesMessage.class, new GetListingImagesAction());
+			factory.put(RegisterGCMMessage.class, new RegisterGCMAction());
 		}
 	}
 	

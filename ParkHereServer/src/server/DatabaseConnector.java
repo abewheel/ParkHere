@@ -56,7 +56,7 @@ public class DatabaseConnector {
 		//Map<Long, Listing> favorites = new HashMap<>();
 		System.out.println("seeker id in get favorites: "+seekerId);
 		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LENDER_ID_COL+
-				", l."+DBConstants.PRICE_PER_HR_COL+", l."+DBConstants.LISTING_TITLE_COL+", l."+DBConstants.DELETED_COL+
+				", l."+DBConstants.PRICE_PER_HR_COL+", l."+DBConstants.LISTING_TITLE_COL+", l."+DBConstants.DELETED_COL+", l."+DBConstants.CATEGORIES_COL+
 				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
 				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+", a."+DBConstants.LATITUDE_COL+", a."+DBConstants.LONGITUDE_COL+
 				", a."+DBConstants.STATE_COL+" FROM "+DBConstants.SEEKER_FAVORITES_TB+" sf INNER JOIN "+ DBConstants.LISTING_TB+" l ON sf."+DBConstants.LISTING_ID_COL+
@@ -100,20 +100,7 @@ public class DatabaseConnector {
 		listing.setTitle(rsListing.getString(rsListing.findColumn(DBConstants.LISTING_TITLE_COL)));
 		listing.setListingId(rsListing.getLong(rsListing.findColumn(DBConstants.LISTING_ID_COL)));
 		listing.setPrice_per_hr(rsListing.getDouble(rsListing.findColumn(DBConstants.PRICE_PER_HR_COL)));
-	//	listing.setNumberOfRatings(rsListing.getInt(rsListing.findColumn(DBConstants.NUM_RATINGS_COL)));
-		//listing.setTotalRating(rsListing.getDouble(rsListing.findColumn(DBConstants.TOTAL_RATING_COL)));
-		
-//		PreparedStatement psCategories = conn.prepareStatement("SELECT "+DBConstants.CATEGORY_COL+" FROM "+DBConstants.LISTING_CATEGORY_TB+
-//				" l INNER JOIN "+DBConstants.CATEGORY_TB+" c ON l."+DBConstants.CATEGORY_ID_COL+" = c."+DBConstants.CATEGORY_ID_COL+" WHERE "+DBConstants.LISTING_ID_COL+
-//				" = "+listing.getListingId());
-//		System.out.println("before get listing categories");
-//		ResultSet rsCats = psCategories.executeQuery();
-//		listing.setCategories(new ArrayList<>());
-//		while (rsCats.next()){
-//			System.out.println("WE HAVE CATEGORIES");
-//			listing.getCategories().add(rsCats.getString(1));
-//		}
-		
+
 		PreparedStatement psComments = conn.prepareStatement("SELECT * FROM "+DBConstants.LISTING_COMMENT_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listing.getListingId());
 		ResultSet rsComments = psComments.executeQuery();
 		double totalRating = 0;
@@ -514,8 +501,8 @@ public class DatabaseConnector {
 		
 	}
 	
-	public void removeListing(long listingId) throws SQLException{
-	
+	public void removeListing(ListingMessage message) throws SQLException{
+		long listingId = message.listing.getListingId();
 		PreparedStatement psAvailabilities = conn.prepareStatement("DELETE FROM "+DBConstants.AVAILABILITY_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
 		psAvailabilities.executeUpdate();
 		PreparedStatement psCategories = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_CATEGORY_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
@@ -785,6 +772,13 @@ public class DatabaseConnector {
 			System.out.println(sqle.getMessage());
 		}
 		
+	}
+
+	public void addGCMToken(String registrationToken, long user_id) throws SQLException {
+		PreparedStatement ps = conn.prepareStatement("UPDATE "+DBConstants.USER_TB+" SET "+DBConstants.REGISTRATION_TOKEN_COL+" = ? WHERE "+
+				DBConstants.USER_ID_COL+" = "+user_id);
+		ps.setString(1, registrationToken);
+		ps.executeUpdate();
 	}
 
 }

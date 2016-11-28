@@ -96,6 +96,7 @@ public class DBConstants {
 	public static final String FIRST_NAME_COL = "first_name";
 	public static final String LAST_NAME_COL = "last_name";
 	public static final String PASSWORD_COL = "password";
+	public static final String REGISTRATION_TOKEN_COL = "registration_token";
 	//USER_ID_COL
 	
 	//search
