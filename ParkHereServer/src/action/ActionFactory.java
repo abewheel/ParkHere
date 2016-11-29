@@ -19,6 +19,7 @@ import messages.SearchMessage;
 import messages.SeekerFavoriteMessage;
 import messages.SeekerMessage;
 import messages.UserMessage;
+import messages.ViewLenderMessage;
 
 public class ActionFactory {
 	
@@ -43,6 +44,7 @@ public class ActionFactory {
 			factory.put(ListingImageMessage.class, new ListingImageAction());
 			factory.put(GetListingImagesMessage.class, new GetListingImagesAction());
 			factory.put(RegisterGCMMessage.class, new RegisterGCMAction());
+			factory.put(ViewLenderMessage.class, new ViewLenderAction());
 		}
 	}
 	

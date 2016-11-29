@@ -20,6 +20,7 @@ import messages.SearchMessage;
 import messages.SeekerFavoriteMessage;
 import messages.SeekerMessage;
 import messages.UserMessage;
+import messages.ViewLenderMessage;
 import server.BrainTreeConnector;
 import server.DBException;
 import server.DatabaseConnector;
@@ -321,6 +322,18 @@ class RegisterGCMAction extends Action{
 			throws IOException, SQLException, DBException {
 		RegisterGCMMessage mess = (RegisterGCMMessage) message;
 		dbConn.addGCMToken(mess.registrationToken, mess.user.getUser_id());
+		comThread.sendMessage(mess);
+	}
+	
+}
+
+class ViewLenderAction extends Action{
+
+	@Override
+	public void execute(Message message, DatabaseConnector dbConn, BrainTreeConnector btConn, ServerComThread comThread)
+			throws IOException, SQLException, DBException {
+		ViewLenderMessage mess = (ViewLenderMessage) message;
+		dbConn.getViewLenderInfo(mess);
 		comThread.sendMessage(mess);
 	}
 	

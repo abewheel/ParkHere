@@ -18,6 +18,7 @@ import messages.ListingMessage;
 import messages.ListingReviewMessage;
 import messages.ProfilePicMessage;
 import messages.SearchMessage;
+import messages.ViewLenderMessage;
 import model.Address;
 import model.Lender;
 import model.Listing;
@@ -804,6 +805,46 @@ public class DatabaseConnector {
 				DBConstants.USER_ID_COL+" = "+user_id);
 		ps.setString(1, registrationToken);
 		ps.executeUpdate();
+	}
+
+	public void getViewLenderInfo(ViewLenderMessage mess) throws SQLException {
+		long lenderId = mess.lenderId;
+		PreparedStatement ps = conn.prepareStatement("SELECT u."+DBConstants.FIRST_NAME_COL+", u."+DBConstants.LAST_NAME_COL+", l."+DBConstants.PROFILE_PIC_COL+" FROM "+
+				DBConstants.USER_TB+" u INNER JOIN "+DBConstants.LENDER_TB+" l ON u."+DBConstants.USER_ID_COL+" = l."+DBConstants.USER_ID_COL+" WHERE l."+DBConstants.LENDER_ID_COL+" = "+lenderId);
+		
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()){
+			mess.name = rs.getString(rs.findColumn(DBConstants.FIRST_NAME_COL)) + rs.getString(rs.findColumn(DBConstants.LAST_NAME_COL));
+			Blob blob = rs.getBlob(rs.findColumn(DBConstants.PROFILE_PIC_COL));
+			if (blob != null){
+				int blobLength = (int) blob.length();  
+				byte[] blobAsBytes = blob.getBytes(1, blobLength);
+				mess.profilePicture = blobAsBytes;
+				//release the blob and free up memory. (since JDBC 4.0)
+				blob.free();
+			}
+		}
+		
+		PreparedStatement psReviews = conn.prepareStatement("SELECT * FROM "+DBConstants.LISTING_COMMENT_TB+" c INNER JOIN "+DBConstants.LISTING_TB+
+				" l ON c."+DBConstants.LISTING_ID_COL+" = l."+DBConstants.LISTING_ID_COL+" WHERE l."+DBConstants.LENDER_ID_COL+" = "+lenderId);
+		
+		double totalRating = 0;
+		double numRatings = 0;
+		ResultSet rsReviews = psReviews.executeQuery();
+		List<Review> reviews = new ArrayList<>();
+		while (rsReviews.next()){
+			Review listingReview = new Review();
+			listingReview.setComment(rsReviews.getString(rsReviews.findColumn(DBConstants.COMMENT_COL)));
+			listingReview.setFirstName(rsReviews.getString(DBConstants.FIRST_NAME_COL));
+			listingReview.setListingId(rsReviews.getLong(DBConstants.LISTING_ID_COL));
+			listingReview.setRating(rsReviews.getDouble(rsReviews.findColumn(DBConstants.RATING_COL)));
+			reviews.add(listingReview);
+			totalRating += listingReview.getRating();
+			numRatings++;
+		}
+		
+		mess.allReviews = reviews;
+		mess.averageRating = totalRating/numRatings;
 	}
 
 }
