@@ -54,20 +54,20 @@ public class DatabaseConnector {
 	}
 	
 	public Map<Long, Listing> getSeekerListings(long seekerId) throws SQLException {
-		//Map<Long, Listing> favorites = new HashMap<>();
-		System.out.println("seeker id in get favorites: "+seekerId);
-		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LENDER_ID_COL+
+		
+		PreparedStatement psListing = conn.prepareStatement("SELECT l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+
+		DBConstants.LENDER_ID_COL+
 				", l."+DBConstants.PRICE_PER_HR_COL+", l."+DBConstants.LISTING_TITLE_COL+", l."+DBConstants.DELETED_COL+", l."+DBConstants.CATEGORIES_COL+
-				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
-				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+", a."+DBConstants.LATITUDE_COL+", a."+DBConstants.LONGITUDE_COL+
-				", a."+DBConstants.STATE_COL+" FROM "+DBConstants.SEEKER_FAVORITES_TB+" sf INNER JOIN "+ DBConstants.LISTING_TB+" l ON sf."+DBConstants.LISTING_ID_COL+
-				" = l."+DBConstants.LISTING_ID_COL+" INNER JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
-				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE "+"sf."+DBConstants.SEEKER_ID_COL+" = "+seekerId);
+				", l."+DBConstants.CANCELLATION_POLICY_COL+", l."+DBConstants.ADDRESS_ID_COL+", "+"l."+DBConstants.ZIP_CODE_COL+
+				", l."+DBConstants.FIRST_LINE_COL+", l."+DBConstants.SECOND_LINE_COL+", l."+DBConstants.CITY_COL+", l."+DBConstants.LATITUDE_COL+
+				", l."+DBConstants.LONGITUDE_COL+
+				", l."+DBConstants.STATE_COL+" FROM "+DBConstants.SEEKER_FAVORITES_TB+" sf INNER JOIN "+ 
+				DBConstants.LISTING_TB+" l ON sf."+DBConstants.LISTING_ID_COL+
+				" = l."+DBConstants.LISTING_ID_COL+" WHERE "+"sf."+DBConstants.SEEKER_ID_COL+" = "+seekerId);
 		
 		
 		ResultSet rsListing = psListing.executeQuery();
 		return populateListings(rsListing);
-		//return favorites;
 	}
 	
 	private Listing populateListing(ResultSet rsListing) throws SQLException{
@@ -192,24 +192,19 @@ public class DatabaseConnector {
 	public String getListingsSQL(){
 		StringBuilder sb = new StringBuilder("SELECT l."+DBConstants.LENDER_ID_COL+", +l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+
 				", l."+DBConstants.LISTING_TITLE_COL+", l."+DBConstants.PRICE_PER_HR_COL+", l."+DBConstants.DELETED_COL+", l."+DBConstants.CATEGORIES_COL+
-				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
-				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+
-				", a."+DBConstants.STATE_COL+", a."+DBConstants.LONGITUDE_COL+", a."+DBConstants.LATITUDE_COL+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
-				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
-				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+" WHERE ");
+				", l."+DBConstants.CANCELLATION_POLICY_COL+", l."+DBConstants.ADDRESS_ID_COL+", "+"l."+DBConstants.ZIP_CODE_COL+
+				", l."+DBConstants.FIRST_LINE_COL+", l."+DBConstants.SECOND_LINE_COL+", l."+DBConstants.CITY_COL+
+				", l."+DBConstants.STATE_COL+", l."+DBConstants.LONGITUDE_COL+", l."+DBConstants.LATITUDE_COL+" FROM "+DBConstants.LISTING_TB+" l WHERE ");
 		return sb.toString();
 	}
 	
 	public Map<Long, Listing>getLenderListings(long lenderId) throws SQLException{
-		System.out.println("before get listings");
-		//Map<Long, Listing> listings = new HashMap<>();
-		
+
 		PreparedStatement psListing = conn.prepareStatement(getListingsSQL()+
 				"l."+DBConstants.LENDER_ID_COL+" = "+lenderId);
 		
 		ResultSet rsListing = psListing.executeQuery();
 		return populateListings(rsListing);
-		
 	}
 	
 	public void addProfilePic(ProfilePicMessage message){
@@ -224,9 +219,9 @@ public class DatabaseConnector {
 			ps.setBlob(1, blob);
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+
 			System.out.println(e.getMessage());
-			e.printStackTrace();
+
 		}
 		
 	}
@@ -242,9 +237,6 @@ public class DatabaseConnector {
 			lender.setLenderId(rsLender.getLong(rsLender.findColumn(DBConstants.LENDER_ID_COL)));
 			Profile profile = new Profile();
 			profile.setPhoneNumber(rsLender.getString(rsLender.findColumn(DBConstants.PHONE_NUM_COL)));
-			System.out.println("lender phone : "+rsLender.getString(rsLender.findColumn(DBConstants.PHONE_NUM_COL)));
-			//profile pic
-			//merchant id
 			lender.setProfile(profile);
 			Blob blob = rsLender.getBlob(rsLender.findColumn(DBConstants.PROFILE_PIC_COL));
 			if (blob != null){
@@ -257,7 +249,6 @@ public class DatabaseConnector {
 			lender.setListings(getLenderListings(lender.getLenderId()));
 			lender.setMerchantId(rsLender.getString(rsLender.findColumn(DBConstants.MERCHANT_ID_COL)));
 			lender.setReservations(getReservations(lender.getLenderId(), true));
-			System.out.println("after  get listings and reservations");
 			user.setLender(lender);
 			if (rsLender.getBoolean(rsLender.findColumn(DBConstants.IS_DEFAULT_ROLE_COL))){
 				user.setCurrent_role(lender);
@@ -278,8 +269,6 @@ public class DatabaseConnector {
 			seeker.setSeekerId(rsSeeker.getLong(rsSeeker.findColumn(DBConstants.SEEKER_ID_COL)));
 			Profile profile = new Profile();
 			profile.setPhoneNumber(rsSeeker.getString(rsSeeker.findColumn(DBConstants.PHONE_NUM_COL)));
-			//profile pic
-			//merchant id
 			seeker.setProfile(profile);
 			Blob blob = rsSeeker.getBlob(rsSeeker.findColumn(DBConstants.PROFILE_PIC_COL));
 			if (blob != null){
@@ -385,6 +374,7 @@ public class DatabaseConnector {
 			System.out.println("email "+user.getEmail());
 			return user;
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 			throw new DBException(DBException.INVALID_USER_EMAIL+" "+DBException.GET_USER);
 		}
 	}
@@ -432,38 +422,34 @@ public class DatabaseConnector {
 		StringBuilder sb = new StringBuilder("SELECT l."+DBConstants.LENDER_ID_COL+", lend."+DBConstants.MERCHANT_ID_COL+", l."+DBConstants.CATEGORIES_COL+
 				", l."+DBConstants.LISTING_ID_COL+", l."+DBConstants.DESCRIPTION_COL+", l."+DBConstants.LISTING_TITLE_COL+
 				", l."+DBConstants.PRICE_PER_HR_COL+", l."+DBConstants.DELETED_COL+
-				", c."+DBConstants.CANCELLATION_POLICY_COL+", a."+DBConstants.ADDRESS_ID_COL+", "+"a."+DBConstants.ZIP_CODE_COL+
-				", a."+DBConstants.FIRST_LINE_COL+", a."+DBConstants.SECOND_LINE_COL+", a."+DBConstants.CITY_COL+", a."+DBConstants.LATITUDE_COL+", a."+DBConstants.LONGITUDE_COL+
-				", a."+DBConstants.STATE_COL+", ( 3959 * acos( cos( radians("+searchMessage.advanced.getLat()+") )  * cos( radians( a."+DBConstants.LATITUDE_COL+" ) ) * "+
-				"cos( radians( a."+DBConstants.LONGITUDE_COL+" ) - radians("+searchMessage.advanced.getLon()+") ) + sin( radians("+searchMessage.advanced.getLat()+") ) "
-	              +"* sin( radians( a."+DBConstants.LATITUDE_COL+" ) ) ) ) AS "+DBConstants.DISTANCE_ALIAS+" FROM "+DBConstants.LISTING_TB+" l LEFT JOIN "+DBConstants.CANCELLATION_POLICY_TB+" c ON "+
-				"l."+DBConstants.CANCELLATION_POLICY_ID_COL+" = c."+DBConstants.CANCELLATION_POLICY_ID_COL+
-				" INNER JOIN "+DBConstants.ADDRESS_TB+" a ON l."+DBConstants.ADDRESS_ID_COL+" = a."+DBConstants.ADDRESS_ID_COL+
-				" INNER JOIN "+DBConstants.LENDER_TB+" lend ON l."+DBConstants.LENDER_ID_COL+" = lend."+DBConstants.LENDER_ID_COL+" WHERE ");
+				", l."+DBConstants.CANCELLATION_POLICY_COL+", l."+DBConstants.ADDRESS_ID_COL+", l."+DBConstants.ZIP_CODE_COL+
+				", l."+DBConstants.FIRST_LINE_COL+", l."+DBConstants.SECOND_LINE_COL+", l."+DBConstants.CITY_COL+", l."+DBConstants.LATITUDE_COL+", l."+
+				DBConstants.LONGITUDE_COL+", l."+DBConstants.STATE_COL+", ( 3959 * acos( cos( radians("+searchMessage.advanced.getLat()+") )  * cos( radians( l."+
+				DBConstants.LATITUDE_COL+" ) ) * "+"cos( radians( l."+DBConstants.LONGITUDE_COL+" ) - radians("+searchMessage.advanced.getLon()+
+				") ) + sin( radians("+searchMessage.advanced.getLat()+") ) "
+	              +"* sin( radians( l."+DBConstants.LATITUDE_COL+" ) ) ) ) AS "+DBConstants.DISTANCE_ALIAS+" FROM "+DBConstants.LISTING_TB+
+				" l INNER JOIN "+DBConstants.LENDER_TB+" lend ON l."+DBConstants.LENDER_ID_COL+" = lend."+DBConstants.LENDER_ID_COL+" WHERE ");
 		
 		if (searchMessage.advanced.getEndTime() != null){
-			System.out.println(searchMessage.advanced.getStartTime().toString());
-			System.out.println(searchMessage.advanced.getEndTime().toString());
 			sb.append(" EXISTS (SELECT NULL FROM "+DBConstants.AVAILABILITY_TB+" av WHERE av."+DBConstants.LISTING_ID_COL+" = "+
-					" l."+DBConstants.LISTING_ID_COL+" AND av."+DBConstants.BEGIN_DATE_TIME_COL+" <= ? AND av."+DBConstants.END_DATE_TIME_COL+" >= ? AND "+DBConstants.DELETED_COL+" = FALSE) AND ");
+					" l."+DBConstants.LISTING_ID_COL+" AND av."+DBConstants.BEGIN_DATE_TIME_COL+" <= ? AND av."+DBConstants.END_DATE_TIME_COL+" >= ? AND "+
+					DBConstants.DELETED_COL+" = FALSE) AND ");
 			
 			sb.append(" NOT EXISTS(SELECT NULL FROM "+DBConstants.RESERVATION_TB+" r WHERE r."+DBConstants.LISTING_ID_COL+" = l."+DBConstants.LISTING_ID_COL
 					+" AND (r."+DBConstants.END_DATE_TIME_COL+
 				" BETWEEN ? AND ?) OR (r."+DBConstants.BEGIN_DATE_TIME_COL+" BETWEEN ? AND ?)) AND ");
 		}
-		
 				
 		if (searchMessage.advanced.getCategories() != null && !searchMessage.advanced.getCategories().isEmpty()){
 		
 			for (String cat : searchMessage.advanced.getCategories()){
 				sb.append("JSON_SEARCH(l."+DBConstants.CATEGORIES_COL+", 'all', '"+cat+"') IS NOT NULL AND ");
 			}
-
 		}
 		
-		sb.append("l."+DBConstants.PRICE_PER_HR_COL+" < "+searchMessage.advanced.getPrice()+" AND a."+DBConstants.LATITUDE_COL+" BETWEEN "+minLat+" AND "+maxLat+" AND a."+DBConstants.LONGITUDE_COL
-				+" BETWEEN "+minLong+" AND "+maxLong +" HAVING "+DBConstants.DISTANCE_ALIAS+" < "+searchMessage.advanced.getDistance()+" AND l."+DBConstants.DELETED_COL+" = FALSE"
-						+ " ORDER BY "+DBConstants.DISTANCE_ALIAS);
+		sb.append("l."+DBConstants.PRICE_PER_HR_COL+" < "+searchMessage.advanced.getPrice()+" AND l."+DBConstants.LATITUDE_COL+" BETWEEN "+minLat+" AND "+
+				maxLat+" AND l."+DBConstants.LONGITUDE_COL +" BETWEEN "+minLong+" AND "+maxLong +" HAVING "+DBConstants.DISTANCE_ALIAS+" < "+
+				searchMessage.advanced.getDistance()+" AND l."+DBConstants.DELETED_COL+" = FALSE"+" ORDER BY "+DBConstants.DISTANCE_ALIAS);
 		
 		
 		PreparedStatement psListing = conn.prepareStatement(sb.toString());
@@ -474,16 +460,14 @@ public class DatabaseConnector {
 			psListing.setTimestamp(4, searchMessage.advanced.getEndTime());
 			psListing.setTimestamp(5, searchMessage.advanced.getStartTime());
 			psListing.setTimestamp(6, searchMessage.advanced.getEndTime());
-			
-			System.out.println(searchMessage.advanced.getStartTime());
-			System.out.println(searchMessage.advanced.getEndTime());
+
 		}
 		
-		System.out.println(sb.toString());
+
 		ResultSet rs = psListing.executeQuery();
-		System.out.println("after query");
+
 		while (rs.next()){
-			System.out.println("we have search results!!!!");
+
 			Listing listing = populateListing(rs);
 			ListingResult listingResult = new ListingResult();
 			listingResult.listing = listing;
@@ -491,11 +475,7 @@ public class DatabaseConnector {
 			lender.setLenderId(listing.getLenderId());
 			lender.setMerchantId(rs.getString(rs.findColumn(DBConstants.MERCHANT_ID_COL)));
 			listing.setLender(lender);
-			System.out.println(listing.getAddress().getFirstLine());
 			listingResult.distance = rs.getDouble(rs.findColumn(DBConstants.DISTANCE_ALIAS));
-			System.out.println("distance: "+listingResult.distance);
-			System.out.println("lat: "+listing.getAddress().getLatitude());
-			System.out.println("lat: "+listing.getAddress().getLongitude());
 			results.put(listing.getListingId(),  listingResult);
 		}
 		
@@ -527,12 +507,14 @@ public class DatabaseConnector {
 		PreparedStatement psAvailabilities = conn.prepareStatement(sbDelete.toString()+ (toDelete.isEmpty() ? "" : ids.toString()));
 		
 		psAvailabilities.executeUpdate();
-		PreparedStatement psCategories = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_CATEGORY_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
-		psCategories.executeUpdate();
 		PreparedStatement psImages = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_IMAGE_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
 		psImages.executeUpdate();
-		PreparedStatement psSeekerFavorites = conn.prepareStatement("DELETE FROM "+DBConstants.SEEKER_FAVORITES_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
+		PreparedStatement psSeekerFavorites = conn.prepareStatement("UPDATE "+DBConstants.SEEKER_FAVORITES_TB+" SET "+DBConstants.LISTING_ID_COL+" = "+
+		newListingId.getListingId()+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
 		psSeekerFavorites.executeUpdate();
+		PreparedStatement psReservations = conn.prepareStatement("UPDATE "+DBConstants.RESERVATION_TB+" SET "+DBConstants.LISTING_ID_COL+" = "+
+				newListingId.getListingId()+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
+		psReservations.executeUpdate();
 		PreparedStatement psListing = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
 		psListing.executeUpdate();
 
@@ -564,15 +546,12 @@ public class DatabaseConnector {
 			else sb.append(","+id);
 			
 		}
-		
-	//	sb.deleteCharAt(sb.length()-1);
+	
 		sb.append(")");
 		PreparedStatement ps = conn.prepareStatement(sb.toString());
 		ps.executeUpdate();
 	}
 	
-	//left out profile pic for now
-	//hardcoded default role for now
 	public Seeker createSeeker(Seeker seeker) throws SQLException, DBException{
 		
 		if (seeker.getUser_id() == 0) throw new DBException(DBException.CREATE_SEEKER+" "+DBException.INVALID_USER_ID);
@@ -595,8 +574,6 @@ public class DatabaseConnector {
 		return seeker;
 	}
 	
-	//left out profile pic for now
-	//hardcoded default role for now
 	public Lender createLender(Lender lender) throws SQLException, DBException{
 		if (lender.getUser_id() == 0) throw new DBException(DBException.CREATE_LENDER+" "+DBException.INVALID_USER_ID);
 		
@@ -659,39 +636,48 @@ public class DatabaseConnector {
 		
 		if (listing.getAddress() == null) throw new DBException(DBException.CREATE_LISTING+" "+DBException.INVALID_ADDRESS);
 		
-		System.out.println("in create listing");
 		Address address = listing.getAddress();
-		PreparedStatement psAddress = conn.prepareStatement("INSERT INTO "+DBConstants.ADDRESS_TB+" ("+DBConstants.FIRST_LINE_COL+", "+DBConstants.SECOND_LINE_COL+
-				", "+DBConstants.ZIP_CODE_COL+", "+DBConstants.CITY_COL+", "+DBConstants.STATE_COL+", "+DBConstants.LONGITUDE_COL+", "+DBConstants.LATITUDE_COL+") VALUES ('"+address.getFirstLine()+
-				"', '"+address.getSecondLine()+"', '"+address.getZipCode()+"', '"+address.getCity()+"', '"+address.getState()+"', "+address.getLongitude()+", "+address.getLatitude()+")", Statement.RETURN_GENERATED_KEYS);
-		
-		psAddress.executeUpdate();
-		ResultSet rsAddress = psAddress.getGeneratedKeys();
-		if (rsAddress.next()){
-			address.setAddressId(rsAddress.getLong(1));
-		}
-		System.out.println("after address");
+
 		Boolean haveCategories = listing.getCategories() != null && !listing.getCategories().isEmpty();
-		PreparedStatement psListing = conn.prepareStatement("INSERT INTO "+DBConstants.LISTING_TB+" ("+DBConstants.LENDER_ID_COL+", "+DBConstants.LISTING_TITLE_COL+
-				", "+DBConstants.DESCRIPTION_COL+", "+DBConstants.TOTAL_RATING_COL+", "+DBConstants.NUM_RATINGS_COL+", "+
-				DBConstants.CANCELLATION_POLICY_ID_COL+", "+DBConstants.PRICE_PER_HR_COL+", "+DBConstants.ADDRESS_ID_COL+ 
-				(haveCategories ? ", "+DBConstants.CATEGORIES_COL : "" )+ ") VALUES ("+listing.getLenderId()+
-				", '"+listing.getTitle()+"', '"+listing.getDescription()+"', 0, 0, (SELECT "+DBConstants.CANCELLATION_POLICY_ID_COL+" FROM "+DBConstants.CANCELLATION_POLICY_TB+
-				" WHERE "+DBConstants.CANCELLATION_POLICY_COL+" = '"+listing.getCancellationPolicy()+"'), "+listing.getPricePerHr()+", "+
-				address.getAddressId()+ (haveCategories ? ", ?" : "")+ ")", Statement.RETURN_GENERATED_KEYS);
+		PreparedStatement psListing = conn.prepareStatement("INSERT INTO "+DBConstants.LISTING_TB+" ("+
+				DBConstants.LENDER_ID_COL+", "+
+				DBConstants.LISTING_TITLE_COL+", "+
+				DBConstants.DESCRIPTION_COL+", "+
+				DBConstants.TOTAL_RATING_COL+", "+
+				DBConstants.NUM_RATINGS_COL+", "+
+				DBConstants.CANCELLATION_POLICY_COL+", "+
+				DBConstants.PRICE_PER_HR_COL+", "+
+				DBConstants.FIRST_LINE_COL+", "+
+				DBConstants.SECOND_LINE_COL+", "+
+				DBConstants.ZIP_CODE_COL+", "+
+				DBConstants.CITY_COL+", "+
+				DBConstants.STATE_COL+", "+
+				DBConstants.LONGITUDE_COL+", "+
+				DBConstants.LATITUDE_COL+
+				(haveCategories ? ", "+DBConstants.CATEGORIES_COL : "" )+ 
+				") VALUES ("+
+				listing.getLenderId()+", '"+
+				listing.getTitle()+"', '"+
+				listing.getDescription()+"', 0, 0, '"+
+				listing.getCancellationPolicy()+"', "+
+				listing.getPricePerHr()+", '"+
+				address.getFirstLine()+"', '"+
+				address.getSecondLine()+"', '"+
+				address.getZipCode()+"', '"+
+				address.getCity()+"', '"+
+				address.getState()+"', "+
+				address.getLongitude()+", "+
+				address.getLatitude()+ 
+				(haveCategories ? ", ?" : "")+ ")", Statement.RETURN_GENERATED_KEYS);
 		
 
 		if (haveCategories){
-			System.out.println("have cats");
 			Gson gson = new GsonBuilder().create();
 			String json = gson.toJson(listing.getCategories(), List.class);
 			psListing.setString(1, json);
-			System.out.println(json);
-
 		}
 		
 		psListing.executeUpdate();
-		System.out.println("after listing");
 		ResultSet rsListing = psListing.getGeneratedKeys();
 		if (rsListing.next()){
 			listing.setListingId(rsListing.getLong(1));
@@ -737,9 +723,8 @@ public class DatabaseConnector {
 				System.out.println("after image");
 			}
 			
-			//listing.setListingImages(images);
 		}
-		//insert images
+
 		return listing;
 	}
 	
