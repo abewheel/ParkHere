@@ -82,8 +82,8 @@ class ListingAction extends Action{
 			listMess.listing = dbConn.createListing(listMess);
 		}
 		else if (listMess.action.equals(Message.update)){
-			System.out.println("received delete listing message");
-			dbConn.removeListing(listMess);
+			System.out.println("received update listing message");
+			listMess.listing = dbConn.removeListing(listMess);
 		}
 		else if (listMess.action.equals(Message.delete)){
 			System.out.println("received delete listing message");

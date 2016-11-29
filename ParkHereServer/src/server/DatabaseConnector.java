@@ -501,9 +501,29 @@ public class DatabaseConnector {
 		
 	}
 	
-	public void removeListing(ListingMessage message) throws SQLException{
-		long listingId = message.listing.getListingId();
-		PreparedStatement psAvailabilities = conn.prepareStatement("DELETE FROM "+DBConstants.AVAILABILITY_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
+	public Listing removeListing(ListingMessage message) throws SQLException, DBException{
+		Listing newListingId = createListing(message);
+		
+		
+		long listingId = message.updateListing.getListingId();
+		List<Long> toDelete = message.deleteAvailabilities;
+		StringBuilder sbDelete = new StringBuilder("DELETE FROM "+DBConstants.AVAILABILITY_TB+" WHERE "+
+				DBConstants.LISTING_ID_COL+" = "+listingId);
+		StringBuilder ids = new StringBuilder("(");
+		if (!toDelete.isEmpty()){
+			sbDelete.append(" AND "+DBConstants.AVAILIBILITY_ID_COL+" NOT IN ");
+			for (Long id : toDelete){
+				ids.append(id+",");
+			}
+			ids.deleteCharAt(ids.length()-1);
+			ids.append(")");
+			PreparedStatement psDeleteAvails = conn.prepareStatement("UPDATE "+ DBConstants.AVAILABILITY_TB+" SET "+DBConstants.LISTING_ID_COL+" = "+newListingId.getListingId()+
+					" AND "+DBConstants.DELETED_COL+" = TRUE WHERE "+DBConstants.AVAILIBILITY_ID_COL+" IN "+ids.toString());
+			psDeleteAvails.executeUpdate();
+		}
+		
+		PreparedStatement psAvailabilities = conn.prepareStatement(sbDelete.toString()+ (toDelete.isEmpty() ? "" : ids.toString()));
+		
 		psAvailabilities.executeUpdate();
 		PreparedStatement psCategories = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_CATEGORY_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
 		psCategories.executeUpdate();
@@ -514,11 +534,15 @@ public class DatabaseConnector {
 		PreparedStatement psListing = conn.prepareStatement("DELETE FROM "+DBConstants.LISTING_TB+" WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
 		psListing.executeUpdate();
 
+		return newListingId;
 	}
 	
 	public void deleteListing(long listingId) throws SQLException{
 		PreparedStatement ps = conn.prepareStatement("UPDATE "+DBConstants.LISTING_TB+" SET "+DBConstants.DELETED_COL+" = TRUE WHERE "+DBConstants.LISTING_ID_COL+" = "+listingId);
 		ps.executeUpdate();
+		
+		PreparedStatement psAvail = conn.prepareStatement("UPDATE "+DBConstants.AVAILABILITY_TB+" SET "+DBConstants.DELETED_COL+" = TRUE WHERE "+ DBConstants.LISTING_ID_COL+" = "+listingId);
+		psAvail.executeUpdate();
 	}
 	
 	
