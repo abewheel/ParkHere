@@ -98,6 +98,7 @@ public class DatabaseConnector {
 		System.out.println("cancellation policy retrieved: "+listing.getCancellationPolicy());
 		listing.setDescription(rsListing.getString(rsListing.findColumn(DBConstants.DESCRIPTION_COL)));
 		listing.setTitle(rsListing.getString(rsListing.findColumn(DBConstants.LISTING_TITLE_COL)));
+		listing.setDeleted(rsListing.getBoolean(rsListing.findColumn(DBConstants.DELETED_COL)));
 		listing.setListingId(rsListing.getLong(rsListing.findColumn(DBConstants.LISTING_ID_COL)));
 		listing.setPrice_per_hr(rsListing.getDouble(rsListing.findColumn(DBConstants.PRICE_PER_HR_COL)));
 
