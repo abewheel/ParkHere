@@ -814,7 +814,7 @@ public class DatabaseConnector {
 		
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()){
-			mess.name = rs.getString(rs.findColumn(DBConstants.FIRST_NAME_COL)) + rs.getString(rs.findColumn(DBConstants.LAST_NAME_COL));
+			mess.name = rs.getString(rs.findColumn(DBConstants.FIRST_NAME_COL));
 			Blob blob = rs.getBlob(rs.findColumn(DBConstants.PROFILE_PIC_COL));
 			if (blob != null){
 				int blobLength = (int) blob.length();  
@@ -844,7 +844,7 @@ public class DatabaseConnector {
 		}
 		
 		mess.allReviews = reviews;
-		mess.averageRating = totalRating/numRatings;
+		mess.averageRating = (totalRating == 0 || numRatings == 0) ? 0 : totalRating/numRatings;
 	}
 
 }
