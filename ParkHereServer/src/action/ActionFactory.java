@@ -3,6 +3,7 @@ package action;
 import java.util.HashMap;
 
 import messages.CreateCustomerMessage;
+import messages.EditPhoneMessage;
 import messages.GetClientTokenMessage;
 import messages.GetListingImagesMessage;
 import messages.LenderMessage;
@@ -45,6 +46,7 @@ public class ActionFactory {
 			factory.put(GetListingImagesMessage.class, new GetListingImagesAction());
 			factory.put(RegisterGCMMessage.class, new RegisterGCMAction());
 			factory.put(ViewLenderMessage.class, new ViewLenderAction());
+			factory.put(EditPhoneMessage.class, new EditPhoneAction());
 		}
 	}
 	

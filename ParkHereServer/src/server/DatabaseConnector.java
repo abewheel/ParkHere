@@ -14,6 +14,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import messages.EditPhoneMessage;
 import messages.ListingMessage;
 import messages.ListingReviewMessage;
 import messages.ProfilePicMessage;
@@ -830,6 +831,13 @@ public class DatabaseConnector {
 		
 		mess.allReviews = reviews;
 		mess.averageRating = (totalRating == 0 || numRatings == 0) ? 0 : totalRating/numRatings;
+	}
+
+	public void updateProfile(EditPhoneMessage mess) throws SQLException {
+		String table = mess.isLender ? DBConstants.LENDER_TB : DBConstants.SEEKER_TB;
+		String id = mess.isLender ? DBConstants.LENDER_ID_COL : DBConstants.SEEKER_ID_COL;
+		PreparedStatement ps = conn.prepareStatement("UPDATE "+table+" SET "+DBConstants.PHONE_NUM_COL+" = '"+mess.phone+"' WHERE "+id+" = "+mess.id);
+		ps.executeUpdate();
 	}
 
 }

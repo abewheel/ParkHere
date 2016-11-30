@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import messages.CreateCustomerMessage;
+import messages.EditPhoneMessage;
 import messages.GetClientTokenMessage;
 import messages.GetListingImagesMessage;
 import messages.LenderMessage;
@@ -337,4 +338,14 @@ class ViewLenderAction extends Action{
 		comThread.sendMessage(mess);
 	}
 	
+}
+
+class EditPhoneAction extends Action{
+	@Override
+	public void execute(Message message, DatabaseConnector dbConn, BrainTreeConnector btConn, ServerComThread comThread)
+			throws IOException, SQLException, DBException {
+		EditPhoneMessage mess = (EditPhoneMessage) message;
+		dbConn.updateProfile(mess);
+		comThread.sendMessage(mess);
+	}
 }
