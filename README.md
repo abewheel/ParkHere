@@ -21,7 +21,7 @@ Spots can be reviewed and rated.
 
 ## About the Project
 
-This repository contains the client and server code for Park Here
+This repository contains the client and server code for Park Here.
 Park Here was written in 2016 by myself and a team of 4 other USC students.
 
 <p align="center">
@@ -34,4 +34,4 @@ Park Here was written in 2016 by myself and a team of 4 other USC students.
 Park Here was implemented in Java as an AndroidStudio project.
 It uses the google maps API for parking space search and braintree API for payment processing.
 It uses a MVC architecture.
-An apache server was used to store SQL data
+An apache server was used to store SQL data.
