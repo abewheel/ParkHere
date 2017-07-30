@@ -25,7 +25,7 @@ This repository contains the client and server code for Park Here
 Park Here was written in 2016 by myself and a team of 4 other USC students.
 
 <p align="center">
-  <img src="https://github.com/abewheel/ParkHere/blob/master/utils/login.PNG" alt="Login"/>
+  <img src="https://github.com/abewheel/ParkHere/blob/master/utils/search.PNG" alt="Search"/>
 </p>
 
 
